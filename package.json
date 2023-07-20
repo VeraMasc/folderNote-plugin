@@ -1,0 +1,53 @@
+{
+	"name": "obsidian-sample-plugin",
+	"version": "1.0.1",
+	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"main": "main.js",
+	"scripts": {
+		"dev": "tsc --noEmit && node esbuild.config.mjs &&  powershell  Write-Host \" Ts Compiled \" -BackgroundColor darkblue " ,
+		"build:ts": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+
+ 
+		"build:sass": " sass  --no-source-map _styles/styles.scss:plugin/styles.css &&  powershell  Write-Host \" SASS Compiled \" -BackgroundColor darkmagenta ",
+	
+		"watch:sass": "npm run build:sass && onchange \"**/*.scss\"    -- npm run build:sass",
+		"watch:ts": " npm run dev && onchange \"**/*.ts?(x)\" \"../.sharedModules/**/*.(t|j)s?(x)\"  -- npm run dev",
+
+		"watch": "npm-run-all --parallel watch:*",
+		"serve": "browser-sync start --server publish --files publish",
+		"start": "npm-run-all copy --parallel watch",
+		"build": "npm-run-all build:*",
+		"pinstall":"cd .. && npm i"
+
+		
+		
+		
+	  },
+	  "directories": {},
+	  
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^16.11.6",
+		"@typescript-eslint/eslint-plugin": "^5.2.0",
+		"@typescript-eslint/parser": "^5.2.0",
+		"builtin-modules": "^3.2.0",
+		"esbuild": "0.13.12",
+		"color2k": "^2.0.0",
+		"obsidian": "latest",
+		"tslib": "^2.3.1",
+		"typescript": "latest"
+	},
+	"dependencies": {
+		"sass": "^1.52.1",
+		"copyfiles": "^2.4.1",
+		"cssnano": "^5.0.17",
+		"npm-run-all": "^4.1.5",
+		"onchange": "^7.1.0",
+		"postcss-cli": "^9.1.0"
+
+	},
+	"workspaces":["../"]
+}

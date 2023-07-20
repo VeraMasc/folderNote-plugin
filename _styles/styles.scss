@@ -1,0 +1,21 @@
+//out: ${workspaceRoot}/plugin/
+
+@import "trail.scss";
+
+@import "index.scss";
+
+@import "links.scss";
+
+
+.FN-div{
+    max-width: 100%;
+    margin-bottom: 10px;
+    @at-root .cm-contentContainer>#{&}{
+        margin-top: -5px;
+    }
+	&.isSticky{
+		position: sticky;
+		top:0;
+		z-index: 10;
+	}
+}

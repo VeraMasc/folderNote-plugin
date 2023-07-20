@@ -1,0 +1,9 @@
+{
+    "outDir": "project",
+
+	"removeComments": true,
+	"sourceMaps": false,
+	"indentType": "tab",
+
+	"outputStyle":  "compressed"
+}

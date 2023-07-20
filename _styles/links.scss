@@ -1,0 +1,24 @@
+.FN-link{
+   min-width: fit-content;
+    &:not([href]){
+        color:var(--text-faint);
+        pointer-events: none;
+        text-decoration-line: line-through;
+    }
+    >.ellipsed{
+        &::before{
+            content: "...";
+        }
+
+    }
+}
+
+.isExpanded .FN-link>.ellipsed{
+    &::before{
+        content: none;
+    }
+
+    &::after{
+        content: attr(data-text);
+    }
+}

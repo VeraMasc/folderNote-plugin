@@ -1,0 +1,94 @@
+// main: styles.scss
+.FN-trail-scroller{
+	width: 100%;
+	overflow-x: auto;
+	&:not(:focus){
+		overflow: hidden;
+		>.FN-trail{
+			@extend %noFocusTrail;
+			
+		}
+		
+	}
+
+}
+
+
+.FN-trail{
+    // background-color: var(--background-primary-alt);
+	display: inline-block;
+    padding: 2px 10px;
+    border-radius: 500px;
+    border: 1px solid var(--background-modifier-border);
+    line-height: 25px;
+    white-space:nowrap ;
+    display: inline-flex;
+	background-color: var(--background-primary);
+    
+	min-height: 30px;
+    width: auto;
+    left:0;
+    right:0;
+	
+}
+%noFocusTrail{
+	max-width: 100%;
+}
+
+.FN-root{
+    color:var(--text-faint);
+}
+ 
+.FN-trail-arrow{
+
+    // display: flex;
+    // align-content: center;
+    text-align: center;
+    white-space: nowrap;
+    margin: auto 5px;
+	color:var(--text-normal)
+    
+}
+%noFocusTrail>.FN-ellipsis:not(:focus,:hover){
+    display: none;
+    &+.FN-trail-arrow::before{
+        content: "…";
+        margin-right: 5px;
+        display: inline-block;
+        text-align: center;
+        font-size: 18px;
+    }
+   
+    &+*+.FN-ellipsis:not(:focus,:hover)+.FN-trail-arrow{
+        // color:red;
+        display: none;
+    }
+}
+
+%noFocusTrail>.FN-current.FN-ellipsis{
+	&::before{
+		content: "▽";
+		font-size: 1rem;
+		
+	}
+	text-decoration-line: none;
+	display: unset;
+	font-size: 0;
+   
+}
+
+
+
+.FN-current{
+    // filter: hue-rotate(-45deg);
+    font-weight: 500;
+}
+.FN-div.isIndex .FN-current{
+    // font-style: italic;
+
+    text-decoration-line: none;
+    filter: brightness(80%);
+
+}
+
+

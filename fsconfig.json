@@ -1,0 +1,59 @@
+{
+	"configs":
+	[
+		
+		{
+			"name":"sync_plugin",
+			"enabled":true,
+			
+			
+			"sync":
+			[
+				{
+					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/plugin",
+					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/",
+					
+					"bidir":false
+
+
+				},
+				{
+					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/_styles",
+					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/_styles",
+					
+					"bidir":false
+
+
+				}
+				
+			]
+		},
+		{
+			"name":"fanfics",
+			"enabled":true,
+			
+			
+			"sync":
+			[
+				{
+					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/plugin",
+					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/",
+					
+					"bidir":false
+
+
+				},
+				{
+					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/_styles",
+					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/_styles",
+					
+					"bidir":false
+
+
+				}
+				
+			]
+		}
+			
+	]
+}
