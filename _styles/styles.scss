@@ -7,15 +7,17 @@
 @import "links.scss";
 
 
-.FN-div{
+.FN-div,.FN-div-block{
     max-width: 100%;
     margin-bottom: 10px;
     @at-root .cm-contentContainer>#{&}{
         margin-top: -5px;
     }
-	&.isSticky{
-		position: sticky;
-		top:0;
-		z-index: 10;
-	}
+	
+}
+
+.FN-div.isSticky{
+	position: sticky;
+	top:0;
+	z-index: 10;
 }
