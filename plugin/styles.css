@@ -233,6 +233,8 @@ ul.FN-indexList::-webkit-scrollbar {
 .FN-link.FN-gotoIndex {
   display: inline-block;
   width: 1em;
+  fill: var(--background-primary);
+  vertical-align: bottom;
 }
 
 .isExpanded .FN-link > .ellipsed::before {

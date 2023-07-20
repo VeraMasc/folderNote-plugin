@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView } from 'obsidian';
 import * as DOMu from "../../.sharedModules/DOM Utils"
 import FolderIndexPlugin from "./main"
 import {indexData} from "./indexing"
@@ -153,11 +153,17 @@ function* iterateOuter(arr){
 export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
 	let title = indexData.config?.indexPath ?? indexData?.name;
 	summEl.append(` ${title} `);
-	var link = summEl.createEl("a", {
-		cls: "FN-link FN-gotoIndex", href: indexData.filePath, title: indexData.name, attr: { target: "_blank", rel: "noopener", "data-href": link, }
+	let link = summEl.createEl("a", {
+		cls: "FN-link internal-link FN-gotoIndex", href: indexData.filePath, title: indexData.name, attr: { target: "_blank", rel: "noopener", "data-href": indexData.filePath, }
 	});
 	link.innerHTML = html.gotoIndex_icon;
-	//indexData.fileLink()
+	link.onclick=(e)=>{
+		e.preventDefault()
+		let mode =(app.vault as any).getConfig("defaultViewMode");
+		app.workspace.activeLeaf?.openFile(indexData.file,
+			{active:true, mode} as OpenViewState)
+	}
+	
 }
 
 export function addIndex(fnDiv:HTMLElement,indexData:indexData){
