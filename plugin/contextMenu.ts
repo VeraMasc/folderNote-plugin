@@ -1,5 +1,5 @@
 import {addIcon, MarkdownView, Menu, OpenViewState} from "obsidian";
-import { type } from "os";
+
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 
@@ -51,10 +51,13 @@ function setPropItem(menu:Menu,title:string, icon:obsidianIcons, prop:string, va
         item.setTitle(title)
         .setIcon(icon)
         .onClick(() => {
-            let view = app.workspace.getActiveViewOfType(MarkdownView)
-            let data = new fmFromView(view);
-            data.setProp(prop,value);
-            data.editorSave();
+			let view = app.workspace.getActiveViewOfType(MarkdownView)
+			var propDict = {};
+			propDict[prop] = value;
+			view?.["metadataEditor"].insertProperties(propDict)
+            // let data = new fmFromView(view);
+            // data.setProp(prop,value);
+			// data.editorSave();
             }
         )
     );

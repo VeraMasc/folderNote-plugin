@@ -4,6 +4,7 @@ import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
 import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
+// import * as Suggest from "./suggestions"
 
 interface xApp extends App{
 	commands:any,
@@ -42,6 +43,7 @@ export default class FolderIndexPlugin extends Plugin {
 	divResizeObs:ResizeObserver;
 	/** Codeblock Injectors */
 	injectors:{}={};
+	editorChange: any;
 
 	async onload() {
 		(window as any).FNindex=this;
@@ -67,22 +69,11 @@ export default class FolderIndexPlugin extends Plugin {
 			this.registerLayoutChangeEvent();
 			this.registerMetaChangeEvent();
 			this.registerMetaDelEvent();
+			this.registerBlockSuggestions();
 
 
 
-            // Source for save setting
-            // https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
-            const saveCommandDefinition = this.app.commands.commands["editor:save-file"];
-            const save = saveCommandDefinition === null || saveCommandDefinition === void 0 ? void 0 : saveCommandDefinition.callback;
-            if (typeof save === "function") {
-                saveCommandDefinition.callback = async () => {
-                    await save();
-                    if (this.settings.refreshOnNoteSave) {
-                        
-						// console.warn("Save event")
-                    }
-                };
-            }
+            
 
             app.workspace.iterateAllLeaves((leaf) => {
                 if (leaf instanceof MarkdownView)
@@ -90,7 +81,21 @@ export default class FolderIndexPlugin extends Plugin {
                     leaf.view.previewMode.rerender(true);
             });
 			
-        });
+		});
+		
+		// Custom Save command
+		// https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
+		const saveCommandDefinition = this.app.commands.commands["editor:save-file"];
+		const save = saveCommandDefinition === null || saveCommandDefinition === void 0 ? void 0 : saveCommandDefinition.callback;
+		if (typeof save === "function") {
+			saveCommandDefinition.callback = async () => {
+				await save();
+				if (this.settings.refreshOnNoteSave) {
+					
+					await this.drawTrail()
+				}
+			};
+		}
 
         for(let block of Object.values(Blocks)){
 			if(!block?.Id) continue;
@@ -103,6 +108,10 @@ export default class FolderIndexPlugin extends Plugin {
 		}
 
 		this.addSettingTab(new SettingTab(this.app, this));
+	}
+
+	registerBlockSuggestions() {
+		//this.registerEditorSuggest(new Suggest.TestSuggestions(this))
 	}
 
 	onunload() {
@@ -125,14 +134,16 @@ export default class FolderIndexPlugin extends Plugin {
 	}
 
 	registerActiveLeafChangeEvent() {
-        this.activeLeafChange = this.app.workspace.on("active-leaf-change", async () => {
-            if (this.settings.refreshOnNoteChange) {
+		var func = async () => {
+			if (this.settings.refreshOnNoteChange) {
 				await this.drawTrail();
-				// console.warn("Refresh event")
-            }
-            
-        });
-        this.registerEvent(this.activeLeafChange);
+				console.warn("Refresh event")
+			};
+		};
+		this.activeLeafChange = this.app.workspace.on("active-leaf-change", func);
+		this.editorChange = this.app.workspace.on("editor-change", func);
+		this.registerEvent(this.activeLeafChange);
+		this.registerEvent(this.editorChange);
     }
 
 	registerLayoutChangeEvent() {
