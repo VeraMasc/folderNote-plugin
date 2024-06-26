@@ -2,6 +2,7 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View } from 'obsidian';
 import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
+import {setLinkToIndex} from "./metadata"
 import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
@@ -36,6 +37,8 @@ export default class FolderIndexPlugin extends Plugin {
 	activeLeafSave = undefined;
 	layoutChange = undefined;
 	metaChange = undefined;
+	metaResolve = undefined;
+	metaInit= undefined;
 	metaDel = undefined;
 	RootIndexList:Array<string>=[];
 	map:IndexTree;
@@ -57,7 +60,7 @@ export default class FolderIndexPlugin extends Plugin {
 			new ResizeObserver(Display.trailOverflow);
 
 
-
+		this.registerMetaChangeEvent();
 
 		app.workspace.onLayoutReady(async () => {
             var _a;
@@ -67,7 +70,7 @@ export default class FolderIndexPlugin extends Plugin {
 			
             this.registerActiveLeafChangeEvent();
 			this.registerLayoutChangeEvent();
-			this.registerMetaChangeEvent();
+			
 			this.registerMetaDelEvent();
 			this.registerBlockSuggestions();
 
@@ -137,7 +140,7 @@ export default class FolderIndexPlugin extends Plugin {
 		var func = async () => {
 			if (this.settings.refreshOnNoteChange) {
 				await this.drawTrail();
-				console.warn("Refresh event")
+				// console.warn("Refresh event")
 			};
 		};
 		this.activeLeafChange = this.app.workspace.on("active-leaf-change", func);
@@ -156,10 +159,18 @@ export default class FolderIndexPlugin extends Plugin {
     }
  
 	registerMetaChangeEvent() {
+		//Evento de archivo modificado
         this.metaChange = this.app.metadataCache.on("changed", async (file) => {
 			this.map.refreshNode(file)
         });
         this.registerEvent(this.metaChange);
+
+		this.metaResolve = this.app.metadataCache.on("resolve", (data)=>(console.log("res"),setLinkToIndex(data,this)))
+		this.registerEvent(this.metaResolve);
+
+		
+		// this.metaInit = this.app.vault.on("create", (data)=>(console.log("init"),setLinkToIndex(data)));
+		// this.registerEvent(this.metaInit);
     }
 	registerMetaDelEvent() {
         this.metaDel = this.app.metadataCache.on("deleted", async (file) => {
