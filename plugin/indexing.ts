@@ -4,22 +4,32 @@ import {noteConfig} from "./config"
 import {lighten,getLuminance} from "color2k"
 import { linkMenu } from './contextMenu';
 
+/**Indexing data of a specific folder or file*/
 export class indexData{
+    /**Folder represented or folder that contains the file*/
     folder:TFolder;
+    /**The file itself*/
     file:TFile;
+    /**Detects if folder is a root of the Indexing Tree*/
     get isRoot(){ return this.folder?.isRoot()}
+    /**Was the indexing data generated from the folder or from an index file? */
     isFolder:boolean;
+    /**Indicates folder or file exist */
     exists:boolean;
+    /**Is index hidden */
 	hidden?:boolean;
+    /**Reference to the full index tree */
     indexer:IndexTree;
 	/** File extension (without leading ".") */
     ext?:string;
 	type;
-	/** Configuration of the index file*/
+	/** Configuration of the file*/
     config=new noteConfig();
     id:string=null;
     prev:indexData;
     next:indexData;
+
+    /**Gets partial name of the index (no extension) */
     get name(){
         if(!this.exists)
             return null;
@@ -28,12 +38,16 @@ export class indexData{
         name ??= "Unknown";
         return name
     }
+
+    /**Gets full name of the file with extension (No path) */
 	get fullName(){
         return this.name + (this.ext?`.${this.ext}`:'')
     }
+    /**Gets path of the folder containing the file */
     get folderPath(){
         return this.folder?.path?.slice(1);
     }
+    /**Gets path of the the file file itself */
     get filePath(){
         if(! (this.folder && this.file) )
             return null;
@@ -45,7 +59,7 @@ export class indexData{
 	clone():indexData {
 		return Object.assign(Object.create(this), {config :Object.create(this.config) })
 	}
-	/** Checks if the current file is an index file */
+	/** Checks if this file is acts as an index file */
     get isIndex(){
 		if(this.isFolder || !!this.config.useAsIndex)
 			return true;
@@ -97,6 +111,7 @@ export class indexData{
         
     }
     
+    /**Finds the index of the folder */
     findIndex(){
         let {folder,isRoot,isFolder,exists} = this;
         if(!(isFolder && exists)) 
@@ -129,6 +144,8 @@ export class indexData{
             return null;
         return this.explore(abstract)
     }
+
+    /**Returns an array of all IndexData from root to this file */
     getSplitPath(){
         let ret = [];ret.unshift(this)
         let current = this?.folder?.parent;
@@ -190,11 +207,11 @@ export class indexData{
     }
 
 
-    
-    *childNotes(config:noteConfig=null){
-        let mapped = this.folder.children
-			.map(child => this.explore(child))
-			.sort((a,b)=> (b?.config?.priority ?? 0) - (a?.config?.priority ?? 0))
+    /**Returns the index data of all child notes (except hidden)*/
+    *childNotes(config:noteConfig=null): Generator<indexData, void, unknown>{
+        //Map and sort notes
+        let mapped = this.sortNodes(this.folder.children
+			.map(child => this.explore(child)));
         
 		
 		let rawHideReg = config?.hideRegExp ?? [];
@@ -202,6 +219,7 @@ export class indexData{
 		let hideRegExp = rawHideReg?.map(exp => new RegExp(exp))
 
         for(let cData of mapped){
+            //Hide files from index
 			let ignore= cData?.config?.ignore;
 			ignore ||= hideRegExp?.find(reg => reg.test(cData.fullName)) !=null;
             if(!ignore)
@@ -211,6 +229,15 @@ export class indexData{
         }
     }
 
+    /**Handles the order of nodes */
+    sortNodes(nodes:indexData[], config:noteConfig=null) {
+        //Locale Sort (Fixes number order and stuff)
+        nodes = nodes.sort((a,b)=> a.fullName.localeCompare(b.fullName,undefined, {numeric: true}));
+        //Priority sort
+        return nodes.sort((a,b)=> (b?.config?.priority ?? 0) - (a?.config?.priority ?? 0))
+    }
+
+    /**Refreshes the config data of the file*/
     updateConfig(){
         let {file,exists} = this;
         if(!(file && exists)){
@@ -223,6 +250,7 @@ export class indexData{
         this.config.fromMeta(frontmatter)
     }
 
+    /**Explores another node in the tree */
     explore(abstract:TFolder | TFile | TAbstractFile){
         return this.indexer.getNode(abstract);
     }
@@ -240,6 +268,7 @@ export class IndexTree{
         this.plugin = plugin;
     }
 
+    /**Explore a node if not yet visited or recover the existing data */
     getNode(abstract:TFolder| TFile | TAbstractFile){
 		if(abstract==null)
 			return null;
@@ -261,6 +290,7 @@ export class IndexTree{
 		return this.getNode(abstract);
 	}
 
+    /**Recalculates and replaces a node */
     refreshNode(abstract:TFolder| TFile | TAbstractFile){
         let data = new indexData(abstract,this);
         let old = this.data[abstract.path];
@@ -268,11 +298,12 @@ export class IndexTree{
 
         if(!data.isFolder){
             let anyIndex = data.isIndex || old?.isIndex;
-            if (anyIndex)
+            if (anyIndex) //If index was changed, update its corresponding folder
                 this.refreshNode(data.folder)
         }
     }
 
+    /**Removes the node from the tree */
     deleteNode(abstract:TFolder| TFile | TAbstractFile){
         let old = this.data[abstract.path];
         delete this.data[abstract.path];

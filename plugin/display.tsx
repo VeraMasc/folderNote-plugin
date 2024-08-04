@@ -166,6 +166,11 @@ export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
 	
 }
 
+/**
+ * Adds the index to a page
+ * @param fnDiv Div used to put all Folder Note elements
+ * @param indexData All info about the index
+ */
 export function addIndex(fnDiv:HTMLElement,indexData:indexData){
     //Index
     let {config} = indexData;
@@ -195,6 +200,7 @@ export function addIndex(fnDiv:HTMLElement,indexData:indexData){
         
     }); 
     
+    //Children
     for(let child of indexData.childNotes(config)){
         if(indexData.file == child.file) // No mostrar el archivo actual en el índice
             continue;
@@ -243,7 +249,7 @@ export function drawIndex(){
 	activeMDView
 }
 
-export function getActiveMDView(){
+export function getActiveMDView():{activeMDView:MarkdownView,mode:any}{
 	let container = null;
 	const { RootIndexList=[], settings,  app } = this;
 
@@ -261,7 +267,7 @@ export function getActiveMDView(){
 
 		
 	}
-	return {activeMDView,mode};
+	return { activeMDView,mode};
 }
 
 function createFNDiv(activeMDView,mode,fData:indexData){

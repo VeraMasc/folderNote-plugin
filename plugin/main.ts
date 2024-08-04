@@ -140,7 +140,7 @@ export default class FolderIndexPlugin extends Plugin {
 		var func = async () => {
 			if (this.settings.refreshOnNoteChange) {
 				await this.drawTrail();
-				// console.warn("Refresh event")
+				console.warn("Refresh event")
 			};
 		};
 		this.activeLeafChange = this.app.workspace.on("active-leaf-change", func);
@@ -151,9 +151,9 @@ export default class FolderIndexPlugin extends Plugin {
 
 	registerLayoutChangeEvent() {
         this.layoutChange = this.app.workspace.on("layout-change", async () => {
-            
+            //TODO: Make this handle config changes
 			await this.drawTrail();
-			// console.warn("Layout event")
+			console.warn("Layout event")
         });
         this.registerEvent(this.layoutChange);
     }
@@ -161,7 +161,13 @@ export default class FolderIndexPlugin extends Plugin {
 	registerMetaChangeEvent() {
 		//Evento de archivo modificado
         this.metaChange = this.app.metadataCache.on("changed", async (file) => {
+			//console.warn("File modified")
 			this.map.refreshNode(file)
+			var view = Display.getActiveMDView();
+			if(view.activeMDView.file == file){
+				//console.warn("Active File modified")
+				await this.drawTrail();
+			}
         });
         this.registerEvent(this.metaChange);
 
