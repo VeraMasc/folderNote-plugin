@@ -1,2 +1,5 @@
 import * as indexBlock from "./indexBlock"
-export {indexBlock};
+import  * as contentBlock from './contentBlock';
+
+export {indexBlock,contentBlock};
+

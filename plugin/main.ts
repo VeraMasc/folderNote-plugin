@@ -52,6 +52,16 @@ export default class FolderIndexPlugin extends Plugin {
 		(window as any).FNindex=this;
 		await this.loadSettings();
 
+		//Register Blocks
+		for(let block of Object.values(Blocks)){
+			if(!block?.Id) continue;
+			try{
+				this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
+				this.injectors[block?.Id+'']=block;
+			}catch(err){
+				console.error("Blocks Plugin Error: ",err)
+			}
+		}
 		
 
 
