@@ -1,0 +1,44 @@
+
+@use "sass:math";
+
+.block-language-headerIndex{
+    margin-right: auto;
+    width: fit-content;
+    padding: 5px 15px;
+    border-width: 2px;
+    border-color: var(--text-faint);
+    border-bottom-style: solid;
+    border-left-style: solid;
+    background-color: var(--background-secondary);
+    border-radius: 15px;
+    
+    ol{
+        padding-left: 1.5em;
+        @for $i from 1 through 6 {
+            >.header-level\:#{$i}{
+                font-size: #{20px - $i *2};
+                >a{
+                    color: var(--h#{$i}-color);
+                }
+            }
+        }
+        
+        li.noMarker{
+            &::marker{
+                list-style: none;
+                visibility: hidden;
+                content:"";
+                
+                
+            }
+            >ol{
+                padding-left: 0;
+            }
+        }
+
+        &::before{
+
+            content: none !important;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 import { MarkdownPostProcessorContext, TFile ,CachedMetadata, MarkdownView,Component, Plugin} from "obsidian";
 
-export const Id = "contentBlock";
+export const Id = "headerIndex";
 
 import {PPContext as Context }from "../../../.sharedModules/obsidianUtils"
 

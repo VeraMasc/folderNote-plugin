@@ -258,3 +258,65 @@ ul.FN-indexList::-webkit-scrollbar {
   top: 0;
   z-index: 10;
 }
+
+.block-language-headerIndex {
+  margin-right: auto;
+  width: fit-content;
+  padding: 5px 15px;
+  border-width: 2px;
+  border-color: var(--text-faint);
+  border-bottom-style: solid;
+  border-left-style: solid;
+  background-color: var(--background-secondary);
+  border-radius: 15px;
+}
+.block-language-headerIndex ol {
+  padding-left: 1.5em;
+}
+.block-language-headerIndex ol > .header-level\:1 {
+  font-size: 18px;
+}
+.block-language-headerIndex ol > .header-level\:1 > a {
+  color: var(--h1-color);
+}
+.block-language-headerIndex ol > .header-level\:2 {
+  font-size: 16px;
+}
+.block-language-headerIndex ol > .header-level\:2 > a {
+  color: var(--h2-color);
+}
+.block-language-headerIndex ol > .header-level\:3 {
+  font-size: 14px;
+}
+.block-language-headerIndex ol > .header-level\:3 > a {
+  color: var(--h3-color);
+}
+.block-language-headerIndex ol > .header-level\:4 {
+  font-size: 12px;
+}
+.block-language-headerIndex ol > .header-level\:4 > a {
+  color: var(--h4-color);
+}
+.block-language-headerIndex ol > .header-level\:5 {
+  font-size: 10px;
+}
+.block-language-headerIndex ol > .header-level\:5 > a {
+  color: var(--h5-color);
+}
+.block-language-headerIndex ol > .header-level\:6 {
+  font-size: 8px;
+}
+.block-language-headerIndex ol > .header-level\:6 > a {
+  color: var(--h6-color);
+}
+.block-language-headerIndex ol li.noMarker::marker {
+  list-style: none;
+  visibility: hidden;
+  content: "";
+}
+.block-language-headerIndex ol li.noMarker > ol {
+  padding-left: 0;
+}
+.block-language-headerIndex ol::before {
+  content: none !important;
+}
