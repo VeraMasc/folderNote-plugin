@@ -2,6 +2,7 @@ import {addIcon, MarkdownView, Menu, OpenViewState} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
+import {BlockName} from './blocks/Blocks';
 
 export function indexMenu(ev){
     ev.preventDefault(); 
@@ -17,6 +18,7 @@ export function indexMenu(ev){
 function noteOptions(menu:Menu){
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
 	setPropItem(menu, "Use custom color","highlight-glyph" , "FN-color","yellowgreen")
+    insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","")
 	addIcon("testIco","")
 }
 
@@ -45,7 +47,7 @@ export function linkMenu(ev){
 }
 
 
-
+/**Sets contextual option to add a specific prop to the file */
 function setPropItem(menu:Menu,title:string, icon:obsidianIcons, prop:string, value:any=true){
     menu.addItem((item) =>
         item.setTitle(title)
@@ -58,6 +60,20 @@ function setPropItem(menu:Menu,title:string, icon:obsidianIcons, prop:string, va
             // let data = new fmFromView(view);
             // data.setProp(prop,value);
 			// data.editorSave();
+            }
+        )
+    );
+}
+
+/**Sets contextual option to insert a specific code block to the file  */
+function insertBlockItem(menu:Menu,title:string, icon:obsidianIcons, blockType:BlockName, content:string=""){
+    menu.addItem((item) =>
+        item.setTitle(title)
+        .setIcon(icon)
+        .onClick(() => {
+                console.log(blockType);
+                let view = app.workspace.getActiveViewOfType(MarkdownView)
+                view.editor.replaceSelection(`\`\`\`${blockType}\n${content}\n\`\`\``)
             }
         )
     );

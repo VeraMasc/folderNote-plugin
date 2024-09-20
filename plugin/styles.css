@@ -270,14 +270,17 @@ ul.FN-indexList::-webkit-scrollbar {
   background-color: var(--background-secondary);
   border-radius: 15px;
 }
-.block-language-headerIndex ol {
-  padding-left: 1.5em;
-}
 .block-language-headerIndex ol > .header-level\:1 {
   font-size: 18px;
 }
 .block-language-headerIndex ol > .header-level\:1 > a {
   color: var(--h1-color);
+}
+.block-language-headerIndex ol > .header-level\:1 > ol {
+  /*color: rgba(from var(--h1-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
 }
 .block-language-headerIndex ol > .header-level\:2 {
   font-size: 16px;
@@ -285,11 +288,23 @@ ul.FN-indexList::-webkit-scrollbar {
 .block-language-headerIndex ol > .header-level\:2 > a {
   color: var(--h2-color);
 }
+.block-language-headerIndex ol > .header-level\:2 > ol {
+  /*color: rgba(from var(--h2-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
+}
 .block-language-headerIndex ol > .header-level\:3 {
   font-size: 14px;
 }
 .block-language-headerIndex ol > .header-level\:3 > a {
   color: var(--h3-color);
+}
+.block-language-headerIndex ol > .header-level\:3 > ol {
+  /*color: rgba(from var(--h3-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
 }
 .block-language-headerIndex ol > .header-level\:4 {
   font-size: 12px;
@@ -297,17 +312,38 @@ ul.FN-indexList::-webkit-scrollbar {
 .block-language-headerIndex ol > .header-level\:4 > a {
   color: var(--h4-color);
 }
+.block-language-headerIndex ol > .header-level\:4 > ol {
+  /*color: rgba(from var(--h4-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
+}
 .block-language-headerIndex ol > .header-level\:5 {
   font-size: 10px;
 }
 .block-language-headerIndex ol > .header-level\:5 > a {
   color: var(--h5-color);
 }
+.block-language-headerIndex ol > .header-level\:5 > ol {
+  /*color: rgba(from var(--h5-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
+}
 .block-language-headerIndex ol > .header-level\:6 {
   font-size: 8px;
 }
 .block-language-headerIndex ol > .header-level\:6 > a {
   color: var(--h6-color);
+}
+.block-language-headerIndex ol > .header-level\:6 > ol {
+  /*color: rgba(from var(--h6-color) r g b 0.5);
+  width: 2px;
+  style: solid;*/
+  border-bottom-left-radius: 0.5em;
+}
+.block-language-headerIndex ol > li {
+  margin-inline-start: 1.25em;
 }
 .block-language-headerIndex ol li.noMarker::marker {
   list-style: none;

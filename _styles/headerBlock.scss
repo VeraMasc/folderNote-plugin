@@ -11,18 +11,36 @@
     border-left-style: solid;
     background-color: var(--background-secondary);
     border-radius: 15px;
+
     
+
     ol{
-        padding-left: 1.5em;
+        
+
         @for $i from 1 through 6 {
             >.header-level\:#{$i}{
                 font-size: #{20px - $i *2};
                 >a{
                     color: var(--h#{$i}-color);
                 }
+
+                >ol{ //Trace parent header
+                    border-left: {
+                        //TODO: make it work with relative colors
+                        /*color: rgba(from var(--h#{$i}-color) r g b 0.5);
+                        width: 2px;
+                        style: solid;*/
+                        
+                    }
+                    border-bottom-left-radius: 0.5em; 
+                }
             }
         }
         
+        >li{
+            margin-inline-start: 1.25em; //Do not indent too much
+        }
+
         li.noMarker{
             &::marker{
                 list-style: none;
@@ -41,4 +59,5 @@
             content: none !important;
         }
     }
+    
 }
