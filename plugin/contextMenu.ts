@@ -1,8 +1,9 @@
-import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache} from "obsidian";
+import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
+import FolderIndexPlugin from "./main"
 
 /**Interface of the FolderNoteCore plugin */
 export type FolderNoteCore = Plugin & 
@@ -56,7 +57,14 @@ export function linkMenu(ev:MouseEvent){
 		var folderNoteCore = (window as any).app.plugins.plugins["folder-note-core"] as FolderNoteCore;
         var path = link?.dataset?.href;
         var file = app.metadataCache.getFirstLinkpathDest(path,".");
-        folderNoteCore.api.createFolderForNote(file)
+        folderNoteCore.api.createFolderForNote(file).then(
+            ()=>{
+                //Call change event
+                var plugin = (window as any).FNindex as FolderIndexPlugin;
+                plugin.drawTrail();
+            }
+        )
+        
 	})
 	
     menu.showAtMouseEvent(ev);

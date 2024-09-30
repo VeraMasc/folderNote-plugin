@@ -1,5 +1,5 @@
 
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
 import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
 import {setLinkToIndex} from "./metadata"
@@ -33,10 +33,10 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 export default class FolderIndexPlugin extends Plugin {
 	declare app:xApp;
 	settings: MyPluginSettings;
-	activeLeafChange = undefined;
-	activeLeafSave = undefined;
-	layoutChange = undefined;
-	metaChange = undefined;
+	activeLeafChange:EventRef = undefined;
+	activeLeafSave:EventRef = undefined;
+	layoutChange:EventRef = undefined;
+	metaChange:EventRef = undefined;
 	metaResolve = undefined;
 	metaInit= undefined;
 	metaDel = undefined;
