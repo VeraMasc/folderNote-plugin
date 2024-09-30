@@ -1,10 +1,19 @@
-import {addIcon, MarkdownView, Menu, OpenViewState} from "obsidian";
+import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
 
-export function indexMenu(ev){
+/**Interface of the FolderNoteCore plugin */
+export type FolderNoteCore = Plugin & 
+    {
+        api:{
+            createFolderForNote:(note:TFile)=>Promise<any>
+        }
+    };
+
+/**Context menu of the index file*/
+export function indexMenu(ev:MouseEvent){
     ev.preventDefault(); 
     const menu = new Menu();
     setPropItem(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
@@ -15,6 +24,7 @@ export function indexMenu(ev){
     menu.showAtMouseEvent(ev);
 }
 
+/**Context menu of all files*/
 function noteOptions(menu:Menu){
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
 	setPropItem(menu, "Use custom color","highlight-glyph" , "FN-color","yellowgreen")
@@ -22,14 +32,14 @@ function noteOptions(menu:Menu){
 	addIcon("testIco","")
 }
 
-export function noteMenu(ev){
+export function noteMenu(ev:MouseEvent){
     ev.preventDefault(); 
     const menu = new Menu();
     noteOptions(menu)
     menu.showAtMouseEvent(ev);
 }
 
-export function linkMenu(ev){
+export function linkMenu(ev:MouseEvent){
 	let link = ev.target as HTMLAnchorElement;
     ev.preventDefault(); 
     const menu = new Menu();
@@ -41,6 +51,12 @@ export function linkMenu(ev){
 		console.log({e,link})
 		app.workspace?.openLinkText(link.dataset.href,".",true,
 			{active:true, mode} as OpenViewState)
+	})
+    actionItem(menu,"Make Folder Note","folder-root",(e)=>{
+		var folderNoteCore = (window as any).app.plugins.plugins["folder-note-core"] as FolderNoteCore;
+        var path = link?.dataset?.href;
+        var file = app.metadataCache.getFirstLinkpathDest(path,".");
+        folderNoteCore.api.createFolderForNote(file)
 	})
 	
     menu.showAtMouseEvent(ev);

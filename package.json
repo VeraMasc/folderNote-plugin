@@ -29,7 +29,9 @@
 		"esbuild": "0.13.12",
 		"obsidian": "^1.4.11",
 		"tslib": "^2.3.1",
-		"typescript": "latest"
+		"typescript": "latest",
+		"lucide-react": "^0.446.0",
+		"lucide-static": "^0.446.0"
 	},
 	"dependencies": {
 		"copyfiles": "^2.4.1",

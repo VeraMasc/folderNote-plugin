@@ -1,5 +1,5 @@
 
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer } from 'obsidian';
 import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
 import {setLinkToIndex} from "./metadata"
@@ -46,6 +46,8 @@ export default class FolderIndexPlugin extends Plugin {
 	divResizeObs:ResizeObserver;
 	/** Codeblock Injectors */
 	injectors:{}={};
+	/** Codeblock Processors */
+	mdProcessors:{}={};
 	editorChange: any;
 
 	async onload() {
@@ -56,7 +58,7 @@ export default class FolderIndexPlugin extends Plugin {
 		for(let block of Object.values(Blocks)){
 			if(!block?.Id) continue;
 			try{
-				this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
+				this.mdProcessors[block?.Id] = await this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
 				this.injectors[block?.Id+'']=block;
 			}catch(err){
 				console.error("Blocks Plugin Error: ",err)
@@ -124,11 +126,20 @@ export default class FolderIndexPlugin extends Plugin {
 	}
 
 	registerBlockSuggestions() {
-		//this.registerEditorSuggest(new Suggest.TestSuggestions(this))
+		//this.registerEditorSuggest(new Suggest.TestSuggestions(this)) 
 	}
 
 	onunload() {
 		this.trailResizeObs.disconnect()
+		//Unregister Blocks
+		for(let block of Object.values(Blocks)){
+			if(!block?.Id) continue;
+			try{
+				MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessors[block?.Id]);
+			}catch(err){
+				console.error("Blocks Plugin Error: ",err)
+			}
+		}
 	}
  
 	async loadSettings() {
@@ -188,6 +199,8 @@ export default class FolderIndexPlugin extends Plugin {
 		// this.metaInit = this.app.vault.on("create", (data)=>(console.log("init"),setLinkToIndex(data)));
 		// this.registerEvent(this.metaInit);
     }
+
+	/**Registers the delete event*/
 	registerMetaDelEvent() {
         this.metaDel = this.app.metadataCache.on("deleted", async (file) => {
 			this.map.deleteNode(file)
@@ -195,6 +208,7 @@ export default class FolderIndexPlugin extends Plugin {
         this.registerEvent(this.metaDel);
     }
 
+	/**Draws the path trail */
 	async drawTrail() {
 		
 		try {

@@ -5,6 +5,7 @@ export const Id = "headerIndex";
 
 import {PPContext as Context }from "../../../.sharedModules/obsidianUtils"
 
+/**Block Markdown processor */
 export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin){
 	try{
 		let config = getConfig(source) as config;
@@ -17,6 +18,7 @@ export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin)
 
 }
 
+/**Renders the content of the block */
 function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: Context,plugin:Plugin){
 	let {headings} =data;
 	let {from,relative}=config;
@@ -55,6 +57,7 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 	// }
 }
 
+/**Generates the specific line of the index block */
 function getLine(level:number,list:Array<HTMLElement>,line:HTMLElement|null){
 
 	while(level > list.length){
@@ -70,7 +73,9 @@ function getLine(level:number,list:Array<HTMLElement>,line:HTMLElement|null){
 
 	return list.last().createEl("li",{cls:"header-level:"+level});
 }
-
+/**Obtains headers and subheaders of the given file
+ * @param from Header to use as root for the index
+*/
 function getSubheaders(ctx:Context,el:HTMLElement,data:CachedMetadata,from?:string){
 	let ret = data.headings;
 	if(!from){
@@ -87,6 +92,7 @@ function getSubheaders(ctx:Context,el:HTMLElement,data:CachedMetadata,from?:stri
 	return ret;
 }
 
+/**Config parameters of the code block */
 export type config={
 	depth,
 	relative,
@@ -94,6 +100,7 @@ export type config={
 	toTop
 }
 
+/**Gets the metadata of the current file */
 function getMetaData(ctx:Context){
 	let file = app.vault.getAbstractFileByPath(ctx.sourcePath) as TFile;
 	let cache = app.metadataCache.getFileCache(file);

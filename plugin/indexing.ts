@@ -260,6 +260,7 @@ type fileTree= {
     [name:string]:indexData;
 }
 
+/**Holds the full tree structure of all the cached indexes  */
 export class IndexTree{
     data:fileTree={};
     plugin:FolderIndexPlugin;
