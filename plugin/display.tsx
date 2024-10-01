@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType } from 'obsidian';
 import * as DOMu from "../../.sharedModules/DOM Utils"
 import FolderIndexPlugin from "./main"
 import {indexData} from "./indexing"
@@ -11,7 +11,13 @@ import { noteConfig } from './config';
 
 //TODO: Mejorar y documentar proceso de renderizado
 
-export function Trail(activeMDView:MarkdownView, mode, plugin:FolderIndexPlugin){
+
+/**Renders the path train 
+ * @param activeMDView what view we need to draw the trail on
+ * @param mode mode of the view
+ * @param plugin reference to the plugin
+*/
+export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plugin:FolderIndexPlugin){
 	if(!activeMDView)
 		return;
     const { file } = activeMDView;
@@ -79,6 +85,7 @@ export function Trail(activeMDView:MarkdownView, mode, plugin:FolderIndexPlugin)
 
 let trailSize = null;
 
+/**Resizing observer to deal with trail overflowing */
 export function trailOverflow(elements,observer){
 	
     for (let {target} of elements){
@@ -149,7 +156,7 @@ function* iterateOuter(arr){
 (window as any).iterateCenter = iterateCenter;
 (window as any).iterateOuter = iterateOuter;
 
-
+/**Adds a title to the index */
 export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
 	let title = indexData.config?.indexPath ?? indexData?.name;
 	summEl.append(` ${title} `);
@@ -244,12 +251,10 @@ export function addIndex(fnDiv:HTMLElement,indexData:indexData){
     
 }
 
-export function drawIndex(){
-	const {activeMDView,mode}= getActiveMDView();
-	activeMDView
-}
 
-export function getActiveMDView():{activeMDView:MarkdownView,mode:any}{
+
+/** Gets the currently active Markdown View */
+export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewModeType}{
 	let container = null;
 	const { RootIndexList=[], settings,  app } = this;
 
@@ -270,7 +275,7 @@ export function getActiveMDView():{activeMDView:MarkdownView,mode:any}{
 	return { activeMDView,mode};
 }
 
-function createFNDiv(activeMDView,mode,fData:indexData){
+function createFNDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fData:indexData){
 	const view = mode === "preview"
 	? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
 	: activeMDView.contentEl.querySelector("div.markdown-source-view");
