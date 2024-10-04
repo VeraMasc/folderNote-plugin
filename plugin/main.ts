@@ -7,11 +7,25 @@ import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
 
-interface xApp extends App{
+/**Exposed app interface */
+export interface xApp extends App{
 	commands:any,
 	viewRegistry:{
 		typeByExtension:any,
 		viewByType:any}
+	plugins:{
+		plugins:{
+			[key:string]:Plugin
+		}
+	}
+	internalPlugins:{
+		plugins:{
+			[key:string]:{
+				instance:any
+			}|any
+		}
+		
+	}
 }
 
 // Remember to rename these classes and interfaces!

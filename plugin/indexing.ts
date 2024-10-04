@@ -146,8 +146,8 @@ export class indexData{
     }
 
     /**Returns an array of all IndexData from root to this file */
-    getSplitPath(){
-        let ret = [];ret.unshift(this)
+    getSplitPath(this:indexData):indexData[]{
+        let ret:indexData[] = [];ret.unshift(this)
         let current = this?.folder?.parent;
         while(current != null){
             ret.unshift(this.explore(current));

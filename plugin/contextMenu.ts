@@ -1,9 +1,10 @@
-import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events} from "obsidian";
+import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events, Notice} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
 import FolderIndexPlugin from "./main"
+import {xApp} from "./main"
 
 /**Interface of the FolderNoteCore plugin */
 export type FolderNoteCore = Plugin & 
@@ -13,7 +14,7 @@ export type FolderNoteCore = Plugin &
         }
     };
 
-/**Context menu of the index file*/
+/**Context menu of the index element of the index file*/
 export function indexMenu(ev:MouseEvent){
     ev.preventDefault(); 
     const menu = new Menu();
@@ -21,25 +22,67 @@ export function indexMenu(ev:MouseEvent){
     setPropItem(menu, "Expanded by default", "fullscreen", "FN-expand")
 	setPropItem(menu, "Hide files", "scissors", "FN-hideRegExp",'"\\\\..+$(?<!\\\\.md$)"')
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
-    noteOptions(menu)
+    noteOptions(menu,ev)
     menu.showAtMouseEvent(ev);
 }
 
-/**Context menu of all files*/
-function noteOptions(menu:Menu){
+/**Generates the Context menu that is universal to all notes*/
+function noteOptions(menu:Menu, ev:MouseEvent){
+
+    let link = ev.target as HTMLAnchorElement;
+    var path = link?.dataset?.href;
+    var file = app.metadataCache.getFirstLinkpathDest(path,".");
+
+    //Folder note
+    actionItem(menu,"Make Folder Note","folder-root",(e)=>{
+		var folderNoteCore = (window as any).app.plugins.plugins["folder-note-core"] as FolderNoteCore;
+        
+        folderNoteCore.api.createFolderForNote(file).then(
+            ()=>{
+                //Call change event
+                var plugin = (window as any).FNindex as FolderIndexPlugin;
+                plugin.drawTrail();
+            }
+        )
+        
+	})
+    //View file in explorer
+    actionItem(menu,"View in explorer","eye",(e)=>{
+        //Get reveal function
+        var explorer = (app as xApp).internalPlugins.plugins["file-explorer"];
+        new Notice("Core Plugin 'File Explorer' not found")
+		explorer?.instance.revealInFolder(file);
+        
+        
+	})
+	addIcon("testIco","")
+}
+//TODO: Call this function
+/**Generates the Context menu of all the currently opened file*/
+function currentNoteOptions(menu:Menu, ev:MouseEvent){
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
 	setPropItem(menu, "Use custom color","highlight-glyph" , "FN-color","yellowgreen")
     insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","")
-	addIcon("testIco","")
+    //Generate regular options
+    noteOptions(menu, ev)
 }
-
+/**Generates the full context menu of all notes*/
 export function noteMenu(ev:MouseEvent){
     ev.preventDefault(); 
     const menu = new Menu();
-    noteOptions(menu)
+    noteOptions(menu,ev)
     menu.showAtMouseEvent(ev);
 }
 
+/**Generates the full context menu of the current note */
+export function currentNoteMenu(ev:MouseEvent){
+    ev.preventDefault(); 
+    const menu = new Menu();
+    currentNoteOptions(menu,ev)
+    menu.showAtMouseEvent(ev);
+}
+
+/**Generates the Context menu of index links */
 export function linkMenu(ev:MouseEvent){
 	let link = ev.target as HTMLAnchorElement;
     ev.preventDefault(); 
@@ -53,19 +96,8 @@ export function linkMenu(ev:MouseEvent){
 		app.workspace?.openLinkText(link.dataset.href,".",true,
 			{active:true, mode} as OpenViewState)
 	})
-    actionItem(menu,"Make Folder Note","folder-root",(e)=>{
-		var folderNoteCore = (window as any).app.plugins.plugins["folder-note-core"] as FolderNoteCore;
-        var path = link?.dataset?.href;
-        var file = app.metadataCache.getFirstLinkpathDest(path,".");
-        folderNoteCore.api.createFolderForNote(file).then(
-            ()=>{
-                //Call change event
-                var plugin = (window as any).FNindex as FolderIndexPlugin;
-                plugin.drawTrail();
-            }
-        )
-        
-	})
+    noteOptions(menu,ev);
+    
 	
     menu.showAtMouseEvent(ev);
 }

@@ -5,7 +5,7 @@ import {indexData} from "./indexing"
 
 import * as html from "./html"
 import {JSX} from "../../.sharedModules/JSX"
-import {indexMenu,noteMenu} from './contextMenu';
+import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { noteConfig } from './config';
 
 
@@ -70,11 +70,12 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
 
     if (isIndex){
         addIndex(fnDiv,index)
+        el.oncontextmenu=currentNoteMenu; //Set context menu
 	}
 	else
 	{
 		let arrow = trailDiv.createEl("span",{cls:"FN-trail-arrow FN-end-arrow",text:" ↓ "})
-		arrow.oncontextmenu=noteMenu;
+		arrow.oncontextmenu=currentNoteMenu;
 		if(fnColor)
 			arrow.style.setProperty("--text-normal", fnColor);
 	}
