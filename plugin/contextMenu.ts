@@ -26,12 +26,25 @@ export function indexMenu(ev:MouseEvent){
     menu.showAtMouseEvent(ev);
 }
 
+/**Gets the file whose link has generated the context menu */
+function getOptionsTargetFile(ev:MouseEvent){
+    let link = ev.target as HTMLAnchorElement;
+    var path = link?.dataset?.href;
+    //If target is actual link
+    if(path){
+        var file = app.metadataCache.getFirstLinkpathDest(path,".");
+        return file;
+    }
+    else{ //Return current file
+        return app.workspace.getActiveFile();
+    }
+    
+}
+
 /**Generates the Context menu that is universal to all notes*/
 function noteOptions(menu:Menu, ev:MouseEvent){
 
-    let link = ev.target as HTMLAnchorElement;
-    var path = link?.dataset?.href;
-    var file = app.metadataCache.getFirstLinkpathDest(path,".");
+    var file = getOptionsTargetFile(ev)
 
     //Folder note
     actionItem(menu,"Make Folder Note","folder-root",(e)=>{

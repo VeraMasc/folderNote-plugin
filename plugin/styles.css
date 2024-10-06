@@ -35,6 +35,9 @@
   margin: auto 5px;
   color: var(--text-normal);
 }
+.FN-trail-arrow.FN-end-arrow:is(:hover, :active, :focus, :focus-visible) {
+  font-weight: 800;
+}
 
 .FN-trail-scroller:not(:focus) > .FN-trail > .FN-ellipsis:not(:focus, :hover) {
   display: none;

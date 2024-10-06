@@ -46,8 +46,11 @@
     text-align: center;
     white-space: nowrap;
     margin: auto 5px;
-	color:var(--text-normal)
+	color:var(--text-normal);
     
+    &.FN-end-arrow:is(:hover,:active,:focus,:focus-visible){
+        font-weight: 800;
+    }
 }
 %noFocusTrail>.FN-ellipsis:not(:focus,:hover){
     display: none;
