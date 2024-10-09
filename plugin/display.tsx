@@ -1,6 +1,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType } from 'obsidian';
 import * as DOMu from "../../.sharedModules/DOM Utils"
-import FolderIndexPlugin from "./main"
+import FI_Plugin from "./main"
 import {indexData} from "./indexing"
 
 import * as html from "./html"
@@ -17,7 +17,7 @@ import { noteConfig } from './config';
  * @param mode mode of the view
  * @param plugin reference to the plugin
 */
-export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plugin:FolderIndexPlugin){
+export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plugin:FI_Plugin){
 	if(!activeMDView)
 		return;
     const { file } = activeMDView;

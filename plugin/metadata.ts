@@ -1,9 +1,9 @@
 import {TAbstractFile,MetadataCache} from 'obsidian';
-import FolderIndexPlugin from "./main"
+import FI_Plugin from "./main"
 import {noteConfig} from "./config"
 
 /** Marca el índice como uno de los archivos a los que conecta este archivo */
-export function setLinkToIndex(file:TAbstractFile, plugin:FolderIndexPlugin){
+export function setLinkToIndex(file:TAbstractFile, plugin:FI_Plugin){
     //console.log(file.path)
     var resolved = app.metadataCache.resolvedLinks[file.path];
     if(!resolved)
@@ -27,7 +27,5 @@ export function setLinkToIndex(file:TAbstractFile, plugin:FolderIndexPlugin){
         return; //Avoid loops with itself
     resolved[indexPath] ??=1;
         
-    
-    // file.parent
     
 }

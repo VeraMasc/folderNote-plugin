@@ -1,16 +1,18 @@
-import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events, Notice} from "obsidian";
+import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events, Notice, TFolder} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
 import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
-import FolderIndexPlugin from "./main"
+import FI_Plugin from "./main"
 import {xApp} from "./main"
 
 /**Interface of the FolderNoteCore plugin */
 export type FolderNoteCore = Plugin & 
     {
         api:{
+            /**Converts the current note into a folder with that note inside as index */
             createFolderForNote:(note:TFile)=>Promise<any>
+            CreateFolderNote:(folder:TFolder, val:boolean) => Promise<any>
         }
     };
 
@@ -32,11 +34,11 @@ function getOptionsTargetFile(ev:MouseEvent){
     var path = link?.dataset?.href;
     //If target is actual link
     if(path){
-        var file = app.metadataCache.getFirstLinkpathDest(path,".");
+        var file = this.app.metadataCache.getFirstLinkpathDest(path,".");
         return file;
     }
     else{ //Return current file
-        return app.workspace.getActiveFile();
+        return this.app.workspace.getActiveFile();
     }
     
 }
@@ -53,7 +55,7 @@ function noteOptions(menu:Menu, ev:MouseEvent){
         folderNoteCore.api.createFolderForNote(file).then(
             ()=>{
                 //Call change event
-                var plugin = (window as any).FNindex as FolderIndexPlugin;
+                var plugin = (window as any).FNindex as FI_Plugin;
                 plugin.drawTrail();
             }
         )

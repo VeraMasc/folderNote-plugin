@@ -1,5 +1,5 @@
 import {OpenViewState, App, Editor,TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile} from 'obsidian';
-import FolderIndexPlugin from "./main"
+import FI_Plugin from "./main"
 import {noteConfig} from "./config"
 import {lighten,getLuminance} from "color2k"
 import { linkMenu } from './contextMenu';
@@ -43,9 +43,10 @@ export class indexData{
 	get fullName(){
         return this.name + (this.ext?`.${this.ext}`:'')
     }
-    /**Gets path of the folder containing the file */
+    /**Gets path of the folder containing the file () */
     get folderPath(){
-        return this.folder?.path?.slice(1);
+
+        return this.folder?.path // ?.slice(1);
     }
     /**Gets path of the the file file itself */
     get filePath(){
@@ -167,7 +168,7 @@ export class indexData{
             text = text?.slice(0,15);
         }
         let linkEl:HTMLElement;
-        if(stepNote){
+        if(stepNote){ //Si la step note existe
             linkEl = createEl("a",{cls:"internal-link FN-link",
                 href:link , title:this.name,text, 
 				attr:{
@@ -190,7 +191,7 @@ export class indexData{
                     {active:true, mode} as OpenViewState)
             }
 			linkEl.oncontextmenu=linkMenu;
-        }else{ 
+        }else{ //Si la step note no existe
             linkEl = createEl("a",{cls:"internal-link FN-link",
              attr:{target:"_blank", rel:"noopener",text}, 
             text})
@@ -201,6 +202,7 @@ export class indexData{
             }
 
         }
+        //Has excess overflowing text
         if(extraText)
             linkEl.createEl("span",{cls:"ellipsed", attr:{"data-text":extraText}})
         return linkEl;
@@ -263,9 +265,9 @@ type fileTree= {
 /**Holds the full tree structure of all the cached indexes  */
 export class IndexTree{
     data:fileTree={};
-    plugin:FolderIndexPlugin;
+    plugin:FI_Plugin;
 
-    constructor(plugin:FolderIndexPlugin){
+    constructor(plugin:FI_Plugin){
         this.plugin = plugin;
     }
 

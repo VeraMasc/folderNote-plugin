@@ -7,6 +7,24 @@ import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
 
+
+
+// Remember to rename these classes and interfaces!
+
+interface MyPluginSettings {
+	refreshOnNoteSave: boolean;
+	refreshOnNoteChange:boolean;
+	RootIndex:string;
+	
+}
+
+const DEFAULT_SETTINGS: MyPluginSettings = {
+	refreshOnNoteSave: true,
+	refreshOnNoteChange:true,
+	RootIndex:null,
+
+}
+
 /**Exposed app interface */
 export interface xApp extends App{
 	commands:any,
@@ -28,23 +46,13 @@ export interface xApp extends App{
 	}
 }
 
-// Remember to rename these classes and interfaces!
-
-interface MyPluginSettings {
-	refreshOnNoteSave: boolean;
-	refreshOnNoteChange:boolean;
-	RootIndex:string;
-	
+//Declare the global variables that the plugin will have access to
+declare global {
+    var app: xApp;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	refreshOnNoteSave: true,
-	refreshOnNoteChange:true,
-	RootIndex:null,
-
-}
-
-export default class FolderIndexPlugin extends Plugin {
+/**Base structure of the Folder note Index plugin*/
+export default class FI_Plugin extends Plugin {
 	declare app:xApp;
 	settings: MyPluginSettings;
 	activeLeafChange:EventRef = undefined;
@@ -67,6 +75,7 @@ export default class FolderIndexPlugin extends Plugin {
 	async onload() {
 		(window as any).FNindex=this;
 		await this.loadSettings();
+		globalThis.app=this.app;
 
 		//Register Blocks
 		for(let block of Object.values(Blocks)){
@@ -256,9 +265,9 @@ class SampleModal extends Modal {
 }
 
 class SettingTab extends PluginSettingTab {
-	plugin: FolderIndexPlugin;
+	plugin: FI_Plugin;
 
-	constructor(app: App, plugin: FolderIndexPlugin) {
+	constructor(app: App, plugin: FI_Plugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

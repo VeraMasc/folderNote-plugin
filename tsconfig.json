@@ -3,7 +3,6 @@
     "paths": { "tslib": ["node_modules/tslib/tslib.d.ts"] },
     "baseUrl": "../",
     "inlineSourceMap": true,
-    "watch": false,
     "module": "ESNext",
     "target": "ESNext",
     "allowJs": true,

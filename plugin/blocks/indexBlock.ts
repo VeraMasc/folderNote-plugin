@@ -2,7 +2,7 @@ import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 
 import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
 import * as Display from '../display';
-import FolderIndexPlugin from "../main";
+import FI_Plugin from "../main";
 import { indexData } from '../indexing';
 
 /**Block identifier */
@@ -10,7 +10,7 @@ export const Id = "index";
 
 
 /** Generates the block from the source data */
-export async function generateBlock(source, el, ctx:MarkdownPostProcessorContext,plugin:FolderIndexPlugin){
+export async function generateBlock(source, el, ctx:MarkdownPostProcessorContext,plugin:FI_Plugin){
 	try{
 		//Get Config
 		let config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};
