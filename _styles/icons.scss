@@ -1,0 +1,9 @@
+.alx-folder-with-note[data-icon-type=svg]> .nav-folder-title > .nav-folder-title-content::before{
+    background-color: var(--text-faint)!important;
+    background-image: none !important;
+    mask: var(--alx-folder-icon-url);
+    -webkit-mask: var(--alx-folder-icon-url);
+}
+
+
+//.alx-folder-icons .nav-folder.alx-folder-with-note[data-icon][data-icon-type=svg] > .nav-folder-title > .nav-folder-title-content::before

@@ -7,4 +7,3 @@
 - Improve Header Index block
   - Add new configuration params
   - Add context menu?
-

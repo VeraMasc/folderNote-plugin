@@ -248,6 +248,13 @@ ul.FN-indexList::-webkit-scrollbar {
   content: attr(data-text);
 }
 
+.alx-folder-with-note[data-icon-type=svg] > .nav-folder-title > .nav-folder-title-content::before {
+  background-color: var(--text-faint) !important;
+  background-image: none !important;
+  mask: var(--alx-folder-icon-url);
+  -webkit-mask: var(--alx-folder-icon-url);
+}
+
 .FN-div, .FN-div-block {
   max-width: 100%;
   margin-bottom: 10px;
