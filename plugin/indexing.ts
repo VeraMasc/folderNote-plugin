@@ -1,4 +1,4 @@
-import {OpenViewState, App, Editor,TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile} from 'obsidian';
+import {OpenViewState, App, Editor,TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile, TextFileView} from 'obsidian';
 import FI_Plugin from "./main"
 import {noteConfig} from "./config"
 import {lighten,getLuminance} from "color2k"
@@ -187,7 +187,8 @@ export class indexData{
             linkEl.onclick=(e)=>{
                 e.preventDefault()
                 let mode =(app.vault as any).getConfig("defaultViewMode");
-                app.workspace.activeLeaf?.openFile(stepNote,
+                let view = app.workspace.getActiveViewOfType(TextFileView)
+                view?.leaf?.openFile(stepNote,
                     {active:true, mode} as OpenViewState)
             }
 			linkEl.oncontextmenu=linkMenu;

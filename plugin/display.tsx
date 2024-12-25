@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType,MarkdownPostProcessorContext } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from 'obsidian';
 import * as DOMu from "../../.sharedModules/DOM Utils"
 import FI_Plugin from "./main"
 import {indexData} from "./indexing"
@@ -8,6 +8,7 @@ import {JSX} from "../../.sharedModules/JSX"
 import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { noteConfig } from './config';
 import { getContextOf } from './blocks/BlockUtils';
+import { headerBlock, indexBlock } from './blocks/Blocks';
 
 
 //TODO: Mejorar y documentar proceso de renderizado
@@ -47,9 +48,12 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
     let contDiv = createContentDiv(activeMDView,mode,note)
-
+    console.log(contDiv);
     if(listContent && contDiv){
-        console.log(getContextOf(note.file));
+        let ctx = getContextOf(note.file);
+        console.log(ctx);
+        let div = contDiv.createDiv({cls:"block-language-headerIndex"});
+        headerBlock.generateBlock("", div, ctx, plugin)
     }
 
     // Trail
@@ -337,7 +341,8 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
 
     //Create new content div
 	const contDiv = createDiv({
-        cls: `FN-content`,
+        cls: `FN-content markdown-rendered`,
+        attr:{contenteditable:false},
         
     });
 	
@@ -350,8 +355,36 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
     }
     else {
         
-        //Insert Content Div right before content
+        //Insert Content Div right before content in a non editable section
 		view.querySelector("div.cm-contentContainer")?.before(contDiv);
+        let testSpan = createDiv({
+            cls: `FN-content markdown-rendered`,
+            attr:{contenteditable:false},
+            text:"test"
+            
+        })
+
+        //Todo: Optimize
+        contDiv.querySelectorAll(".internal-link").forEach( (link:HTMLElement) => {
+            link.onclick = (e)=>{
+                e.preventDefault()
+                let mode =(app.vault as any).getConfig("defaultViewMode");
+                let target = e.target as HTMLAnchorElement;
+                let path = target?.href;
+                let current = activeMDView.file;
+                let linkFile = (app.metadataCache).getFirstLinkpathDest(path,current.path);
+                if(target){
+                    
+                    app.workspace.activeLeaf?.openFile(linkFile,
+                        {active:true, mode} as OpenViewState);
+                }
+                
+            };
+        },)
+
+        
+        
+        
     }
 	contDiv.empty();
 	return contDiv;

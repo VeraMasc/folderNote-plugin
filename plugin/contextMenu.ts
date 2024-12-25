@@ -5,6 +5,7 @@ import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
 import FI_Plugin from "./main"
 import {xApp} from "./main"
+import { getRandomColor } from "./config";
 
 /**Interface of the FolderNoteCore plugin */
 export type FolderNoteCore = Plugin & 
@@ -78,7 +79,7 @@ function currentNoteOptions(menu:Menu, ev:MouseEvent){
     //Sticky index
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
     //Custom link color
-	setPropItem(menu, "Use custom color","highlight-glyph" , "FN-color","yellowgreen")
+	setPropItemFunction(menu, "Use custom color","highlight-glyph" , "FN-color",getRandomColor)
     //Insert header index
     insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","")
     //Generate regular options
@@ -131,9 +132,21 @@ function setPropItem(menu:Menu,title:string, icon:obsidianIcons, prop:string, va
 			var propDict = {};
 			propDict[prop] = value;
 			view?.["metadataEditor"].insertProperties(propDict)
-            // let data = new fmFromView(view);
-            // data.setProp(prop,value);
-			// data.editorSave();
+            }
+        )
+    );
+}
+
+/**Same as {@link setPropItem} but sets the value through a function */
+function setPropItemFunction(menu:Menu,title:string, icon:obsidianIcons, prop:string, valueFunc:(e?:MouseEvent)=>any){
+    menu.addItem((item) =>
+        item.setTitle(title)
+        .setIcon(icon)
+        .onClick((e:MouseEvent) => {
+			let view = app.workspace.getActiveViewOfType(MarkdownView)
+			var propDict = {};
+			propDict[prop] = valueFunc(e);
+			view?.["metadataEditor"].insertProperties(propDict)
             }
         )
     );
