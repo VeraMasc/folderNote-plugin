@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType,MarkdownPostProcessorContext } from 'obsidian';
 import * as DOMu from "../../.sharedModules/DOM Utils"
 import FI_Plugin from "./main"
 import {indexData} from "./indexing"
@@ -7,12 +7,13 @@ import * as html from "./html"
 import {JSX} from "../../.sharedModules/JSX"
 import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { noteConfig } from './config';
+import { getContextOf } from './blocks/BlockUtils';
 
 
 //TODO: Mejorar y documentar proceso de renderizado
 
 
-/**Renders the path train 
+/**Renders the path trail and and additional elements
  * @param activeMDView what view we need to draw the trail on
  * @param mode mode of the view
  * @param plugin reference to the plugin
@@ -26,7 +27,7 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     let note = plugin.map.getNode(file)
 
 	let {isIndex} = note;
-	let {ignore,color:fnColor}= note.config;
+	let {ignore,color:fnColor,listContent}= note.config;
     const { basename,parent } = file;
 
 
@@ -45,7 +46,11 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
 
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
-    createContentDiv(activeMDView,mode,note) //! Remove when finished testing
+    let contDiv = createContentDiv(activeMDView,mode,note)
+
+    if(listContent && contDiv){
+        console.log(getContextOf(note.file));
+    }
 
     // Trail
 	let trailScroll = fnDiv.createEl('div',{cls: "FN-trail-scroller",attr:{tabindex:0}})
@@ -340,7 +345,7 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
     if (mode === "preview") {
        
         //Insert last in note header (after title and metadata)
-        view.querySelector("div.markdown-preview-sizer>.mod-header").appendChild(contDiv);
+        view.querySelector("div.markdown-preview-sizer>.mod-header")?.appendChild(contDiv);
         
     }
     else {

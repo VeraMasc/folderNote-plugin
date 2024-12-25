@@ -1,4 +1,6 @@
 export class noteConfig{
+    /**If true, not will render with a header index */
+    listContent:boolean;
     useAsIndex:boolean;
 	/** Ignore this file when displaying an index */
     ignore:boolean;

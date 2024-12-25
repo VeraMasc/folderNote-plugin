@@ -56,7 +56,7 @@ function noteOptions(menu:Menu, ev:MouseEvent){
             ()=>{
                 //Call change event
                 var plugin = (window as any).FNindex as FI_Plugin;
-                plugin.drawTrail();
+                plugin.redrawFN();
             }
         )
         

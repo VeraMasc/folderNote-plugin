@@ -100,7 +100,7 @@ export default class FI_Plugin extends Plugin {
 		app.workspace.onLayoutReady(async () => {
             var _a;
             const noFiles = app.vault.getMarkdownFiles().length;
-			await this.drawTrail()
+			await this.redrawFN()
             // console.warn("Load event")
 			
             this.registerActiveLeafChangeEvent();
@@ -130,7 +130,7 @@ export default class FI_Plugin extends Plugin {
 				await save();
 				if (this.settings.refreshOnNoteSave) {
 					
-					await this.drawTrail()
+					await this.redrawFN()
 				}
 			};
 		}
@@ -141,7 +141,8 @@ export default class FI_Plugin extends Plugin {
 				this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
 				this.injectors[block?.Id+'']=block;
 			}catch(err){
-				console.error("Blocks Plugin Error: ",err)
+				console.log({err})
+				console.warn("Blocks Plugin Error: ",err)
 			}
 		}
 
@@ -152,13 +153,15 @@ export default class FI_Plugin extends Plugin {
 		//this.registerEditorSuggest(new Suggest.TestSuggestions(this)) 
 	}
 
-	onunload() {
+	async onunload() {
 		this.trailResizeObs.disconnect()
 		//Unregister Blocks
 		for(let block of Object.values(Blocks)){
 			if(!block?.Id) continue;
 			try{
+				//TODO: Fix post processors not unregistering
 				MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessors[block?.Id]);
+				console.warn(`Unregistered block: ${block?.Id}`)
 			}catch(err){
 				console.error("Blocks Plugin Error: ",err)
 			}
@@ -183,7 +186,7 @@ export default class FI_Plugin extends Plugin {
 	registerActiveLeafChangeEvent() {
 		var func = async () => {
 			if (this.settings.refreshOnNoteChange) {
-				await this.drawTrail();
+				await this.redrawFN();
 				console.warn("Refresh event")
 			};
 		};
@@ -196,7 +199,7 @@ export default class FI_Plugin extends Plugin {
 	registerLayoutChangeEvent() {
         this.layoutChange = this.app.workspace.on("layout-change", async () => {
             //TODO: Make this handle config changes
-			await this.drawTrail();
+			await this.redrawFN();
 			console.warn("Layout event")
         });
         this.registerEvent(this.layoutChange);
@@ -210,7 +213,7 @@ export default class FI_Plugin extends Plugin {
 			var view = Display.getActiveMDView();
 			if(view.activeMDView.file == file){
 				//console.warn("Active File modified")
-				await this.drawTrail();
+				await this.redrawFN();
 			}
         });
         this.registerEvent(this.metaChange);
@@ -231,8 +234,8 @@ export default class FI_Plugin extends Plugin {
         this.registerEvent(this.metaDel);
     }
 
-	/**Draws the path trail */
-	async drawTrail() {
+	/**Redraws the Folder Note elements */
+	async redrawFN() {
 		
 		try {
 			const { RootIndexList=[], settings,  app } = this;
@@ -307,7 +310,7 @@ class SettingTab extends PluginSettingTab {
 					this.plugin.settings.RootIndex = value;
 					this.plugin.parseRootIndex();
 					await this.plugin.saveSettings();
-					await this.plugin.drawTrail();
+					await this.plugin.redrawFN();
 				}));
 	}
 }
