@@ -199,7 +199,8 @@ export class indexData{
             linkEl.ondblclick=(e)=>{
                 e.preventDefault()
                 let mode =(app.vault as any).getConfig("defaultViewMode");
-                app.workspace.openLinkText(this.folder.path+"/"+this.folder.name,".",false,mode)
+                let state = {mode} as OpenViewState;
+                app.workspace.openLinkText(this.folder.path+"/"+this.folder.name,".",false,state)
             }
 
         }

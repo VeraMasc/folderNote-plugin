@@ -54,8 +54,43 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
         console.log(ctx);
         let div = contDiv.createDiv({cls:"block-language-headerIndex"});
         headerBlock.generateBlock("", div, ctx, plugin)
-    }
 
+        //Todo: Optimize
+        if(activeMDView.getMode()=='source'){
+            contDiv.querySelectorAll(".internal-link").forEach( (link:HTMLElement) => {
+                console.log(link);
+                link.onclick = (e)=>{
+                    e.preventDefault()
+                    let mode =(app.vault as any).getConfig("defaultViewMode");
+                    let target = e.target as HTMLAnchorElement;
+                    let path = target?.getAttribute("data-href");
+                    let match = path.match(/^(.*)#(.*?)$/)
+                    let heading = match?.[2];
+                    let filepath = match?.[1]; //Path without the heading subpath
+                    let current = activeMDView.file;
+                    debugger;
+
+                    
+                    let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);
+
+                    if(target){
+                        
+                        app.workspace.activeLeaf?.openFile(linkFile,
+                            {active:true, 
+                                mode,
+                                eState:{
+                                    active: true,
+                                    focus: true,
+                                    subpath: heading,
+                                }
+                            } as OpenViewState
+                        );
+                    }
+                    
+                };
+            },)
+        }
+    }
     // Trail
 	let trailScroll = fnDiv.createEl('div',{cls: "FN-trail-scroller",attr:{tabindex:0}})
     let trailDiv = trailScroll.createEl('span',{cls: "FN-trail"})
@@ -364,24 +399,7 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
             
         })
 
-        //Todo: Optimize
-        contDiv.querySelectorAll(".internal-link").forEach( (link:HTMLElement) => {
-            link.onclick = (e)=>{
-                e.preventDefault()
-                let mode =(app.vault as any).getConfig("defaultViewMode");
-                let target = e.target as HTMLAnchorElement;
-                let path = target?.href;
-                let current = activeMDView.file;
-                let linkFile = (app.metadataCache).getFirstLinkpathDest(path,current.path);
-                if(target){
-                    
-                    app.workspace.activeLeaf?.openFile(linkFile,
-                        {active:true, mode} as OpenViewState);
-                }
-                
-            };
-        },)
-
+        
         
         
         
