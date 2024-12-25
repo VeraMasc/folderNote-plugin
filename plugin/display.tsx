@@ -45,7 +45,7 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
 
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
-
+    createContentDiv(activeMDView,mode,note) //! Remove when finished testing
 
     // Trail
 	let trailScroll = fnDiv.createEl('div',{cls: "FN-trail-scroller",attr:{tabindex:0}})
@@ -121,8 +121,8 @@ export function trailOverflow(elements,observer){
 }
 
 
-
-function* iterateCenter(arr){
+/**Iterates the array from te center */
+function* iterateCenter(arr:Array<any>){
     let center = Math.ceil(arr.length/2);
 
     let top = arr.slice(center)
@@ -136,7 +136,9 @@ function* iterateCenter(arr){
     }
 
 }
-function* iterateOuter(arr){
+
+/**Iterates the array from both sides */
+function* iterateOuter(arr:Array<any>){
     let center = Math.ceil(arr.length/2);
 
     let top = arr.slice(center)
@@ -276,26 +278,33 @@ export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewMo
 	return { activeMDView,mode};
 }
 
+/**Creates the container for the trail and index */
 function createFNDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fData:indexData){
 	const view = mode === "preview"
 	? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
 	: activeMDView.contentEl.querySelector("div.markdown-source-view");
 
+    //Remove old
 	activeMDView.containerEl?.querySelectorAll(".FN-div")?.forEach((div) =>{ div.remove()});
 
 	const fnDiv = createDiv({
         cls: `FN-div`,
         
     });
+    //Set Css settings
 	if(fData?.config?.isIndex)
         fnDiv.addClass("isIndex")
 	if(fData?.config?.isSticky)
         fnDiv.addClass("isSticky")
+
+    //Set position in view
     if (mode === "preview") {
         view.querySelector("div.markdown-preview-sizer").before(fnDiv);
         
     }
     else {
+
+        //Handle gutter (If it exists)
         const cmGutter = view.querySelector("div.cm-gutters") as HTMLElement;
         if (cmGutter) {
             requestAnimationFrame(() => {
@@ -305,10 +314,42 @@ function createFNDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fData:i
             });
         }
         
+        //Insert FN Div as first element
 		view.querySelector("div.cm-sizer")?.firstChild?.before(fnDiv);
     }
 	fnDiv.empty();
 	return fnDiv;
+}
+
+/**Creates the div to display internal content of the note, like a header index */
+function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fData:indexData){
+	const view = mode === "preview"
+	? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
+	: activeMDView.contentEl.querySelector("div.markdown-source-view");
+
+    //Remove old
+	activeMDView.containerEl?.querySelectorAll(".FN-content")?.forEach((div) =>{ div.remove()});
+
+    //Create new content div
+	const contDiv = createDiv({
+        cls: `FN-content`,
+        
+    });
+	
+    //Set position in view
+    if (mode === "preview") {
+       
+        //Insert last in note header (after title and metadata)
+        view.querySelector("div.markdown-preview-sizer>.mod-header").appendChild(contDiv);
+        
+    }
+    else {
+        
+        //Insert Content Div right before content
+		view.querySelector("div.cm-contentContainer")?.before(contDiv);
+    }
+	contDiv.empty();
+	return contDiv;
 }
 
 

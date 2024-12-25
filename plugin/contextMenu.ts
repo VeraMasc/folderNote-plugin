@@ -72,11 +72,14 @@ function noteOptions(menu:Menu, ev:MouseEvent){
 	})
 	addIcon("testIco","")
 }
-//TODO: Call this function
+
 /**Generates the Context menu of all the currently opened file*/
 function currentNoteOptions(menu:Menu, ev:MouseEvent){
+    //Sticky index
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
+    //Custom link color
 	setPropItem(menu, "Use custom color","highlight-glyph" , "FN-color","yellowgreen")
+    //Insert header index
     insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","")
     //Generate regular options
     noteOptions(menu, ev)
@@ -150,10 +153,17 @@ function insertBlockItem(menu:Menu,title:string, icon:obsidianIcons, blockType:B
     );
 }
 
+/**Creates a context menu item that performs an action 
+ * @param menu Menu that will hold the item
+ * @param title Display text of the item
+ * @param icon Display icon of the item
+ * @param onclick Action to trigger on clicking the item
+*/
 function actionItem(menu:Menu,title:string, icon:obsidianIcons, onclick:(ev?:MouseEvent) => any){
     menu.addItem((item) =>
         item.setTitle(title)
         .setIcon(icon)
         .onClick(onclick)
+        //TODO: add option for expanding submenus on hover
     );
 }

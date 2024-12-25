@@ -95,7 +95,9 @@ function getSubheaders(ctx:Context,el:HTMLElement,data:CachedMetadata,from?:stri
 /**Config parameters of the code block */
 export type config={
 	depth,
+	/** Block is relative  */ //TODO:Relative to what???
 	relative,
+	/**What header to use as root */
 	from,
 	toTop
 }

@@ -10,7 +10,7 @@ export const Id = "index";
 
 
 /** Generates the block from the source data */
-export async function generateBlock(source, el, ctx:MarkdownPostProcessorContext,plugin:FI_Plugin){
+export async function generateBlock(source:string, el, ctx:MarkdownPostProcessorContext, plugin:FI_Plugin){
 	try{
 		//Get Config
 		let config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};
