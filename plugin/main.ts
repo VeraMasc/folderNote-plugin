@@ -187,7 +187,7 @@ export default class FI_Plugin extends Plugin {
 		var func = async () => {
 			if (this.settings.refreshOnNoteChange) {
 				await this.redrawFN();
-				console.warn("Refresh event")
+				//console.warn("Refresh event")
 			};
 		};
 		this.activeLeafChange = this.app.workspace.on("active-leaf-change", func);
@@ -200,7 +200,7 @@ export default class FI_Plugin extends Plugin {
         this.layoutChange = this.app.workspace.on("layout-change", async () => {
             //TODO: Make this handle config changes
 			await this.redrawFN();
-			console.warn("Layout event")
+			//console.warn("Layout event")
         });
         this.registerEvent(this.layoutChange);
     }
@@ -218,7 +218,7 @@ export default class FI_Plugin extends Plugin {
         });
         this.registerEvent(this.metaChange);
 
-		this.metaResolve = this.app.metadataCache.on("resolve", (data)=>(console.log("res"),setLinkToIndex(data,this)))
+		this.metaResolve = this.app.metadataCache.on("resolve", (data)=>(setLinkToIndex(data,this)))
 		this.registerEvent(this.metaResolve);
 
 		

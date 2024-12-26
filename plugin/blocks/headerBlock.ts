@@ -106,7 +106,7 @@ export type config={
 function getMetaData(ctx:Context){
 	let file = app.vault.getAbstractFileByPath(ctx.sourcePath) as TFile;
 	let cache = app.metadataCache.getFileCache(file);
-	console.log({cache,ctx})
+	// console.log({cache,ctx})
 	return cache;
 }
 

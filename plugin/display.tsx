@@ -48,17 +48,14 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
     let contDiv = createContentDiv(activeMDView,mode,note)
-    console.log(contDiv);
     if(listContent && contDiv){
         let ctx = getContextOf(note.file);
-        console.log(ctx);
         let div = contDiv.createDiv({cls:"block-language-headerIndex"});
         headerBlock.generateBlock("", div, ctx, plugin)
 
         //Todo: Optimize
         if(activeMDView.getMode()=='source'){
             contDiv.querySelectorAll(".internal-link").forEach( (link:HTMLElement) => {
-                console.log(link);
                 link.onclick = (e)=>{
                     e.preventDefault()
                     let mode =(app.vault as any).getConfig("defaultViewMode");
@@ -68,7 +65,6 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
                     let heading = match?.[2];
                     let filepath = match?.[1]; //Path without the heading subpath
                     let current = activeMDView.file;
-                    debugger;
 
                     
                     let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);

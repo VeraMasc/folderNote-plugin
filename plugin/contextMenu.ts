@@ -111,7 +111,6 @@ export function linkMenu(ev:MouseEvent){
 		if(!link?.dataset?.href)
 			return;
 		let mode =(app.vault as any).getConfig("defaultViewMode");
-		console.log({e,link})
 		app.workspace?.openLinkText(link.dataset.href,".",true,
 			{active:true, mode} as OpenViewState)
 	})
@@ -158,7 +157,6 @@ function insertBlockItem(menu:Menu,title:string, icon:obsidianIcons, blockType:B
         item.setTitle(title)
         .setIcon(icon)
         .onClick(() => {
-                console.log(blockType);
                 let view = app.workspace.getActiveViewOfType(MarkdownView)
                 view.editor.replaceSelection(`\`\`\`${blockType}\n${content}\n\`\`\``)
             }
