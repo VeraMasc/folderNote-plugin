@@ -1,9 +1,10 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
-import { MarkdownPostProcessorContext, TFile ,CachedMetadata, MarkdownView,Component, Plugin} from "obsidian";
+import { MarkdownPostProcessorContext, TFile ,CachedMetadata, MarkdownView,Component, Plugin, OpenViewState} from "obsidian";
 
 export const Id = "headerIndex";
 
 import {PPContext as Context }from "../../../.sharedModules/obsidianUtils"
+import { getActiveMDView } from "../display";
 
 /**Block Markdown processor */
 export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin){
@@ -21,11 +22,15 @@ export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin)
 /**Renders the content of the block */
 function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: Context,plugin:Plugin){
 	let {headings} =data;
-	let {from,relative}=config;
+	let {from,relative, excludeRoot}=config;
 	if(relative||from){
 		headings=getSubheaders(ctx,el,data,from||null)
 	}
-
+	
+	if(excludeRoot && headings?.length){
+		headings.shift()//Remove excess root
+	}
+	
 	el.parentElement?.addClass("compactBlock");
 	let depth = (config.depth && Number.parseInt(config.depth)) 
 		|| 4;
@@ -42,14 +47,12 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 		let link = line.createEl("a",{href:"#"+heading,cls:"internal-link",text:heading,
 			attr:{target:"_blank",rel:"noopener","data-href":"#"+heading}});
 		
-		
+		if(config.customLinkEv){
+			link.onclick = onHeaderLinkClick(); //It doesn't trigger otherwise
+		}
 	}
 	
-	// if(config.toTop){
-	// 	console.warn("toTop")
-	// 	let leaf = app.workspace.getActiveViewOfType(MarkdownView);
-	// 	leaf.contentEl.querySelectorAll(".ContentBlock-toTop").forEach(e =>e.remove() );
-	// 	let topEl =createSpan({text:"toTop",cls:"ContentBlock-toTop",attr:{style:"position:sticky; top:50px;"}});
+	
 
 	// 	plugin.registerDomEvent(el as HTMLElement,"",(()=>console.log("loaded",el.parentElement))),
 	// 	topEl.insertAfter(el);
@@ -94,12 +97,15 @@ function getSubheaders(ctx:Context,el:HTMLElement,data:CachedMetadata,from?:stri
 
 /**Config parameters of the code block */
 export type config={
-	depth,
+	depth?:string,
 	/** Block is relative  */ //TODO:Relative to what???
-	relative,
+	relative?,
 	/**What header to use as root */
-	from,
-	toTop
+	from?:string,
+	/**If root marked with {@link config.from} should be omitted */
+	excludeRoot?:boolean,
+	/**Overrides the default click event in case it's blocked */
+	customLinkEv?:boolean,
 }
 
 /**Gets the metadata of the current file */
@@ -112,4 +118,37 @@ function getMetaData(ctx:Context){
 
 function getToIndex(el:HTMLElement){
 	// app.workspace.
+}
+
+/**Replaces the default link click event in the cases it doesn't work naturally */
+export function onHeaderLinkClick(){
+	return (e:MouseEvent)=>{
+		e.preventDefault()
+		let mode =(app.vault as any).getConfig("defaultViewMode");
+		let target = e.target as HTMLAnchorElement;
+		let path = target?.getAttribute("data-href");
+		let match = path.match(/^(.*)#(.*?)$/)
+		let heading = match?.[2];
+		let filepath = match?.[1]; //Path without the heading subpath
+		let activeMDView:MarkdownView = getActiveMDView()?.activeMDView;
+		let current = activeMDView.file;
+
+		
+		let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);
+
+		if(target){
+			
+			app.workspace.activeLeaf?.openFile(linkFile,
+				{active:true, 
+					mode,
+					eState:{
+						active: true,
+						focus: true,
+						subpath: heading,
+					}
+				} as OpenViewState
+			);
+		}
+	}					
+					
 }

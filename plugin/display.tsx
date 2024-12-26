@@ -9,6 +9,7 @@ import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { noteConfig } from './config';
 import { getContextOf } from './blocks/BlockUtils';
 import { headerBlock, indexBlock } from './blocks/Blocks';
+import { onHeaderLinkClick } from './blocks/headerBlock';
 
 
 //TODO: Mejorar y documentar proceso de renderizado
@@ -51,41 +52,9 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     if(listContent && contDiv){
         let ctx = getContextOf(note.file);
         let div = contDiv.createDiv({cls:"block-language-headerIndex"});
-        headerBlock.generateBlock("", div, ctx, plugin)
+        headerBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
 
-        //Todo: Optimize
-        if(activeMDView.getMode()=='source'){
-            contDiv.querySelectorAll(".internal-link").forEach( (link:HTMLElement) => {
-                link.onclick = (e)=>{
-                    e.preventDefault()
-                    let mode =(app.vault as any).getConfig("defaultViewMode");
-                    let target = e.target as HTMLAnchorElement;
-                    let path = target?.getAttribute("data-href");
-                    let match = path.match(/^(.*)#(.*?)$/)
-                    let heading = match?.[2];
-                    let filepath = match?.[1]; //Path without the heading subpath
-                    let current = activeMDView.file;
-
-                    
-                    let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);
-
-                    if(target){
-                        
-                        app.workspace.activeLeaf?.openFile(linkFile,
-                            {active:true, 
-                                mode,
-                                eState:{
-                                    active: true,
-                                    focus: true,
-                                    subpath: heading,
-                                }
-                            } as OpenViewState
-                        );
-                    }
-                    
-                };
-            },)
-        }
+        
     }
     // Trail
 	let trailScroll = fnDiv.createEl('div',{cls: "FN-trail-scroller",attr:{tabindex:0}})
@@ -287,7 +256,6 @@ export function addIndex(fnDiv:HTMLElement,indexData:indexData){
     let addNote =indexBottom.createEl("span",{cls:"FN-icon FN-newNote",attr:{tabindex:0}})
     addNote.innerHTML = html.newNote_icon;
 	addNote.ondblclick = (ev:MouseEvent)=>{
-        //TODO: this.app.workspace.openLinkText("Archivo/Biblioteca/Ejercicios/Ejercicios",".")
 		
 		(app as any).commands.executeCommandById("file-explorer:new-file");
     }
@@ -395,8 +363,6 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
             
         })
 
-        
-        
         
         
     }
