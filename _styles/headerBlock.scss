@@ -45,6 +45,9 @@
         
         >li{
             margin-inline-start: 1.25em; //Do not indent too much
+            &.no-indent{ //If it doesn't have
+                margin-inline-start: 0;
+            }
         }
 
         li.noMarker{

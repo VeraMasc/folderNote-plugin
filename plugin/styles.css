@@ -355,6 +355,9 @@ ul.FN-indexList::-webkit-scrollbar {
 .block-language-headerIndex ol > li {
   margin-inline-start: 1.25em;
 }
+.block-language-headerIndex ol > li.no-indent {
+  margin-inline-start: 0;
+}
 .block-language-headerIndex ol li.noMarker::marker {
   list-style: none;
   visibility: hidden;

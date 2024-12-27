@@ -35,11 +35,12 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 	let depth = (config.depth && Number.parseInt(config.depth)) 
 		|| 4;
 	let list = [el.createEl("ol",{cls:"noteContents"})]
-	let line:HTMLElement|null = null;
+	let line:HTMLLIElement|null = null;
+
 	for(let head of headings){
 		let {level,heading} =head;
 
-		if(depth && depth<level)
+		if(depth && depth<level)//Limit depth
 			continue;
 		
 		line = getLine(level,list,line)
@@ -52,6 +53,14 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 		}
 	}
 	
+	//Remove unnecessary indentation
+	let element:Element= list[0];
+	while(element?.children.length==1 && element.firstElementChild.tagName=="LI"){
+		element.firstElementChild.addClass("no-indent")
+		element = element?.firstElementChild?.firstElementChild;
+	}
+		
+	
 	
 
 	// 	plugin.registerDomEvent(el as HTMLElement,"",(()=>console.log("loaded",el.parentElement))),
@@ -60,22 +69,26 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 	// }
 }
 
-/**Generates the specific line of the index block */
-function getLine(level:number,list:Array<HTMLElement>,line:HTMLElement|null){
-
-	while(level > list.length){
+/**Generates the specific line of the header block 
+ * @param level Current level
+ * @param list Lists the parent <ol> of the new line
+ * @param line Previous <li> generated (not nested)
+*/
+function getLine(level:number,list:Array<HTMLOListElement>,line:HTMLLIElement|null){
+	while(level > list.length){ //Loop to generate nested lines
 		let noMarker = level > list.length?"noMarker":"";
 		line ??= list.last().createEl("li",{cls:`header-level:${list.length} ${noMarker}`})
-		let ol;
-		list.push( ol=line.createEl("ol"));
-		line=null;		
+		list.push(line.createEl("ol"));
+		line=null; //This allows for depth increases > 1. (the while loops)
 	}
-	while(level < list.length){
+	while(level < list.length){ //Undo nesting when finished
 		list.pop();
 	}
 
 	return list.last().createEl("li",{cls:"header-level:"+level});
 }
+
+
 /**Obtains headers and subheaders of the given file
  * @param from Header to use as root for the index
 */
