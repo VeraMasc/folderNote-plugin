@@ -274,11 +274,29 @@ ul.FN-indexList::-webkit-scrollbar {
   width: fit-content;
   padding: 5px 15px;
   border-width: 2px;
-  border-color: var(--text-faint);
-  border-bottom-style: solid;
+  --HI-color: var(--h1-color);
+  border-color: var(--HI-color);
   border-left-style: solid;
   background-color: var(--background-secondary);
   border-radius: 15px;
+}
+.block-language-headerIndex[h-depth="1"] {
+  --HI-color:var(--h1-color);
+}
+.block-language-headerIndex[h-depth="2"] {
+  --HI-color:var(--h2-color);
+}
+.block-language-headerIndex[h-depth="3"] {
+  --HI-color:var(--h3-color);
+}
+.block-language-headerIndex[h-depth="4"] {
+  --HI-color:var(--h4-color);
+}
+.block-language-headerIndex[h-depth="5"] {
+  --HI-color:var(--h5-color);
+}
+.block-language-headerIndex[h-depth="6"] {
+  --HI-color:var(--h6-color);
 }
 .block-language-headerIndex ol > .header-level\:1 {
   font-size: 18px;

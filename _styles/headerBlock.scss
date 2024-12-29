@@ -12,13 +12,18 @@
     width: fit-content;
     padding: 5px 15px;
     border-width: 2px;
-    border-color: var(--text-faint);
-    border-bottom-style: solid;
+    --HI-color: var(--h1-color);
+    border-color: var(--HI-color);
+    // border-bottom-style: solid;
     border-left-style: solid;
     background-color: var(--background-secondary);
     border-radius: 15px;
 
-    
+    @for $i from 1 through 6 {
+        &[h-depth="#{$i}"]{
+            --HI-color:var(--h#{$i}-color);;
+        }
+    }
 
     ol{
         

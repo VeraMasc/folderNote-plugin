@@ -54,13 +54,18 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 	}
 	
 	//Remove unnecessary indentation
-	let element:Element= list[0];
-	while(element?.children.length==1 && element.firstElementChild.tagName=="LI"){
-		element.firstElementChild.addClass("no-indent")
+	let element:Element= list[0].firstElementChild;
+	var count=1;
+	while(element?.children.length==1 && element.firstElementChild.tagName=="OL"){
+		element.addClass("no-indent")
 		element = element?.firstElementChild?.firstElementChild;
+		count++;
 	}
 		
-	
+	//Depth based border color
+	if(count>1){
+		el.setAttribute("h-depth", count+'');
+	}
 	
 
 	// 	plugin.registerDomEvent(el as HTMLElement,"",(()=>console.log("loaded",el.parentElement))),
