@@ -37,7 +37,8 @@ function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: C
 	let list = [el.createEl("ol",{cls:"noteContents"})]
 	let line:HTMLLIElement|null = null;
 
-	for(let head of headings){
+
+	for(let head of headings ?? []){
 		let {level,heading} =head;
 
 		if(depth && depth<level)//Limit depth
