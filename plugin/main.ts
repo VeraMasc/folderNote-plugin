@@ -211,7 +211,7 @@ export default class FI_Plugin extends Plugin {
 			//console.warn("File modified")
 			this.map.refreshNode(file)
 			var view = Display.getActiveMDView();
-			if(view.activeMDView.file == file){
+			if(view.activeMDView?.file == file){
 				//console.warn("Active File modified")
 				await this.redrawFN();
 			}

@@ -21,6 +21,7 @@ export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin)
 
 /**Renders the content of the block */
 function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: Context,plugin:Plugin){
+	data ??= {headings:[]}; //If no cached data
 	let {headings} =data;
 	let {from,relative, excludeRoot}=config;
 	if(relative||from){
@@ -150,7 +151,7 @@ export function onHeaderLinkClick(){
 		let heading = match?.[2];
 		let filepath = match?.[1]; //Path without the heading subpath
 		let activeMDView:MarkdownView = getActiveMDView()?.activeMDView;
-		let current = activeMDView.file;
+		let current = activeMDView?.file;
 
 		
 		let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);
