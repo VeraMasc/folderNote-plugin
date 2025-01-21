@@ -26,7 +26,7 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     const { file } = activeMDView;
 
   
-    let note = plugin.map.getNode(file)
+    let note = plugin.tree.getNode(file)
 
 	let {isIndex} = note;
 	let {ignore,color:fnColor,listContent}= note.config;
@@ -195,7 +195,7 @@ export function addIndex(fnDiv:HTMLElement,indexData:indexData){
     let {config} = indexData;
     const indexEl = fnDiv.createEl("details",{
         cls: `FN-index` + (config.expand?" isExpanded":""),
-        attr:{open: config.forceOpen==true||IndexOpen||null}
+        attr:{open: config.forceOpen||IndexOpen||null}
     }); 
     
     const indexSum = indexEl.createEl("summary",{
@@ -370,5 +370,5 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
 	return contDiv;
 }
 
-
-export let IndexOpen =false;
+/**Toggles if indexes should be open by default */
+export let IndexOpen =true;

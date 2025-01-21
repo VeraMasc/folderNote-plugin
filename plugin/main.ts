@@ -63,7 +63,8 @@ export default class FI_Plugin extends Plugin {
 	metaInit= undefined;
 	metaDel = undefined;
 	RootIndexList:Array<string>=[];
-	map:IndexTree;
+	/**Tree of all indexes */
+	tree:IndexTree;
 	trailResizeObs:ResizeObserver;
 	divResizeObs:ResizeObserver;
 	/** Codeblock Injectors */
@@ -71,9 +72,11 @@ export default class FI_Plugin extends Plugin {
 	/** Codeblock Processors */
 	mdProcessors:{}={};
 	editorChange: any;
+	/**Singleton for the plugin */
+	static instance:FI_Plugin;
 
 	async onload() {
-		(window as any).FNindex=this;
+		FI_Plugin.instance = (window as any).FNindex=this;
 		await this.loadSettings();
 		globalThis.app=this.app;
 
@@ -90,7 +93,7 @@ export default class FI_Plugin extends Plugin {
 		
 
 
-		this.map = new IndexTree(this);
+		this.tree = new IndexTree(this);
 		this.trailResizeObs = 
 			new ResizeObserver(Display.trailOverflow);
 
@@ -209,7 +212,7 @@ export default class FI_Plugin extends Plugin {
 		//Evento de archivo modificado
         this.metaChange = this.app.metadataCache.on("changed", async (file) => {
 			//console.warn("File modified")
-			this.map.refreshNode(file)
+			this.tree.refreshNode(file)
 			var view = Display.getActiveMDView();
 			if(view.activeMDView?.file == file){
 				//console.warn("Active File modified")
@@ -229,7 +232,7 @@ export default class FI_Plugin extends Plugin {
 	/**Registers the delete event*/
 	registerMetaDelEvent() {
         this.metaDel = this.app.metadataCache.on("deleted", async (file) => {
-			this.map.deleteNode(file)
+			this.tree.deleteNode(file)
         });
         this.registerEvent(this.metaDel);
     }

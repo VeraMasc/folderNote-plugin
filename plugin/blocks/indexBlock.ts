@@ -32,7 +32,7 @@ export async function generateBlock(source:string, el, ctx:MarkdownPostProcessor
 		
 		
 		
-		let data = plugin.map.getNodeAt(path)
+		let data = plugin.tree.getNodeAt(path)
 		if (data == null)
 			throw new Error(`No node in path "${path}"`)
 		//Fill according to config

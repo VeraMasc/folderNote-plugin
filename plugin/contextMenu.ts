@@ -7,15 +7,6 @@ import FI_Plugin from "./main"
 import {xApp} from "./main"
 import { getRandomColor } from "./config";
 
-/**Interface of the FolderNoteCore plugin */
-export type FolderNoteCore = Plugin & 
-    {
-        api:{
-            /**Converts the current note into a folder with that note inside as index */
-            createFolderForNote:(note:TFile)=>Promise<any>
-            CreateFolderNote:(folder:TFolder, val:boolean) => Promise<any>
-        }
-    };
 
 /**Context menu of the index element of the index file*/
 export function indexMenu(ev:MouseEvent){
@@ -30,7 +21,7 @@ export function indexMenu(ev:MouseEvent){
 }
 
 /**Gets the file whose link has generated the context menu */
-function getOptionsTargetFile(ev:MouseEvent){
+function getOptionsTargetFile(ev:MouseEvent):TFile{
     let link = ev.target as HTMLAnchorElement;
     var path = link?.dataset?.href;
     //If target is actual link
@@ -51,15 +42,16 @@ function noteOptions(menu:Menu, ev:MouseEvent){
 
     //Folder note
     actionItem(menu,"Make Folder Note","folder-root",(e)=>{
-		var folderNoteCore = (window as any).app.plugins.plugins["folder-note-core"] as FolderNoteCore;
-        
-        folderNoteCore.api.createFolderForNote(file).then(
-            ()=>{
-                //Call change event
-                var plugin = (window as any).FNindex as FI_Plugin;
-                plugin.redrawFN();
-            }
-        )
+        new Notice("Update folder note creation process")
+        let file = getOptionsTargetFile(e);
+        let data = FI_Plugin.instance.tree.getNode(file);
+        //Check if already folder note
+        if(data.isIndex){
+            new Notice(`Note '${file.basename}' is already a folder note of '${file.parent.name}'`,0)
+            return;
+        }
+
+        //TODO: move files
         
 	})
     //View file in explorer
