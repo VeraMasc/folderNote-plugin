@@ -1,7 +1,7 @@
-import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events, Notice, TFolder} from "obsidian";
+import {addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache,Events, Notice, TFolder, View} from "obsidian";
 
 import {fromView as fmFromView, valueRegex} from "../../.sharedModules/FrontMatter";
-import { obsidianIcons } from '../../.sharedModules/obsidianUtils';
+import { applyHighlight, obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import {BlockName} from './blocks/Blocks';
 import FI_Plugin from "./main"
 import {xApp} from "./main"
@@ -38,12 +38,11 @@ function getOptionsTargetFile(ev:MouseEvent):TFile{
 /**Generates the Context menu that is universal to all notes*/
 function noteOptions(menu:Menu, ev:MouseEvent){
 
-    var file = getOptionsTargetFile(ev)
+    let file = getOptionsTargetFile(ev)
 
     //Folder note
     actionItem(menu,"Make Folder Note","folder-root",(e)=>{
         new Notice("Update folder note creation process")
-        let file = getOptionsTargetFile(e);
         let data = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
         if(data.isIndex){
@@ -56,12 +55,30 @@ function noteOptions(menu:Menu, ev:MouseEvent){
 	})
     //View file in explorer
     actionItem(menu,"View in explorer","eye",(e)=>{
+        console.log(file);
         //Get reveal function
-        var explorer = (app as xApp).internalPlugins.plugins["file-explorer"];
-        new Notice("Core Plugin 'File Explorer' not found")
-		explorer?.instance.revealInFolder(file);
+        let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first();
+
+        //Reveal explorer leaf
+        app.workspace.revealLeaf(explorerTab);
+
+        //Get view
+        let view = explorerTab.view as View & {fileItems:{selfEl:HTMLElement}, tree:any};
         
+        //Get element
+        let data = FI_Plugin.instance.tree.getNode(file);
+    
+        if(data?.isIndex && !data.isRoot) { //Get file or folder
+            var path:string =  file.parent?.path;
+        }
         
+        path ??= file.path; 
+        let fileElement = view.fileItems[path];
+
+        //Focus
+        view.tree.setFocusedItem(fileElement)
+        applyHighlight(fileElement?.selfEl);
+ 
 	})
 	addIcon("testIco","")
 }

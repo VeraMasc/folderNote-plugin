@@ -53,7 +53,7 @@ export class indexData{
         if(! (this.folder && this.file) )
             return null;
 		let path = this.folderPath;
-		if(path) path+="/"
+		if(path.length>1) path+="/" //Add slash if path not empty or "/"
         return path + this.file.basename;
 	}
 	

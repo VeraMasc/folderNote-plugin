@@ -27,7 +27,15 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 
 /**Exposed app interface */
 export interface xApp extends App{
-	commands:any,
+	commands:{
+		commands:{
+			[key:string]:Command
+		},
+		editorCommands:{
+			[key:string]:Command
+		}
+
+	},
 	viewRegistry:{
 		typeByExtension:any,
 		viewByType:any}
