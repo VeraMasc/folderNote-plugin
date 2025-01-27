@@ -55,23 +55,18 @@ function noteOptions(menu:Menu, ev:MouseEvent){
 	})
     //View file in explorer
     actionItem(menu,"View in explorer","eye",(e)=>{
-        console.log(file);
-        //Get reveal function
-        let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first();
+        let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function
+        app.workspace.revealLeaf(explorerTab); //Reveal explorer leaf
 
-        //Reveal explorer leaf
-        app.workspace.revealLeaf(explorerTab);
-
-        //Get view
-        let view = explorerTab.view as View & {fileItems:{selfEl:HTMLElement}, tree:any};
+        let view = explorerTab.view as View & {fileItems:{selfEl:HTMLElement}, tree:any};//Get view
         
         //Get element
-        let data = FI_Plugin.instance.tree.getNode(file);
-    
+        let data = FI_Plugin.instance.tree.getNode(file); 
+
         if(data?.isIndex && !data.isRoot) { //Get file or folder
             var path:string =  file.parent?.path;
         }
-        
+
         path ??= file.path; 
         let fileElement = view.fileItems[path];
 
@@ -85,15 +80,13 @@ function noteOptions(menu:Menu, ev:MouseEvent){
 
 /**Generates the Context menu of all the currently opened file*/
 function currentNoteOptions(menu:Menu, ev:MouseEvent){
-    //Sticky index
-	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
-    //Custom link color
-	setPropItemFunction(menu, "Use custom color","highlight-glyph" , "FN-color",getRandomColor)
-    //Insert header index
-    insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","")
-    //Generate regular options
-    noteOptions(menu, ev)
+    
+	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
+	setPropItemFunction(menu, "Use custom color","highlight-glyph" , "FN-color",getRandomColor)//Custom link color
+    insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","") //Insert header index
+    noteOptions(menu, ev) //Generate regular options
 }
+
 /**Generates the full context menu of all notes*/
 export function noteMenu(ev:MouseEvent){
     ev.preventDefault(); 
@@ -128,7 +121,6 @@ export function linkMenu(ev:MouseEvent){
 	
     menu.showAtMouseEvent(ev);
 }
-
 
 /**Sets contextual option to add a specific prop to the file */
 function setPropItem(menu:Menu,title:string, icon:obsidianIcons, prop:string, value:any=true){

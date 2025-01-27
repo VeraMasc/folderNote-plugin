@@ -136,9 +136,6 @@ function getMetaData(ctx:Context){
 	return cache;
 }
 
-function getToIndex(el:HTMLElement){
-	// app.workspace.
-}
 
 /**Replaces the default link click event in the cases it doesn't work naturally */
 export function onHeaderLinkClick(){
@@ -148,19 +145,15 @@ export function onHeaderLinkClick(){
 		let target = e.target as HTMLAnchorElement;
 		let path = target?.getAttribute("data-href");
 		let match = path.match(/^(.*)#(.*?)$/)
-		let heading = match?.[2];
-		let filepath = match?.[1]; //Path without the heading subpath
+		let [,filepath,heading] = match; //Separates heading from path
+
 		let activeMDView:MarkdownView = getActiveMDView()?.activeMDView;
 		let current = activeMDView?.file;
-
-		
 		let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath,current.path);
 
 		if(target){
-			
 			app.workspace.activeLeaf?.openFile(linkFile,
-				{active:true, 
-					mode,
+				{active:true, mode,
 					eState:{
 						active: true,
 						focus: true,
