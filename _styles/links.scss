@@ -1,5 +1,8 @@
 .FN-link{
-   min-width: fit-content;
+    min-width: fit-content;
+    body.is-mobile &{
+        font-size: 0.9em;
+    }
     &:not([href]){
         color:var(--text-faint);
         pointer-events: none;

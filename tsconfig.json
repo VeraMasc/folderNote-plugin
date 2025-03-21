@@ -21,7 +21,7 @@
     "outDir": "./plugin/",
   },
 
-  "files": ["./plugin/main.ts"],
+  "files": ["./plugin/main.ts", "plugin/colors.ts"],
   "exclude": ["../.sharedModules/*"]
 
 }

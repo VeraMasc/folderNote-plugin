@@ -5,7 +5,7 @@ import { applyHighlight, obsidianIcons } from '../../.sharedModules/obsidianUtil
 import {BlockName} from './blocks/Blocks';
 import FI_Plugin from "./main"
 import {xApp} from "./main"
-import { getRandomColor } from "./config";
+import { getRandomColor } from "./colors";
 
 
 /**Context menu of the index element of the index file*/

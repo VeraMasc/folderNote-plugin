@@ -224,6 +224,9 @@ ul.FN-indexList::-webkit-scrollbar {
 .FN-link {
   min-width: fit-content;
 }
+body.is-mobile .FN-link {
+  font-size: 0.9em;
+}
 .FN-link:not([href]) {
   color: var(--text-faint);
   pointer-events: none;
