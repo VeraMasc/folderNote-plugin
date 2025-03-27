@@ -9,7 +9,7 @@ import { getActiveMDView } from "../display";
 /**Block Markdown processor */
 export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin){
 	try{
-		let config = getConfig(source) as config;
+		let config = getConfig(source) as Config;
 		let data = getMetaData(ctx);
 		renderContents(el,data,config,ctx,plugin);
 	}catch(err){
@@ -20,7 +20,7 @@ export function generateBlock(source, el:HTMLElement, ctx:Context,plugin:Plugin)
 }
 
 /**Renders the content of the block */
-function renderContents(el:HTMLElement, data:CachedMetadata,config:config,ctx: Context,plugin:Plugin){
+function renderContents(el:HTMLElement, data:CachedMetadata,config:Config,ctx: Context,plugin:Plugin){
 	data ??= {headings:[]}; //If no cached data
 	let {headings} =data;
 	let {from,relative, excludeRoot}=config;
@@ -116,13 +116,13 @@ function getSubheaders(ctx:Context,el:HTMLElement,data:CachedMetadata,from?:stri
 }
 
 /**Config parameters of the code block */
-export type config={
+export type Config={
 	depth?:string,
 	/** Block is relative  */ //TODO:Relative to what???
 	relative?,
 	/**What header to use as root */
 	from?:string,
-	/**If root marked with {@link config.from} should be omitted */
+	/**If root marked with {@link Config.from} should be omitted */
 	excludeRoot?:boolean,
 	/**Overrides the default click event in case it's blocked */
 	customLinkEv?:boolean,

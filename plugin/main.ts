@@ -87,7 +87,7 @@ export default class FI_Plugin extends Plugin {
 		}
 
 		//Register suggest
-		this.registerEditorSuggest(new HeaderSuggest(this.app))
+		this.registerEditorSuggest(new HeaderSuggest(this))
 		
 		//TODO: make main readable
 
