@@ -1,29 +1,16 @@
 
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
 import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
 import {setLinkToIndex} from "./metadata"
 import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
+import { HeaderSuggest } from './blocks/suggest/headerSuggest';
+import { EventManager } from './events/EventManager';
+import { DEFAULT_SETTINGS, MyPluginSettings, SettingsTab } from './Settings';
 
 
-
-// Remember to rename these classes and interfaces!
-
-interface MyPluginSettings {
-	refreshOnNoteSave: boolean;
-	refreshOnNoteChange:boolean;
-	RootIndex:string;
-	
-}
-
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	refreshOnNoteSave: true,
-	refreshOnNoteChange:true,
-	RootIndex:null,
-
-}
 
 /**Exposed app interface */
 export interface xApp extends App{
@@ -98,8 +85,11 @@ export default class FI_Plugin extends Plugin {
 				console.error("Blocks Plugin Error: ",err)
 			}
 		}
-		
 
+		//Register suggest
+		this.registerEditorSuggest(new HeaderSuggest(this.app))
+		
+		//TODO: make main readable
 
 		this.tree = new IndexTree(this);
 		this.trailResizeObs = 
@@ -157,7 +147,7 @@ export default class FI_Plugin extends Plugin {
 			}
 		}
 
-		this.addSettingTab(new SettingTab(this.app, this));
+		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
 	registerBlockSuggestions() {
@@ -185,9 +175,14 @@ export default class FI_Plugin extends Plugin {
 			
 	}
 
-	parseRootIndex(){
-		this.RootIndexList = this.settings.RootIndex?.match(/(?:[^,\\]|\\.)+/g)
+	/**Parses the root index names
+	 * @param [resetTree=false] indicates if the {@link IndexTree} should be reset after parsing
+	*/
+	parseRootIndex(resetTree=false){
+		this.RootIndexList = this.settings.rootIndex?.match(/(?:[^,\\]|\\.)+/g)
 		?.map(s=>s?.trim())
+		if(resetTree)
+			this.tree = new IndexTree(this);
 	} 
 
 	async saveSettings() {
@@ -262,66 +257,3 @@ export default class FI_Plugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
-	constructor(app: App ) {
-		super(app);
-	}
-
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SettingTab extends PluginSettingTab {
-	plugin: FI_Plugin;
-
-	constructor(app: App, plugin: FI_Plugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const {containerEl,plugin} = this;
-		const { settings } = plugin;
-		containerEl.empty();
-		
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-		new Setting(containerEl)
-			.setName("Refresh on Save")
-			.setDesc("Refresh Folder note index when a note is saved")
-			.addToggle((toggle) => toggle.setValue(settings.refreshOnNoteSave).onChange(async (value) => {
-				settings.refreshOnNoteSave = value;
-				await plugin.saveSettings();
-			}
-		));
-
-		new Setting(containerEl)
-			.setName("Refresh on Change")
-			.setDesc("Refresh Folder note index when changing notes")
-			.addToggle((toggle) => toggle.setValue(settings.refreshOnNoteChange).onChange(async (value) => {
-				settings.refreshOnNoteChange = value;
-				await plugin.saveSettings();
-			}
-		));
-
-		new Setting(containerEl)
-			.setName("Root Index Name")
-			.setDesc("Name of the file in the root directory that will act as index")
-			.addText(text => text
-				.setPlaceholder('File Name')
-				.setValue(this.plugin.settings.RootIndex)
-				.onChange(async (value) => {
-					this.plugin.settings.RootIndex = value;
-					this.plugin.parseRootIndex();
-					await this.plugin.saveSettings();
-					await this.plugin.redrawFN();
-				}));
-	}
-}
