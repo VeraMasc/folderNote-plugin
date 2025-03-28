@@ -36,23 +36,25 @@ export class HeaderSuggest extends EditorSuggest<string>{
         if(!block)
             return null;
         
+        //Return value
         let ret:EditorSuggestTriggerInfo =null;
         if(word !=null){
             let wordtext = editor.getRange(word.from, word.to);
-            ret= {start:word.from, end:word.to, query:block+" "+wordtext}
-        }else{
-            //Use cursor
-            ret= {start:cursor, end:cursor, query:block+" "}
+            ret= {start:word.from, end:word.to, query:wordtext+" "+block}
+        }else{//Use cursor
+            ret= {start:cursor, end:cursor, query:" "+block}
         }
-        console.log(ret)
         return ret;
 
         
     }
     getSuggestions(context: EditorSuggestContext): (keyof Config)[]{
-        //TODO: remove hard coding and add filtering
-        //? make async?
-        return ["from",'depth','excludeRoot']
+        //TODO: make it work for other blocks
+        const options:(keyof Config)[] = ["from",'depth','excludeRoot'];
+        let {query,end} = context;
+        
+        let partial = query.slice(0,end.ch)
+        return options.filter( o => o.startsWith(partial) ); //Also works if partial is empty
     }
     async renderSuggestion(value: string, el: HTMLElement): Promise<void> {
         el.createDiv("suggestion-aux").createSpan("suggestion-flair", (el) =>
@@ -63,7 +65,16 @@ export class HeaderSuggest extends EditorSuggest<string>{
     selectSuggestion(value: string, evt: MouseEvent | KeyboardEvent): void {
         if(this.context ==null)
             return;
-        this.context.editor.replaceRange(value+":",this.context.start,this.context.end)
+        
+        //Add ":" if missing
+        let nextCh = {...this.context.end};
+        nextCh.ch++;
+        let range = this.context.editor.getRange(this.context.end,nextCh)
+        if(range!==':')
+            value+=":";
+        
+        //Replace with selected option
+        this.context.editor.replaceRange(value,this.context.start,this.context.end)
     }
     
 }
