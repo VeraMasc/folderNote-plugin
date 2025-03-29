@@ -1,15 +1,23 @@
 import { Editor, EditorPosition, EditorSuggest, EditorSuggestContext, EditorSuggestTriggerInfo, TFile, Plugin, SuggestModal, Notice } from 'obsidian';
 import FI_Plugin from '../../main';
-import { headerBlock } from '../Blocks';
+import { headerBlock, BlockName } from '../Blocks';
 import {findParentCodeblock} from "./suggestUtils"
 import { KeyOfType } from '../../../../.sharedModules/Type Utilities';
 import { Config } from '../headerBlock';
 
 //TODO: Replicate suggestions from https://github.com/aidenlx/obsidian-icon-shortcodes/blob/master/src/modules/suggester.ts#L115
 
-/**Suggestions for the {@link headerBlock} codeblock */
-export class HeaderSuggest extends EditorSuggest<string>{
+/**Suggestions for the codeblocks */
+export class BlockSuggest extends EditorSuggest<string>{
     plugin:FI_Plugin;
+    /**Holds the suggestable options of each block */
+    static blockOptions:BlocksOptions={
+        headerIndex:["from",'maxDepth','excludeRoot', 'relative'],
+        //TODO: add suggestions for index
+        index:["FN-forceOpen","indexPath"]
+    }
+
+
 
     constructor(plugin:FI_Plugin){
         super(plugin.app);
@@ -48,14 +56,22 @@ export class HeaderSuggest extends EditorSuggest<string>{
 
         
     }
+
     getSuggestions(context: EditorSuggestContext): (keyof Config)[]{
-        //TODO: make it work for other blocks
-        const options:(keyof Config)[] = ["from",'depth','excludeRoot'];
         let {query,end} = context;
+
+        //Find text and block
+        var partial = query.slice(0,end.ch);
+        var blockName = query.slice(end.ch+1);
         
-        let partial = query.slice(0,end.ch)
+        //Get options of block
+        let options = BlockSuggest.blockOptions[blockName] ?? [];
+        
+        //Return filtered results
         return options.filter( o => o.startsWith(partial) ); //Also works if partial is empty
     }
+
+
     async renderSuggestion(value: string, el: HTMLElement): Promise<void> {
         el.createDiv("suggestion-aux").createSpan("suggestion-flair", (el) =>
             {el.innerText = value;}
@@ -78,4 +94,9 @@ export class HeaderSuggest extends EditorSuggest<string>{
     }
     
 }
+
+/**Holds the possible options of each block type */
+export type BlocksOptions = {
+    [k in BlockName]: string[];
+};
 

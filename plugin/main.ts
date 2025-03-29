@@ -6,7 +6,7 @@ import {setLinkToIndex} from "./metadata"
 import * as Display from "./display"
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
-import { HeaderSuggest } from './blocks/suggest/headerSuggest';
+import { BlockSuggest } from './blocks/suggest/blockSuggest';
 import { EventManager } from './events/EventManager';
 import { DEFAULT_SETTINGS, MyPluginSettings, SettingsTab } from './Settings';
 
@@ -87,7 +87,7 @@ export default class FI_Plugin extends Plugin {
 		}
 
 		//Register suggest
-		this.registerEditorSuggest(new HeaderSuggest(this))
+		this.registerEditorSuggest(new BlockSuggest(this))
 		
 		//TODO: make main readable
 

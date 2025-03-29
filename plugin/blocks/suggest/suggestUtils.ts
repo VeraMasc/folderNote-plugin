@@ -4,9 +4,9 @@ import { EditorPosition, Editor } from 'obsidian';
  * @param attempts number of attempts before the function gives up 
 */
 export function findParentCodeblock(pos:EditorPosition, editor:Editor, attempts:number=50):string|null{
+    //Iterate lines
     for(var i=pos.line-1; i>=0; i--){
         let line = editor.getLine(i);
-        console.log(line,editor);
 
         //Skip empty
         if(line.length<3) // 3 because it can't be a variable or a "```"
@@ -27,8 +27,7 @@ export function findParentCodeblock(pos:EditorPosition, editor:Editor, attempts:
                 return null; //Exposed non whitespace found
         } while (index>=0);
         
-            
-            
+
 
         //Max lines reached
         attempts--
