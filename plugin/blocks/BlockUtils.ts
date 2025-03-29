@@ -1,12 +1,12 @@
 import { TFile, MarkdownPostProcessorContext} from 'obsidian';
-import { noteConfig } from '../config';
+import { NoteConfig } from '../config';
 
 
 /**Generates the Codeblock context of a file
  * @param file File that executes the block
  * @param frontmatter Frontmatter config to use when rendering
 */
-export function getContextOf(file:TFile,frontmatter=<noteConfig>{}):MarkdownPostProcessorContext{
+export function getContextOf(file:TFile,frontmatter=<NoteConfig>{}):MarkdownPostProcessorContext{
 
     let ret = <MarkdownPostProcessorContext>{
         docId: generateDocId(),

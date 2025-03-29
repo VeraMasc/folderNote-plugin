@@ -1,5 +1,5 @@
 /**Posibles parámetros de configuración de una nota */
-export class noteConfig{
+export class NoteConfig{
     /**If true, not will render with a header index */
     listContent:boolean;
     useAsIndex:boolean;
@@ -12,7 +12,12 @@ export class noteConfig{
     expand:boolean;
 	/** Hide folders with no index */
     hideEmpty:boolean;
+    /**Regex for hiding files */
 	hideRegExp:Array<string>|string;
+    /**Hides files by extension */
+    hideExt:string|string[];
+    /**Hides specific notes by name */
+    hideNote:string|string[];
 	/** How much to prioritize showing this file first. */
 	priority:number;
 	/** Note text color */
@@ -28,6 +33,7 @@ export class noteConfig{
     
     fromMeta(metadata:Object){
         this.clear();
+        //TODO: Improve NoteConfig documentation
 
         for(let [prop,val] of Object.entries(metadata) as Array<[string, any]> ){
             if(!prop.startsWith("FN-"))
@@ -35,13 +41,17 @@ export class noteConfig{
             prop=prop.slice(3)
             this[prop]=val;
         }
-       
+        this.normalize();
     }
 
+    /**Normalizes all the config data for consistency*/
 	normalize(){
-		this.hideExt=[this.hideExt].flat();
-		this.hideNote=[this.hideNote].flat();
+        //Flatten
+		this.hideExt &&= [this.hideExt].flat();
+		this.hideNote &&= [this.hideNote].flat();
+        this.color &&= this.color.trim();
 	}
+
     clear(){
         for (const prop of Object.getOwnPropertyNames(this)) {
             delete this[prop];

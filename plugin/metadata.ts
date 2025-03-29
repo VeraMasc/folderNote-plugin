@@ -1,6 +1,6 @@
 import {TAbstractFile,MetadataCache} from 'obsidian';
 import FI_Plugin from "./main"
-import {noteConfig} from "./config"
+import {NoteConfig} from "./config"
 
 /** Marca el índice como uno de los archivos a los que conecta este archivo */
 export function setLinkToIndex(file:TAbstractFile, plugin:FI_Plugin){
@@ -17,7 +17,7 @@ export function setLinkToIndex(file:TAbstractFile, plugin:FI_Plugin){
 
     var indexPath:string;
     if( file.parent.name == ""){
-        indexPath = plugin?.RootIndexList.first() //TODO: Mejorar
+        indexPath = plugin?.RootIndexList?.first() //TODO: Mejorar
     }
     else{
         indexPath = `${file.parent.path}/${name?.[0]}.md`;

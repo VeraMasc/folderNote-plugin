@@ -6,7 +6,7 @@ import {indexData} from "./indexing"
 import * as html from "./html"
 import {JSX} from "../../.sharedModules/JSX"
 import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
-import { noteConfig } from './config';
+import { NoteConfig } from './config';
 import { getContextOf } from './blocks/BlockUtils';
 import { headerBlock, indexBlock } from './blocks/Blocks';
 import { onHeaderLinkClick } from './blocks/headerBlock';

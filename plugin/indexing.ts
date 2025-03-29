@@ -1,6 +1,6 @@
 import {OpenViewState, App, Editor,TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile, TextFileView} from 'obsidian';
 import FI_Plugin from "./main"
-import {noteConfig} from "./config"
+import {NoteConfig} from "./config"
 import {lighten,getLuminance} from "color2k"
 import { linkMenu } from './contextMenu';
 
@@ -24,7 +24,7 @@ export class indexData{
     ext?:string;
 	type;
 	/** Configuration of the file*/
-    config=new noteConfig();
+    config=new NoteConfig();
     id:string=null;
     prev:indexData;
     next:indexData;
@@ -176,9 +176,9 @@ export class indexData{
 				}})
 			if(this.config.color){
 				try{
-				linkEl.style.setProperty("--link-color", this.config.color)
-				let lum= 1-getLuminance(this.config.color)
-				linkEl.style.setProperty("--link-color-hover", lighten(this.config.color, 0.15*lum))
+                    linkEl.style.setProperty("--link-color", this.config.color)
+                    let lum= 1-getLuminance(this.config.color)
+                    linkEl.style.setProperty("--link-color-hover", lighten(this.config.color, 0.15*lum))
 				}catch(err){
 					console.error(err);
 				}
@@ -212,7 +212,7 @@ export class indexData{
 
 
     /**Returns the index data of all child notes (except hidden)*/
-    *childNotes(config:noteConfig=null): Generator<indexData, void, unknown>{
+    *childNotes(config:NoteConfig=null): Generator<indexData, void, unknown>{
         //Map and sort notes
         let mapped = this.sortNodes(this.folder.children
 			.map(child => this.explore(child)));
@@ -234,7 +234,7 @@ export class indexData{
     }
 
     /**Handles the order of nodes */
-    sortNodes(nodes:indexData[], config:noteConfig=null) {
+    sortNodes(nodes:indexData[], config:NoteConfig=null) {
         //Locale Sort (Fixes number order and stuff)
         nodes = nodes.sort((a,b)=> a.fullName.localeCompare(b.fullName,undefined, {numeric: true}));
         //Priority sort
@@ -245,7 +245,7 @@ export class indexData{
     updateConfig(){
         let {file,exists} = this;
         if(!(file && exists)){
-            this.config = new noteConfig();
+            this.config = new NoteConfig();
             return;
         }
 
