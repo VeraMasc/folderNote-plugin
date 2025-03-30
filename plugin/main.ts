@@ -54,6 +54,8 @@ export default class FI_Plugin extends Plugin {
 	activeLeafSave:EventRef = undefined;
 	layoutChange:EventRef = undefined;
 	metaChange:EventRef = undefined;
+	//TODO: transfer events to manager
+	events:EventManager = new EventManager(this);
 	metaResolve = undefined;
 	metaInit= undefined;
 	metaDel = undefined;
@@ -96,7 +98,7 @@ export default class FI_Plugin extends Plugin {
 			new ResizeObserver(Display.trailOverflow);
 
 
-		this.registerMetaChangeEvent();
+		this.events.registerMetaChangeEvent();
 
 		app.workspace.onLayoutReady(async () => {
             var _a;
@@ -104,15 +106,10 @@ export default class FI_Plugin extends Plugin {
 			await this.redrawFN()
             // console.warn("Load event")
 			
-            this.registerActiveLeafChangeEvent();
-			this.registerLayoutChangeEvent();
-			
-			this.registerMetaDelEvent();
-			this.registerBlockSuggestions();
+            this.events.registerActiveLeafChangeEvent();
+			this.events.registerLayoutChangeEvent();
+			this.events.registerMetaDelEvent();
 
-
-
-            
 
             app.workspace.iterateAllLeaves((leaf) => {
                 if (leaf instanceof MarkdownView)
@@ -150,9 +147,6 @@ export default class FI_Plugin extends Plugin {
 		this.addSettingTab(new SettingsTab(this.app, this));
 	}
 
-	registerBlockSuggestions() {
-		//this.registerEditorSuggest(new Suggest.TestSuggestions(this)) 
-	}
 
 	async onunload() {
 		this.trailResizeObs.disconnect()
@@ -189,56 +183,7 @@ export default class FI_Plugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	registerActiveLeafChangeEvent() {
-		var func = async () => {
-			if (this.settings.refreshOnNoteChange) {
-				await this.redrawFN();
-				//console.warn("Refresh event")
-			};
-		};
-		this.activeLeafChange = this.app.workspace.on("active-leaf-change", func);
-		this.editorChange = this.app.workspace.on("editor-change", func);
-		this.registerEvent(this.activeLeafChange);
-		this.registerEvent(this.editorChange);
-    }
 
-	registerLayoutChangeEvent() {
-        this.layoutChange = this.app.workspace.on("layout-change", async () => {
-            //TODO: Make this handle config changes
-			await this.redrawFN();
-			//console.warn("Layout event")
-        });
-        this.registerEvent(this.layoutChange);
-    }
- 
-	registerMetaChangeEvent() {
-		//Evento de archivo modificado
-        this.metaChange = this.app.metadataCache.on("changed", async (file) => {
-			//console.warn("File modified")
-			this.tree.refreshNode(file)
-			var view = Display.getActiveMDView();
-			if(view.activeMDView?.file == file){
-				//console.warn("Active File modified")
-				await this.redrawFN();
-			}
-        });
-        this.registerEvent(this.metaChange);
-
-		this.metaResolve = this.app.metadataCache.on("resolve", (data)=>(setLinkToIndex(data,this)))
-		this.registerEvent(this.metaResolve);
-
-		
-		// this.metaInit = this.app.vault.on("create", (data)=>(console.log("init"),setLinkToIndex(data)));
-		// this.registerEvent(this.metaInit);
-    }
-
-	/**Registers the delete event*/
-	registerMetaDelEvent() {
-        this.metaDel = this.app.metadataCache.on("deleted", async (file) => {
-			this.tree.deleteNode(file)
-        });
-        this.registerEvent(this.metaDel);
-    }
 
 	/**Redraws the Folder Note elements */
 	async redrawFN() {

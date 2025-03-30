@@ -47,10 +47,10 @@ esbuild.build({
 	watch: false,
 	target: 'esNext',
 	logLevel: "debug",
-	sourcemap: "external",
+	sourcemap: true,
 	minifySyntax: prod? true : false,
 	minifyWhitespace:true,
-	minifyIdentifiers: prod? true:false,
+	minifyIdentifiers: prod? true : false,
 	treeShaking: true,
 	outfile: 'plugin/main.js',
 }).catch(() => process.exit(1));

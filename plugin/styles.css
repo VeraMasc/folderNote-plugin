@@ -1,7 +1,10 @@
 @charset "UTF-8";
 .FN-trail-scroller {
+  display: flex;
+  flex-direction: row-reverse;
   width: 100%;
   overflow-x: auto;
+  justify-content: stretch;
 }
 .FN-trail-scroller:not(:focus) {
   overflow: hidden;
@@ -18,7 +21,7 @@
   min-height: 30px;
   width: auto;
   left: 0;
-  right: 0;
+  margin-right: auto;
 }
 
 .FN-trail-scroller:not(:focus) > .FN-trail {
