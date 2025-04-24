@@ -1,7 +1,7 @@
 import { dotCommaObj as getConfig } from "../../../.sharedModules/Data Parsing"
 import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from "obsidian";
 
-export const Id = "headerIndex";
+export const Id = "contentIndex";
 
 import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
 import { getActiveMDView } from "../display";
@@ -94,7 +94,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 		});
 
 		if (config.customLinkEv) {
-			link.onclick = onHeaderLinkClick(); //It doesn't trigger otherwise
+			link.onclick = onHeadingLinkClick(); //It doesn't trigger otherwise
 		}
 	}
 	return list;
@@ -163,7 +163,7 @@ function getMetaData(ctx: Context) {
 
 
 /**Replaces the default link click event in the cases it doesn't work naturally */
-export function onHeaderLinkClick() {
+export function onHeadingLinkClick() {
 	return (e: MouseEvent) => {
 		e.preventDefault()
 		let mode = (app.vault as any).getConfig("defaultViewMode");

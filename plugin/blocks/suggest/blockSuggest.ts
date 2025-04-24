@@ -1,9 +1,9 @@
 import { Editor, EditorPosition, EditorSuggest, EditorSuggestContext, EditorSuggestTriggerInfo, TFile, Plugin, SuggestModal, Notice } from 'obsidian';
 import FI_Plugin from '../../main';
-import { headerBlock, BlockName } from '../Blocks';
+import { contentBlock, BlockName } from '../Blocks';
 import {findParentCodeblock} from "./suggestUtils"
 import { KeyOfType } from '../../../../.sharedModules/Type Utilities';
-import { Config } from '../headerBlock';
+import { Config } from '../contentBlock';
 
 //TODO: Replicate suggestions from https://github.com/aidenlx/obsidian-icon-shortcodes/blob/master/src/modules/suggester.ts#L115
 
@@ -13,6 +13,7 @@ export class BlockSuggest extends EditorSuggest<string>{
     /**Holds the suggestable options of each block */
     static blockOptions:BlocksOptions={
         headerIndex:["from",'maxDepth','excludeRoot', 'relative'],
+        contentIndex:["from",'maxDepth','excludeRoot', 'relative'],
         //TODO: add suggestions for index
         index:["FN-forceOpen","indexPath"]
     }

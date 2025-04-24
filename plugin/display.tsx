@@ -9,7 +9,7 @@ import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { NoteConfig } from './config';
 import { getContextOf } from './blocks/BlockUtils';
 import { headerBlock, indexBlock } from './blocks/Blocks';
-import { onHeaderLinkClick } from './blocks/headerBlock';
+import { onHeadingLinkClick } from './blocks/contentBlock';
 
 
 //TODO: Mejorar y documentar proceso de renderizado

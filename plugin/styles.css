@@ -275,7 +275,7 @@ body.is-mobile .FN-link {
   z-index: 10;
 }
 
-.block-language-headerIndex {
+.block-language-contentIndex, .block-language-headerIndex {
   margin-right: auto;
   width: fit-content;
   padding: 5px 15px;
@@ -287,110 +287,110 @@ body.is-mobile .FN-link {
   background-color: var(--background-secondary);
   border-radius: 15px;
 }
-.block-language-headerIndex[h-depth="1"] {
+.block-language-contentIndex[h-depth="1"], .block-language-headerIndex[h-depth="1"] {
   --HI-color:var(--h1-color);
 }
-.block-language-headerIndex[h-depth="2"] {
+.block-language-contentIndex[h-depth="2"], .block-language-headerIndex[h-depth="2"] {
   --HI-color:var(--h2-color);
 }
-.block-language-headerIndex[h-depth="3"] {
+.block-language-contentIndex[h-depth="3"], .block-language-headerIndex[h-depth="3"] {
   --HI-color:var(--h3-color);
 }
-.block-language-headerIndex[h-depth="4"] {
+.block-language-contentIndex[h-depth="4"], .block-language-headerIndex[h-depth="4"] {
   --HI-color:var(--h4-color);
 }
-.block-language-headerIndex[h-depth="5"] {
+.block-language-contentIndex[h-depth="5"], .block-language-headerIndex[h-depth="5"] {
   --HI-color:var(--h5-color);
 }
-.block-language-headerIndex[h-depth="6"] {
+.block-language-contentIndex[h-depth="6"], .block-language-headerIndex[h-depth="6"] {
   --HI-color:var(--h6-color);
 }
-.block-language-headerIndex ol > .header-level\:1 {
+.block-language-contentIndex ol > .header-level\:1, .block-language-headerIndex ol > .header-level\:1 {
   font-size: 18px;
 }
-.block-language-headerIndex ol > .header-level\:1 > a {
+.block-language-contentIndex ol > .header-level\:1 > a, .block-language-headerIndex ol > .header-level\:1 > a {
   color: var(--h1-color);
 }
-.block-language-headerIndex ol > .header-level\:1 > ol {
+.block-language-contentIndex ol > .header-level\:1 > ol, .block-language-headerIndex ol > .header-level\:1 > ol {
   /*color: rgba(from var(--h1-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > .header-level\:2 {
+.block-language-contentIndex ol > .header-level\:2, .block-language-headerIndex ol > .header-level\:2 {
   font-size: 16px;
 }
-.block-language-headerIndex ol > .header-level\:2 > a {
+.block-language-contentIndex ol > .header-level\:2 > a, .block-language-headerIndex ol > .header-level\:2 > a {
   color: var(--h2-color);
 }
-.block-language-headerIndex ol > .header-level\:2 > ol {
+.block-language-contentIndex ol > .header-level\:2 > ol, .block-language-headerIndex ol > .header-level\:2 > ol {
   /*color: rgba(from var(--h2-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > .header-level\:3 {
+.block-language-contentIndex ol > .header-level\:3, .block-language-headerIndex ol > .header-level\:3 {
   font-size: 14px;
 }
-.block-language-headerIndex ol > .header-level\:3 > a {
+.block-language-contentIndex ol > .header-level\:3 > a, .block-language-headerIndex ol > .header-level\:3 > a {
   color: var(--h3-color);
 }
-.block-language-headerIndex ol > .header-level\:3 > ol {
+.block-language-contentIndex ol > .header-level\:3 > ol, .block-language-headerIndex ol > .header-level\:3 > ol {
   /*color: rgba(from var(--h3-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > .header-level\:4 {
+.block-language-contentIndex ol > .header-level\:4, .block-language-headerIndex ol > .header-level\:4 {
   font-size: 12px;
 }
-.block-language-headerIndex ol > .header-level\:4 > a {
+.block-language-contentIndex ol > .header-level\:4 > a, .block-language-headerIndex ol > .header-level\:4 > a {
   color: var(--h4-color);
 }
-.block-language-headerIndex ol > .header-level\:4 > ol {
+.block-language-contentIndex ol > .header-level\:4 > ol, .block-language-headerIndex ol > .header-level\:4 > ol {
   /*color: rgba(from var(--h4-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > .header-level\:5 {
+.block-language-contentIndex ol > .header-level\:5, .block-language-headerIndex ol > .header-level\:5 {
   font-size: 10px;
 }
-.block-language-headerIndex ol > .header-level\:5 > a {
+.block-language-contentIndex ol > .header-level\:5 > a, .block-language-headerIndex ol > .header-level\:5 > a {
   color: var(--h5-color);
 }
-.block-language-headerIndex ol > .header-level\:5 > ol {
+.block-language-contentIndex ol > .header-level\:5 > ol, .block-language-headerIndex ol > .header-level\:5 > ol {
   /*color: rgba(from var(--h5-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > .header-level\:6 {
+.block-language-contentIndex ol > .header-level\:6, .block-language-headerIndex ol > .header-level\:6 {
   font-size: 8px;
 }
-.block-language-headerIndex ol > .header-level\:6 > a {
+.block-language-contentIndex ol > .header-level\:6 > a, .block-language-headerIndex ol > .header-level\:6 > a {
   color: var(--h6-color);
 }
-.block-language-headerIndex ol > .header-level\:6 > ol {
+.block-language-contentIndex ol > .header-level\:6 > ol, .block-language-headerIndex ol > .header-level\:6 > ol {
   /*color: rgba(from var(--h6-color) r g b 0.5);
   width: 2px;
   style: solid;*/
   border-bottom-left-radius: 0.5em;
 }
-.block-language-headerIndex ol > li {
+.block-language-contentIndex ol > li, .block-language-headerIndex ol > li {
   margin-inline-start: 1.25em;
 }
-.block-language-headerIndex ol > li.no-indent {
+.block-language-contentIndex ol > li.no-indent, .block-language-headerIndex ol > li.no-indent {
   margin-inline-start: 0;
 }
-.block-language-headerIndex ol li.noMarker::marker {
+.block-language-contentIndex ol li.noMarker::marker, .block-language-headerIndex ol li.noMarker::marker {
   list-style: none;
   visibility: hidden;
   content: "";
 }
-.block-language-headerIndex ol li.noMarker > ol {
+.block-language-contentIndex ol li.noMarker > ol, .block-language-headerIndex ol li.noMarker > ol {
   padding-left: 0;
 }
-.block-language-headerIndex ol::before {
+.block-language-contentIndex ol::before, .block-language-headerIndex ol::before {
   content: none !important;
 }
