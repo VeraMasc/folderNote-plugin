@@ -83,7 +83,7 @@ function currentNoteOptions(menu:Menu, ev:MouseEvent){
     
 	setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
 	setPropItemFunction(menu, "Use custom color","highlight-glyph" , "FN-color",getRandomColor)//Custom link color
-    insertBlockItem(menu, "Add content block","clipboard-list" ,"headerIndex","") //Insert header index
+    insertBlockItem(menu, "Add content block","clipboard-list" ,"contentIndex","") //Insert header index
     noteOptions(menu, ev) //Generate regular options
 }
 

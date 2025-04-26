@@ -1,11 +1,9 @@
 import * as indexBlock from "./indexBlock"
 import  * as contentBlock from './contentBlock';
 
-type HeaderBlockType = {Id:'headerIndex'} ;
-//TODO: Remove HeaderIndex block
-let headerBlock = {...contentBlock, ...({Id:'headerIndex'} as HeaderBlockType)}
 
-export {indexBlock,headerBlock,contentBlock};
+
+export {indexBlock,contentBlock};
 
 
 //Get block names

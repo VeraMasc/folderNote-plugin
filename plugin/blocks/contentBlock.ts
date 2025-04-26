@@ -23,11 +23,12 @@ export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plu
 
 /**Renders the content of the block */
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
-	data ??= { headings: [] }; //If no cached data
-	let  headings  = [...data.headings]; //Avoid operating on metadata
+	data ??= { }; //If no cached data
+	let  headings  = [...(data.headings ?? [])]; //Avoid operating on metadata
 	let { from, relative, excludeRoot=true } = config;
 
 	//TODO: refactor renderContents for readability
+	//TODO: add message for when there's no headings
 	//Render from heading
 	if (relative) {
 		//Use parent heading

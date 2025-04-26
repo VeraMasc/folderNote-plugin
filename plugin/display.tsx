@@ -8,7 +8,7 @@ import {JSX} from "../../.sharedModules/JSX"
 import {currentNoteMenu, indexMenu,noteMenu} from './contextMenu';
 import { NoteConfig } from './config';
 import { getContextOf } from './blocks/BlockUtils';
-import { headerBlock, indexBlock } from './blocks/Blocks';
+import {indexBlock,contentBlock } from './blocks/Blocks';
 import { onHeadingLinkClick } from './blocks/contentBlock';
 
 
@@ -52,7 +52,7 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     if(listContent && contDiv){
         let ctx = getContextOf(note.file);
         let div = contDiv.createDiv({cls:"block-language-headerIndex"});
-        headerBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
+        contentBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
 
         
     }

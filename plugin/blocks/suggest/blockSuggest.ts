@@ -12,7 +12,6 @@ export class BlockSuggest extends EditorSuggest<string>{
     plugin:FI_Plugin;
     /**Holds the suggestable options of each block */
     static blockOptions:BlocksOptions={
-        headerIndex:["from",'maxDepth','excludeRoot', 'relative'],
         contentIndex:["from",'maxDepth','excludeRoot', 'relative'],
         //TODO: add suggestions for index
         index:["FN-forceOpen","indexPath"]
