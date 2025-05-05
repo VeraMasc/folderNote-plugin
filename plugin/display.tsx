@@ -51,7 +51,7 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     let contDiv = createContentDiv(activeMDView,mode,note)
     if(listContent && contDiv){
         let ctx = getContextOf(note.file);
-        let div = contDiv.createDiv({cls:"block-language-headerIndex"});
+        let div = contDiv.createDiv({cls:"block-language-contentIndex"});
         contentBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
 
         
