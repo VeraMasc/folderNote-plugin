@@ -68,6 +68,7 @@ export default class FI_Plugin extends Plugin {
 	injectors:{}={};
 	/** Codeblock Processors */
 	mdProcessors:{}={};
+	/**Event that triggers when changes are made in the editor */
 	editorChange: any;
 	/**Singleton for the plugin */
 	static instance:FI_Plugin;
@@ -106,7 +107,7 @@ export default class FI_Plugin extends Plugin {
 			await this.redrawFN()
             // console.warn("Load event")
 			
-            this.events.registerActiveLeafChangeEvent();
+            this.events.registerLeafChangeEvents();
 			this.events.registerLayoutChangeEvent();
 			this.events.registerMetaDelEvent();
 
@@ -190,7 +191,6 @@ export default class FI_Plugin extends Plugin {
 		
 		try {
 			const { RootIndexList=[], settings,  app } = this;
-
 			const {activeMDView, mode} = Display.getActiveMDView() 
 			if(activeMDView)
 				Display.Trail(activeMDView,mode,this)	

@@ -277,6 +277,7 @@ body.is-mobile .FN-link {
 
 .block-language-contentIndex {
   margin-right: auto;
+  margin-bottom: 2em;
   width: fit-content;
   padding: 5px 15px;
   border-width: 2px;

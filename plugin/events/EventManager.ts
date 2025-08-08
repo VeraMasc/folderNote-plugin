@@ -2,6 +2,7 @@ import { EventRef } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
 import * as Display from "../display"
+import { debounce } from '../../../.sharedModules/EventUtils';
 
 
 /**Manages all the plugin's events */
@@ -17,8 +18,8 @@ export class EventManager{
         this.plugin=plugin;
     }
 
-    /**Registers an event for when you switch Obsidian "leafs" or editor modes */
-    registerActiveLeafChangeEvent() {
+    /**Registers events for when you write, switch Obsidian "leafs" or switch editor modes */
+    registerLeafChangeEvents() {
         var func = async () => {
             if (this.plugin.settings.refreshOnNoteChange) {
                 await this.plugin.redrawFN();
@@ -26,7 +27,7 @@ export class EventManager{
             };
         };
         this.plugin.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
-        this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", func);
+        this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", debounce(func,100));
         this.plugin.registerEvent(this.plugin.activeLeafChange);
         this.plugin.registerEvent(this.plugin.editorChange);
     }

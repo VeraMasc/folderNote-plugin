@@ -49,11 +49,16 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
     let contDiv = createContentDiv(activeMDView,mode,note)
-    if(listContent && contDiv){
-        let ctx = getContextOf(note.file);
-        let div = contDiv.createDiv({cls:"block-language-contentIndex"});
-        contentBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
 
+    if(listContent && contDiv){
+
+        
+        let ctx = getContextOf(note.file);
+        let div = createDiv({cls:"block-language-contentIndex"});
+        contentBlock.generateBlock("customLinkEv:true;", div, ctx, plugin)
+        //Replace previous
+        contDiv.replaceChildren(div);
+        
         
     }
     // Trail
@@ -334,12 +339,14 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
 	const view = mode === "preview"
 	? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
 	: activeMDView.contentEl.querySelector("div.markdown-source-view");
+    var contDiv:HTMLDivElement;
+    //Remove Duplicates
+	let divs = Array.from(activeMDView.containerEl?.querySelectorAll(".FN-content"));
+    contDiv = divs.pop() as HTMLDivElement;
+    divs?.forEach((div) =>{ div.remove()})
 
-    //Remove old
-	activeMDView.containerEl?.querySelectorAll(".FN-content")?.forEach((div) =>{ div.remove()});
-
-    //Create new content div
-	const contDiv = createDiv({
+    //Create new content div if none exists
+	contDiv ??= createDiv({
         cls: `FN-content markdown-rendered`,
         attr:{contenteditable:false},
         
@@ -366,7 +373,7 @@ function createContentDiv(activeMDView:MarkdownView,mode:MarkdownViewModeType,fD
         
         
     }
-	contDiv.empty();
+    
 	return contDiv;
 }
 
