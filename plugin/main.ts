@@ -99,7 +99,7 @@ export default class FI_Plugin extends Plugin {
 			new ResizeObserver(Display.trailOverflow);
 
 
-		this.events.registerMetaChangeEvent();
+		this.events.regMetaChangeEvent();
 
 		app.workspace.onLayoutReady(async () => {
             var _a;
@@ -107,9 +107,9 @@ export default class FI_Plugin extends Plugin {
 			await this.redrawFN()
             // console.warn("Load event")
 			
-            this.events.registerLeafChangeEvents();
-			this.events.registerLayoutChangeEvent();
-			this.events.registerMetaDelEvent();
+            this.events.regLeafChangeEv();
+			this.events.regLayoutChangeEv();
+			this.events.regMetaDelEv();
 
 
             app.workspace.iterateAllLeaves((leaf) => {
@@ -122,10 +122,10 @@ export default class FI_Plugin extends Plugin {
 		
 		// Custom Save command
 		// https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
-		const saveCommandDefinition = this.app.commands.commands["editor:save-file"];
-		const save = saveCommandDefinition === null || saveCommandDefinition === void 0 ? void 0 : saveCommandDefinition.callback;
+		const saveCmdDef = this.app.commands.commands["editor:save-file"];
+		const save = saveCmdDef === null || saveCmdDef === void 0 ? void 0 : saveCmdDef.callback;
 		if (typeof save === "function") {
-			saveCommandDefinition.callback = async () => {
+			saveCmdDef.callback = async () => {
 				await save();
 				if (this.settings.refreshOnNoteSave) {
 					
@@ -149,7 +149,7 @@ export default class FI_Plugin extends Plugin {
 	}
 
 
-	async onunload() {
+	async onUnload() {
 		this.trailResizeObs.disconnect()
 		//Unregister Blocks
 		for(let block of Object.values(Blocks)){

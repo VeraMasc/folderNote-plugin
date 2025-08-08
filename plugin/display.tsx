@@ -41,11 +41,8 @@ export function Trail(activeMDView:MarkdownView, mode:MarkdownViewModeType, plug
     }
 
 
-
 	let index= isIndex? note : note?.parent;
-  
 	
-
     //Display
 	let fnDiv = createFNDiv(activeMDView,mode,note)
     let contDiv = createContentDiv(activeMDView,mode,note)

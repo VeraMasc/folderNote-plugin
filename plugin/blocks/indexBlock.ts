@@ -4,13 +4,14 @@ import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
 import * as Display from '../display';
 import FI_Plugin from "../main";
 import { indexData } from '../indexing';
+import { PPContext } from '../../../.sharedModules/obsidianUtils';
 
 /**Block identifier */
 export const Id = "index";
 
 
 /** Generates the block from the source data */
-export async function generateBlock(source:string, el, ctx:MarkdownPostProcessorContext, plugin:FI_Plugin){
+export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_Plugin){
 	try{
 		//Get Config
 		let config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};

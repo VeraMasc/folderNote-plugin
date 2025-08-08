@@ -2,7 +2,7 @@ import { EventRef } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
 import * as Display from "../display"
-import { debounce } from '../../../.sharedModules/EventUtils';
+import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
 
 
 /**Manages all the plugin's events */
@@ -19,7 +19,7 @@ export class EventManager{
     }
 
     /**Registers events for when you write, switch Obsidian "leafs" or switch editor modes */
-    registerLeafChangeEvents() {
+    regLeafChangeEv() {
         var func = async () => {
             if (this.plugin.settings.refreshOnNoteChange) {
                 await this.plugin.redrawFN();
@@ -27,13 +27,13 @@ export class EventManager{
             };
         };
         this.plugin.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
-        this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", debounce(func,100));
+        this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", debounceReps(func,500));
         this.plugin.registerEvent(this.plugin.activeLeafChange);
         this.plugin.registerEvent(this.plugin.editorChange);
     }
     
     /**Registers the obsidian layout changes*/
-    registerLayoutChangeEvent() {
+    regLayoutChangeEv() {
         this.plugin.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
             //TODO: Make this handle config changes
             await this.plugin.redrawFN();
@@ -43,7 +43,7 @@ export class EventManager{
     }
      
     /**Registers the event for when a file's metadata changes */
-    registerMetaChangeEvent() {
+    regMetaChangeEvent() {
         //Evento de archivo modificado
         this.plugin.metaChange = this.plugin.app.metadataCache.on("changed", async (file) => {
             //console.warn("File modified")
@@ -62,7 +62,7 @@ export class EventManager{
     }
     
     /**Registers the delete event*/
-    registerMetaDelEvent() {
+    regMetaDelEv() {
         this.plugin.metaDel = this.plugin.app.metadataCache.on("deleted", async (file) => {
             this.plugin.tree.deleteNode(file)
         });
