@@ -1,8 +1,9 @@
-import { MarkdownView, MarkdownViewModeType } from 'obsidian';
+import { MarkdownView, MarkdownViewModeType, OpenViewState } from 'obsidian';
 import { indexData } from '../indexing';
 import { indexMenu } from '../contextMenu';
-import { IndexOpen, addIndexTitle, setIndexOpen } from './display';
+import { IndexOpen, setIndexOpen } from './display';
 import * as html from '../html';
+
 
 /**Creates the container for the trail and index */
 export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: indexData) {
@@ -157,6 +158,23 @@ export function addIndex(fnDiv: HTMLElement, indexData: indexData) {
 
         (app as any).commands.executeCommandById("file-explorer:new-file");
     };
+
+}
+/**Adds a title to the index */
+
+export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
+	let title = indexData.config?.indexPath ?? indexData?.name;
+	summEl.append(` ${title} `);
+	let link = summEl.createEl("a", {
+		cls: "FN-link internal-link FN-gotoIndex", href: indexData.filePath, title: indexData.name, attr: { target: "_blank", rel: "noopener", "data-href": indexData.filePath, }
+	});
+	link.innerHTML = html.gotoIndex_icon;
+	link.onclick = (e) => {
+		e.preventDefault();
+		let mode = (app.vault as any).getConfig("defaultViewMode");
+		app.workspace.activeLeaf?.openFile(indexData.file,
+			{ active: true, mode } as OpenViewState);
+	};
 
 }
 

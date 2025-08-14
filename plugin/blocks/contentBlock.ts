@@ -6,16 +6,53 @@ export const Id = "contentIndex";
 import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
 import { getActiveMDView } from "../display/display";
 
+
+
+
 /**Block Markdown processor */
 export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	try {
 		let config = getConfig(source) as Config;
 		let data = getMetaData(ctx);
+
 		renderContents(el, data, config, ctx, plugin);
+		
+
 	} catch (err) {
 		console.error(err);
 		el.innerText = err + "";
 	}
+
+}
+
+let cache:HeadingCache[];
+
+/**Como generate block, pero lo regenera */
+export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
+	try {
+		let temp = createDiv({ cls: "block-language-contentIndex" });
+		let data = getMetaData(ctx);
+		let hasChanged = !checkSameHeadings(data.headings,cache);
+		cache = data.headings;
+		if(hasChanged){
+			renderContents(temp, data, config, ctx, plugin);
+			cache = data.headings;
+			//Replace previous
+			el.replaceChildren(temp);
+		}
+		
+	} catch (err) {
+		console.error(err);
+		el.innerText = err + "";
+	}
+
+}
+
+/**Checks if both heading lists contain the same exact headings */
+function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
+	return a != null && a.length === b?.length && a.every(
+		(h,i) =>h.heading === b[i].heading && h.level === b[i].level
+	)
 
 }
 

@@ -39,15 +39,13 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	let fnDiv = createFNDiv(activeMDView, mode, note);
 	let contDiv = createContentDiv(activeMDView, mode, note);
 
-	if (listContent && contDiv) {
-
+	if (listContent && contDiv) { // * List content
 
 		let ctx = getContextOf(note.file);
-		let div = createDiv({ cls: "block-language-contentIndex" });
-		contentBlock.generateBlock("customLinkEv:true;", div, ctx, plugin);
-		//Replace previous
-		contDiv.replaceChildren(div);
+		
+		contentBlock.regenerateBlock({customLinkEv:true}, contDiv, ctx, plugin);
 
+        
 
 	}
 	// Trail

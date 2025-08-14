@@ -1,7 +1,5 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, OpenViewState, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from 'obsidian';
-import {indexData} from "../indexing"
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from 'obsidian';
 
-import * as html from "../html"
 import {JSX} from "../../../.sharedModules/JSX"
 import {noteMenu} from '../contextMenu';
 import { NoteConfig } from '../config';
@@ -46,23 +44,6 @@ export function* iterateOuter(arr:Array<any>){
 
 (window as any).iterateCenter = iterateCenter;
 (window as any).iterateOuter = iterateOuter;
-
-/**Adds a title to the index */
-export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
-	let title = indexData.config?.indexPath ?? indexData?.name;
-	summEl.append(` ${title} `);
-	let link = summEl.createEl("a", {
-		cls: "FN-link internal-link FN-gotoIndex", href: indexData.filePath, title: indexData.name, attr: { target: "_blank", rel: "noopener", "data-href": indexData.filePath, }
-	});
-	link.innerHTML = html.gotoIndex_icon;
-	link.onclick=(e)=>{
-		e.preventDefault()
-		let mode =(app.vault as any).getConfig("defaultViewMode");
-		app.workspace.activeLeaf?.openFile(indexData.file,
-			{active:true, mode} as OpenViewState)
-	}
-	
-}
 
 /** Gets the currently active Markdown View */
 export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewModeType}{
