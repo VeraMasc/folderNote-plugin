@@ -3,7 +3,8 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCach
 import {sleep} from '../../.sharedModules/Async Utils'
 import {IndexTree} from "./indexing"
 import {setLinkToIndex} from "./metadata"
-import * as Display from "./display"
+import * as Display from "./display/display"
+import * as Trail from './display/trail';
 import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
 import { BlockSuggest } from './blocks/suggest/blockSuggest';
@@ -96,7 +97,7 @@ export default class FI_Plugin extends Plugin {
 
 		this.tree = new IndexTree(this);
 		this.trailResizeObs = 
-			new ResizeObserver(Display.trailOverflow);
+			new ResizeObserver(Trail.trailOverflow);
 
 
 		this.events.regMetaChangeEvent();
@@ -193,7 +194,7 @@ export default class FI_Plugin extends Plugin {
 			const { RootIndexList=[], settings,  app } = this;
 			const {activeMDView, mode} = Display.getActiveMDView() 
 			if(activeMDView)
-				Display.Trail(activeMDView,mode,this)	
+				Trail.Trail(activeMDView,mode,this)	
 		}
 		catch (err) {
 			console.error(err);

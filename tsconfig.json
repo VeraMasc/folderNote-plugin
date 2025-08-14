@@ -22,7 +22,7 @@
     "outDir": "./plugin/",
   },
 
-  "files": ["./plugin/main.ts", "plugin/colors.ts"],
+  "files": ["./plugin/main.ts", "plugin/colors.ts", "plugin/display/index.tsx", "plugin/display/trail.tsx"],
   "exclude": ["../.sharedModules/*"]
 
 }

@@ -1,7 +1,8 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 
 import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
-import * as Display from '../display';
+import * as Display from '../display/display';
+import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
 import { indexData } from '../indexing';
 import { PPContext } from '../../../.sharedModules/obsidianUtils';
@@ -53,7 +54,7 @@ function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext
 
 	if (data && data.isIndex) {
 		Object.assign(data.config, config);
-		Display.addIndex(fnDiv, data);
+		createFNDiv.addIndex(fnDiv, data);
 	}else{
 		fnDiv.createEl("span",{text:"No Index Data"})
 	}

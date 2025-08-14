@@ -4,7 +4,7 @@ import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Comp
 export const Id = "contentIndex";
 
 import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
-import { getActiveMDView } from "../display";
+import { getActiveMDView } from "../display/display";
 
 /**Block Markdown processor */
 export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plugin) {

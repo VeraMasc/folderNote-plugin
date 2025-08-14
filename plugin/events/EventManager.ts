@@ -1,7 +1,7 @@
 import { EventRef } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
-import * as Display from "../display"
+import * as Display from "../display/display"
 import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
 
 
