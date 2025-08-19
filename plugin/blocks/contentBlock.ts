@@ -44,8 +44,15 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 	} catch (err) {
 		console.error(err);
 		el.innerText = err + "";
+		cache=[]
 	}
 
+}
+
+/**Clears the block and updates the cache */
+export function clearBlock(contDiv:HTMLElement){
+	contDiv.empty()
+	cache=[]
 }
 
 /**Checks if both heading lists contain the same exact headings */

@@ -1,11 +1,12 @@
 import * as DOMu from '.sharedModules/DOM Utils';
 import { MarkdownView, MarkdownViewModeType } from 'obsidian';
-import { createFNDiv, createContentDiv, addIndex } from '.';
+import { createFNDiv, createContentDiv as getContentDiv, addIndex } from '.';
 import { getContextOf } from '../blocks/BlockUtils';
 import { contentBlock } from '../blocks/Blocks';
 import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
 import { iterateCenter, iterateOuter } from './display';
+import { clearBlock } from '../blocks/contentBlock';
 
 //TODO: Mejorar y documentar proceso de renderizado
 /**Renders the path trail and and additional elements
@@ -37,16 +38,15 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 
 	//Display
 	let fnDiv = createFNDiv(activeMDView, mode, note);
-	let contDiv = createContentDiv(activeMDView, mode, note);
+	let contDiv = getContentDiv(activeMDView, mode, note);
 
 	if (listContent && contDiv) { // * List content
-
 		let ctx = getContextOf(note.file);
 		
 		contentBlock.regenerateBlock({customLinkEv:true}, contDiv, ctx, plugin);
 
-        
-
+	}else{
+		clearBlock(contDiv);
 	}
 	// Trail
 	let trailScroll = fnDiv.createEl('div', { cls: "FN-trail-scroller", attr: { tabindex: 0 } });
