@@ -5,7 +5,7 @@ import {lighten,getLuminance} from "color2k"
 import { linkMenu } from './contextMenu';
 
 /**Indexing data of a specific folder or file*/
-export class indexData{
+export class IndexData{
     /**Folder represented or folder that contains the file*/
     folder:TFolder;
     /**The file itself*/
@@ -26,8 +26,8 @@ export class indexData{
 	/** Configuration of the file*/
     config=new NoteConfig();
     id:string=null;
-    prev:indexData;
-    next:indexData;
+    prev:IndexData;
+    next:IndexData;
 
     /**Gets partial name of the index (no extension) */
     get name(){
@@ -57,7 +57,7 @@ export class indexData{
         return path + this.file.basename;
 	}
 	
-	clone():indexData {
+	clone():IndexData {
 		return Object.assign(Object.create(this), {config :Object.create(this.config) })
 	}
 	/** Checks if this file is acts as an index file */
@@ -147,8 +147,8 @@ export class indexData{
     }
 
     /**Returns an array of all IndexData from root to this file */
-    getSplitPath(this:indexData):indexData[]{
-        let ret:indexData[] = [];ret.unshift(this)
+    getSplitPath(this:IndexData):IndexData[]{
+        let ret:IndexData[] = [];ret.unshift(this)
         let current = this?.folder?.parent;
         while(current != null){
             ret.unshift(this.explore(current));
@@ -210,14 +210,20 @@ export class indexData{
         return linkEl;
     }
 
+    /**Opens the specified note */
+    OpenNote(){
+        let mode = (app.vault as any).getConfig("defaultViewMode");
+		app.workspace.activeLeaf?.openFile(this.file,
+			{ active: true, mode } as OpenViewState);
+    }
 
     /**Returns the index data of all child notes (except hidden)*/
-    *childNotes(config:NoteConfig=null): Generator<indexData, void, unknown>{
+    *childNotes(config:NoteConfig=null): Generator<IndexData, void, unknown>{
         //Map and sort notes
         let mapped = this.sortNodes(this.folder.children
 			.map(child => this.explore(child)));
         
-		
+
 		let rawHideReg = config?.hideRegExp ?? [];
 		rawHideReg = [rawHideReg].flat()
 		let hideRegExp = rawHideReg?.map(exp => new RegExp(exp))
@@ -234,7 +240,7 @@ export class indexData{
     }
 
     /**Handles the order of nodes */
-    sortNodes(nodes:indexData[], config:NoteConfig=null) {
+    sortNodes(nodes:IndexData[], config:NoteConfig=null) {
         //Locale Sort (Fixes number order and stuff)
         nodes = nodes.sort((a,b)=> a.fullName.localeCompare(b.fullName,undefined, {numeric: true}));
         //Priority sort
@@ -261,7 +267,7 @@ export class indexData{
 }
 
 type fileTree= {
-    [name:string]:indexData;
+    [name:string]:IndexData;
 }
 
 /**Holds the full tree structure of all the cached indexes  */
@@ -281,7 +287,7 @@ export class IndexTree{
         let visited=this.data[abstract.path];
         if(!visited){
             
-            visited = (this.data[abstract.path] = new indexData(abstract,this));
+            visited = (this.data[abstract.path] = new IndexData(abstract,this));
             // console.warn(`Visiting node "${visited.name}"`)
             
         }
@@ -297,7 +303,7 @@ export class IndexTree{
 
     /**Recalculates and replaces a node */
     refreshNode(abstract:TFolder| TFile | TAbstractFile){
-        let data = new indexData(abstract,this);
+        let data = new IndexData(abstract,this);
         let old = this.data[abstract.path];
         this.data[abstract.path] = data;
 

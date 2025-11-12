@@ -261,6 +261,24 @@ body.is-mobile .FN-link {
   -webkit-mask: var(--alx-folder-icon-url);
 }
 
+.FN-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.2em 1em;
+  margin-bottom: 0;
+}
+
+.FN-nav > .FN-nav-button {
+  text-decoration: none;
+  color: #bbbbbb;
+  border: #bbbbbb 1px solid;
+  width: 1.7em;
+  height: 1.7em;
+  text-align: center;
+  line-height: 1.7em;
+  border-radius: 0.6em;
+}
+
 .FN-div, .FN-div-block {
   max-width: 100%;
   margin-bottom: 10px;

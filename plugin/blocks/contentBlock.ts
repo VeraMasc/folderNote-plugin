@@ -33,10 +33,10 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		let temp = createDiv({ cls: "block-language-contentIndex" });
 		let data = getMetaData(ctx);
 		let hasChanged = !checkSameHeadings(data.headings,cache);
-		cache = data.headings;
+		cache = data?.headings;
 		if(hasChanged){
 			renderContents(temp, data, config, ctx, plugin);
-			cache = data.headings;
+			cache = data?.headings;
 			//Replace previous
 			el.replaceChildren(temp);
 		}
@@ -68,7 +68,7 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 /**Renders the content of the block */
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
 	data ??= { }; //If no cached data
-	let  headings  = [...(data.headings ?? [])]; //Avoid operating on metadata
+	let  headings  = [...(data?.headings ?? [])]; //Avoid operating on metadata
 	let { from, relative, excludeRoot=true } = config;
 
 	//TODO: refactor renderContents for readability

@@ -6,6 +6,7 @@ import { contentBlock } from '../blocks/Blocks';
 import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
 import { iterateCenter, iterateOuter } from './display';
+import { addNavArrows } from './nav';
 import { clearBlock } from '../blocks/contentBlock';
 
 //TODO: Mejorar y documentar proceso de renderizado
@@ -25,7 +26,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	let note = plugin.tree.getNode(file);
 
 	let { isIndex } = note;
-	let { ignore, color: fnColor, listContent } = note.config;
+	let { ignore, color: fnColor, listContent, nav } = note.config;
 	const { basename, parent } = file;
 
 	/*	Is Index?	*/
@@ -33,6 +34,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		return;
 	}
 
+	
 
 	let index = isIndex ? note : note?.parent;
 
@@ -66,8 +68,11 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}
 	el.addClass("FN-current");
 
+	if (nav){
+		addNavArrows(note,fnDiv);
+	}
 
-
+	//Index
 	if (isIndex) {
 		addIndex(fnDiv, index);
 		el.oncontextmenu = currentNoteMenu; //Set context menu

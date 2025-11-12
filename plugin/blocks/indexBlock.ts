@@ -4,7 +4,7 @@ import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
 import * as Display from '../display/display';
 import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
-import { indexData } from '../indexing';
+import { IndexData } from '../indexing';
 import { PPContext } from '../../../.sharedModules/obsidianUtils';
 
 /**Block identifier */
@@ -46,7 +46,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 }
 
 /**Fills block according to the configuration */
-function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:indexData){
+function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:IndexData){
 	let fnDiv=el.createDiv({
         cls: `FN-div-block`,
         

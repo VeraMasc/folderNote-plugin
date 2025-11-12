@@ -1,12 +1,12 @@
 import { MarkdownView, MarkdownViewModeType, OpenViewState } from 'obsidian';
-import { indexData } from '../indexing';
+import { IndexData } from '../indexing';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';
 import * as html from '../html';
 
 
 /**Creates the container for the trail and index */
-export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: indexData) {
+export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: IndexData) {
     const view = mode === "preview"
         ? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
         : activeMDView.contentEl.querySelector("div.markdown-source-view");
@@ -47,7 +47,7 @@ export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeTy
     return fnDiv;
 }
 /**Creates the div to display internal content of the note, like a header index */
-export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: indexData) {
+export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: IndexData) {
     const view = mode === "preview"
         ? activeMDView.previewMode.containerEl.querySelector("div.markdown-preview-view")
         : activeMDView.contentEl.querySelector("div.markdown-source-view");
@@ -91,7 +91,7 @@ export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewM
  * @param indexData All info about the index
  */
 
-export function addIndex(fnDiv: HTMLElement, indexData: indexData) {
+export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
     //Index
     let { config } = indexData;
     const indexEl = fnDiv.createEl("details", {
@@ -162,7 +162,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: indexData) {
 }
 /**Adds a title to the index */
 
-export function addIndexTitle(summEl: HTMLElement, indexData: indexData) {
+export function addIndexTitle(summEl: HTMLElement, indexData: IndexData) {
 	let title = indexData.config?.indexPath ?? indexData?.name;
 	summEl.append(` ${title} `);
 	let link = summEl.createEl("a", {

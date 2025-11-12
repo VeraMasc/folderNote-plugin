@@ -10,16 +10,16 @@
 			"sync":
 			[
 				{
-					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/plugin",
-					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/",
+					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/plugin",
+					"dest":"E:/Archivos Varios/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/",
 					
 					"bidir":false
 
 
 				},
 				{
-					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/_styles",
-					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/_styles",
+					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/_styles",
+					"dest":"E:/Archivos Varios/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/_styles",
 					
 					"bidir":false
 
@@ -36,16 +36,16 @@
 			"sync":
 			[
 				{
-					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/plugin",
-					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/",
+					"src":"E:/Archivos Varios/Proyectos/Programación/Plugins Obsidian/folderNote-plugin/plugin",
+					"dest":"E:/Archivos Varios/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/",
 					
 					"bidir":false
 
 
 				},
 				{
-					"src":"F:/Users/nidea/Documents/Notas Obsidian/Plugins/folderNote-plugin/_styles",
-					"dest":"F:/Users/nidea/Documents/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/_styles",
+					"src":"E:/Archivos Varios/Proyectos/Programación/Plugins Obsidian/folderNote-plugin/_styles",
+					"dest":"E:/Archivos Varios/Notas Obsidian/Fanfics/.obsidian/plugins/folderNote-index/_styles",
 					
 					"bidir":false
 
