@@ -35,7 +35,8 @@
 .FN-trail-arrow {
   text-align: center;
   white-space: nowrap;
-  margin: auto 5px;
+  margin: auto 0;
+  padding: 0 5px;
   color: var(--text-normal);
 }
 .FN-trail-arrow.FN-end-arrow:is(:hover, :active, :focus, :focus-visible) {
@@ -271,12 +272,15 @@ body.is-mobile .FN-link {
 .FN-nav > .FN-nav-button {
   text-decoration: none;
   color: #bbbbbb;
-  border: #bbbbbb 1px solid;
+  border: #bbbbbb 2px solid;
+  box-sizing: border-box;
   width: 1.7em;
   height: 1.7em;
   text-align: center;
   line-height: 1.7em;
   border-radius: 0.6em;
+  font-size: large;
+  font-weight: bold;
 }
 
 .FN-div, .FN-div-block {

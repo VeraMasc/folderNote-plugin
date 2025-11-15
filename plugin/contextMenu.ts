@@ -39,12 +39,12 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
 /**Generates the Context menu that is universal to all notes
  * @param [moreMenu=null] optional menu for extra options
 */
-function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu=null) {
+function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null) {
 
     let file = getOptionsTargetFile(ev)
     moreMenu??=menu;
     //Folder note
-    actionItem(moreMenu, "Make Folder Note", "folder-root", (e) => {
+    actionItem(moreMenu as Menu, "Make Folder Note", "folder-root", (e) => {
         new Notice("Update folder note creation process")
         let data = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
@@ -89,7 +89,7 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
     let moreMenu = new DeferredMenu();
     insertBlockItem(moreMenu as unknown as Menu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
-    noteOptions(menu, ev,moreMenu as unknown as Menu) //Generate regular options
+    noteOptions(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu
     moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
     
@@ -124,8 +124,9 @@ export function linkMenu(ev: MouseEvent) {
         app.workspace?.openLinkText(link.dataset.href, ".", true,
             { active: true, mode } as OpenViewState)
     })
-    noteOptions(menu, ev);
-
+    let moreMenu = new DeferredMenu();
+    noteOptions(menu, ev,moreMenu);
+    moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
 
     menu.showAtMouseEvent(ev);
 }

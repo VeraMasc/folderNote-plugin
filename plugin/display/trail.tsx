@@ -73,18 +73,18 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}
 
 	//Index
+	let cnEl =el;
 	if (isIndex) {
 		addIndex(fnDiv, index);
-		el.oncontextmenu = currentNoteMenu; //Set context menu
 	}
-
 	else {
 		let arrow = trailDiv.createEl("span", { cls: "FN-trail-arrow FN-end-arrow", text: " ↓ " });
-		arrow.oncontextmenu = currentNoteMenu;
+		cnEl=arrow;
 		if (fnColor)
 			arrow.style.setProperty("--text-normal", fnColor);
 	}
-
+	
+	cnEl.ondblclick = cnEl.oncontextmenu = currentNoteMenu; //Set context menu
 	//Observer
 	plugin.trailResizeObs.observe(fnDiv);
 }

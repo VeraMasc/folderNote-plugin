@@ -10,7 +10,7 @@
 			"sync":
 			[
 				{
-					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/plugin",
+					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/plugin/",
 					"dest":"E:/Archivos Varios/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/",
 					
 					"bidir":false
@@ -18,7 +18,7 @@
 
 				},
 				{
-					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/_styles",
+					"src":"E:/Archivos Varios/Notas Obsidian/Plugins/folderNote-plugin/_styles/",
 					"dest":"E:/Archivos Varios/Notas Obsidian/Mis notas/.obsidian/plugins/folderNote-index/_styles",
 					
 					"bidir":false

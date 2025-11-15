@@ -10,11 +10,13 @@
 .FN-nav>.FN-nav-button{
     text-decoration: none;
     color: #bbbbbb;
-    border: #bbbbbb 1px solid;
+    border: #bbbbbb 2px solid;
+    box-sizing: border-box;
     width: 1.7em;
     height:1.7em;
     text-align: center;
     line-height: 1.7em;
     border-radius: 0.6em;
-    
+    font-size: large;
+    font-weight: bold;
 }
