@@ -1,12 +1,13 @@
 import { addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache, Events, Notice, TFolder, View } from "obsidian";
 
 import { fromView as fmFromView, valueRegex } from "../../.sharedModules/FrontMatter";
-import { applyHighlight, obsidianIcons } from '../../.sharedModules/obsidianUtils';
+import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../../.sharedModules/obsidianUtils';
 import { BlockName } from './blocks/Blocks';
 import FI_Plugin from "./main"
 import { xApp } from "./main"
 import { getRandomColor } from "./colors";
 
+import { MenuItemAPI } from "../../.sharedModules/obsidianUtils";
 
 /**Context menu of the index element of the index file*/
 export function indexMenu(ev: MouseEvent) {
@@ -35,13 +36,15 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
 
 }
 
-/**Generates the Context menu that is universal to all notes*/
-function noteOptions(menu: Menu, ev: MouseEvent) {
+/**Generates the Context menu that is universal to all notes
+ * @param [moreMenu=null] optional menu for extra options
+*/
+function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu=null) {
 
     let file = getOptionsTargetFile(ev)
-
+    moreMenu??=menu;
     //Folder note
-    actionItem(menu, "Make Folder Note", "folder-root", (e) => {
+    actionItem(moreMenu, "Make Folder Note", "folder-root", (e) => {
         new Notice("Update folder note creation process")
         let data = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
@@ -75,7 +78,7 @@ function noteOptions(menu: Menu, ev: MouseEvent) {
         applyHighlight(fileElement?.selfEl);
 
     })
-    addIcon("testIco", "")
+    //addIcon("testIco", "")
 }
 
 /**Generates the Context menu of all the currently opened file*/
@@ -83,9 +86,13 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
 
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
     setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", getRandomColor)//Custom link color
-    insertBlockItem(menu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
+    let moreMenu = new DeferredMenu();
+    insertBlockItem(moreMenu as unknown as Menu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
-    noteOptions(menu, ev) //Generate regular options 
+    noteOptions(menu, ev,moreMenu as unknown as Menu) //Generate regular options
+    //Resolve moremenu
+    moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
+    
 }
 
 /**Generates the full context menu of all notes*/
@@ -165,6 +172,8 @@ function insertBlockItem(menu: Menu, title: string, icon: obsidianIcons, blockTy
             )
     );
 }
+
+
 
 /**Creates a context menu item that performs an action 
  * @param menu Menu that will hold the item
