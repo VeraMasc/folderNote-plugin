@@ -90,10 +90,9 @@ export default class FI_Plugin extends Plugin {
 			}
 		}
 
-		//Register suggest
-		this.registerEditorSuggest(new BlockSuggest(this))
 		
-		//TODO: make main readable
+		
+		// TODO: make main readable
 
 		this.tree = new IndexTree(this);
 		this.trailResizeObs = 
@@ -106,8 +105,10 @@ export default class FI_Plugin extends Plugin {
             var _a;
             const noFiles = app.vault.getMarkdownFiles().length;
 			await this.redrawFN()
-            // console.warn("Load event")
-			
+            
+			//Register suggest
+			this.registerEditorSuggest(new BlockSuggest(this))
+			//Register events 
             this.events.regLeafChangeEv();
 			this.events.regLayoutChangeEv();
 			this.events.regMetaDelEv();

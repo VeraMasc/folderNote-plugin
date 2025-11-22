@@ -1,5 +1,6 @@
 import { PluginSettingTab, App, Setting } from 'obsidian';
 import FI_Plugin from './main';
+import {addToggle, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
 
 
 export class SettingsTab extends PluginSettingTab {
@@ -13,42 +14,19 @@ export class SettingsTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl, plugin } = this;
 		const { settings } = plugin;
+		const context = {containerEl, plugin, settings} as SettingsContext<MyPluginSettings>;
 		containerEl.empty();
-
-		containerEl.createEl('h2', { text: 'Settings for my awesome plugin.' });
+		containerEl.createEl('h2', { text: 'Folder Index settings' });
 
 		//Refresh on save
-		new Setting(containerEl)
-			.setName("Refresh on Save")
-			.setDesc("Refresh Folder note index when a note is saved")
-			.addToggle((toggle) => toggle.setValue(settings.refreshOnNoteSave).onChange(async (value) => {
-				settings.refreshOnNoteSave = value;
-				await plugin.saveSettings();
-			}
-			));
+		addToggle<MyPluginSettings>(context,'refreshOnNoteSave',"Refresh on Save","Refresh Folder note index when a note is saved");
 
 		//Refresh on change
-		new Setting(containerEl)
-			.setName("Refresh on Change")
-			.setDesc("Refresh Folder note index when changing notes")
-			.addToggle((toggle) => toggle.setValue(settings.refreshOnNoteChange).onChange(async (value) => {
-				settings.refreshOnNoteChange = value;
-				await plugin.saveSettings();
-			}
-			));
-
-		//Codeblock suggestions
-		new Setting(containerEl)
-			.setName("Codeblock Suggestions")
-			.setDesc("Shows suggestions for the plugin's codeblock parameters")
-			.addToggle((toggle) => 
-				toggle
-				.setValue(settings.blockSuggestions)
-				.onChange(async (value) => {
-					settings.blockSuggestions = value;
-					await plugin.saveSettings();
-				}
-			));
+		addToggle<MyPluginSettings>(context,'refreshOnNoteChange',"Refresh on Change","Refresh Folder note index when changing notes")		
+		//Block suggestions
+		addToggle<MyPluginSettings>(context,'blockSuggestions',"Codeblock Suggestions","Shows suggestions for the plugin's codeblock parameters")
+		
+		
 
 		new Setting(containerEl)
 			.setName("Root Index Name")

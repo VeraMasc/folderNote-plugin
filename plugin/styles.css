@@ -271,8 +271,8 @@ body.is-mobile .FN-link {
 
 .FN-nav > .FN-nav-button {
   text-decoration: none;
-  color: #bbbbbb;
-  border: #bbbbbb 2px solid;
+  color: var(--link-color);
+  border: var(--link-color) 2px outset;
   box-sizing: border-box;
   width: 1.7em;
   height: 1.7em;
@@ -281,6 +281,7 @@ body.is-mobile .FN-link {
   border-radius: 0.6em;
   font-size: large;
   font-weight: bold;
+  background-color: var(--background-secondary);
 }
 
 .FN-div, .FN-div-block {

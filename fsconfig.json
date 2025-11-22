@@ -4,7 +4,7 @@
 		
 		{
 			"name":"sync_plugin",
-			"enabled":true,
+			"enabled":false,
 			
 			
 			"sync":

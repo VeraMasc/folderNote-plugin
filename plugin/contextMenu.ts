@@ -44,7 +44,7 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
     let file = getOptionsTargetFile(ev)
     moreMenu??=menu;
     //Folder note
-    actionItem(moreMenu as Menu, "Make Folder Note", "folder-root", (e) => {
+    actionItem(moreMenu, "Make Folder Note", "folder-root", (e) => {
         new Notice("Update folder note creation process")
         let data = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
@@ -55,7 +55,8 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
 
         //TODO: move files
 
-    })
+    });
+    setPropItem(moreMenu, "Make Navigable", "arrow-right-left" as any, "FN-nav")
     //View file in explorer
     actionItem(menu, "View in explorer", "eye", (e) => {
         let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function
@@ -78,7 +79,6 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
         applyHighlight(fileElement?.selfEl);
 
     })
-    //addIcon("testIco", "")
 }
 
 /**Generates the Context menu of all the currently opened file*/
@@ -87,7 +87,7 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
     setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", getRandomColor)//Custom link color
     let moreMenu = new DeferredMenu();
-    insertBlockItem(moreMenu as unknown as Menu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
+    insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
     noteOptions(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu
@@ -103,7 +103,9 @@ export function noteMenu(ev: MouseEvent) {
     menu.showAtMouseEvent(ev);
 }
 
-/**Generates the full context menu of the current note */
+/**
+ * Generates the full context menu of the current note 
+ */
 export function currentNoteMenu(ev: MouseEvent) {
     ev.preventDefault();
     const menu = new Menu();
@@ -132,7 +134,7 @@ export function linkMenu(ev: MouseEvent) {
 }
 
 /**Sets contextual option to add a specific prop to the file */
-function setPropItem(menu: Menu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
+function setPropItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
@@ -147,7 +149,7 @@ function setPropItem(menu: Menu, title: string, icon: obsidianIcons, prop: strin
 }
 
 /**Same as {@link setPropItem} but sets the value through a function */
-function setPropItemFunction(menu: Menu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent) => any) {
+function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent) => any) {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
@@ -162,7 +164,7 @@ function setPropItemFunction(menu: Menu, title: string, icon: obsidianIcons, pro
 }
 
 /**Sets contextual option to insert a specific code block to the file  */
-function insertBlockItem(menu: Menu, title: string, icon: obsidianIcons, blockType: BlockName, content: string = "") {
+function insertBlockItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, blockType: BlockName, content: string = "") {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
@@ -182,7 +184,7 @@ function insertBlockItem(menu: Menu, title: string, icon: obsidianIcons, blockTy
  * @param icon Display icon of the item
  * @param onclick Action to trigger on clicking the item
 */
-function actionItem(menu: Menu, title: string, icon: obsidianIcons, onclick: (ev?: MouseEvent) => any) {
+function actionItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, onclick: (ev?: MouseEvent) => any) {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)

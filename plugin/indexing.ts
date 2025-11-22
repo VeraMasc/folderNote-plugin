@@ -60,6 +60,7 @@ export class IndexData{
 	clone():IndexData {
 		return Object.assign(Object.create(this), {config :Object.create(this.config) })
 	}
+
 	/** Checks if this file is acts as an index file */
     get isIndex(){
 		if(this.isFolder || !!this.config.useAsIndex)
@@ -71,72 +72,54 @@ export class IndexData{
         if(!exists || file.extension != "md") 
             return false;
 
-        if(isRoot){
-            return this.indexer.plugin?.RootIndexList
+        return isRoot?
+            this.indexer.plugin?.RootIndexList
                         ?.contains(file.basename)
-        }
-		else{
-			return (folder.name == file.basename);
-		}
+            :folder.name == file.basename
     }
 
 	
 
-    constructor(abstract:TFolder | TFile | TAbstractFile,indexer:IndexTree){
-        this.id = abstract.path;
-        this.isFolder = abstract instanceof TFolder;
+    constructor(abstract:TFolder | TFile | TAbstractFile, indexer:IndexTree){
+        
         if(!(this.exists= (abstract != null))) // No File case
             return;
         
-
+        this.id = abstract.path;
+        this.isFolder = abstract instanceof TFolder;
         this.indexer=indexer;
         
-        if(this.isFolder){
-            // Folder
-            this.folder = abstract as TFolder;
-            this.file = this.findIndex();
 
-        }else{
-            // File
-            this.folder = abstract.parent;
-            this.file = abstract as TFile;
-            this.ext =  this.file?.extension??null;
-        }
-
+        //Get file and folder
+        this.folder = this.isFolder? abstract as TFolder : abstract.parent;
+        this.file = this.isFolder? this.findIndex() : abstract as TFile;
+        this.ext =  this.isFolder? null : this.file?.extension??null;
         
         this.updateConfig()
-
-
-        
-        
-        
     }
     
     /**Finds the index of the folder */
     findIndex(){
         let {folder,isRoot,isFolder,exists} = this;
-        if(!(isFolder && exists)) 
+        if(!isFolder || !exists) 
             return null;
 
-        let indexes;
+        let indexes: TAbstractFile[];
 
-        if(isRoot){
-            indexes = folder?.children?.filter(c=>{
-                    if(!(c instanceof TFile))
-                        return false
-                    let f = c as TFile;
-
-                    return this.indexer.plugin?.RootIndexList
+        indexes = folder?.children ?? []
+        //How are indexes found?
+        let func = isRoot? 
+            (f:TFile)=>this.indexer.plugin?.RootIndexList
                         ?.contains(f.basename)
-                })?? []
-        }else{
-            indexes = folder?.children?.filter(c=>{
-                    if(!(c instanceof TFile))
-                        return false
-                    let f = c as TFile;
-                    return f.basename == folder.name
-                })?? []
-        }
+            :(f:TFile)=>f.basename == folder.name; // TODO: implement non folder name indexes 
+        indexes = indexes.filter(c=>{
+            if(!(c instanceof TFile))
+                return false
+            let f = c as TFile;
+
+            return func(f)
+        });
+
         return indexes?.first() as TFile;
     }
     get parent(){
@@ -163,6 +146,7 @@ export class IndexData{
         let link = this.filePath;
         let text = this.name;
         let extraText = null;
+        //Truncate
         if(text.length>17){
             extraText=text?.slice(15);
             text = text?.slice(0,15);
@@ -176,6 +160,7 @@ export class IndexData{
 				}})
 			if(this.config.color){
 				try{
+                    // TODO: Check if possible to do with CSS
                     linkEl.style.setProperty("--link-color", this.config.color)
                     let lum= 1-getLuminance(this.config.color)
                     linkEl.style.setProperty("--link-color-hover", lighten(this.config.color, 0.15*lum))
@@ -266,6 +251,7 @@ export class IndexData{
     }
 }
 
+/** Holds the tree structure of files and their indexes*/
 type fileTree= {
     [name:string]:IndexData;
 }
@@ -285,12 +271,9 @@ export class IndexTree{
 			return null;
 
         let visited=this.data[abstract.path];
-        if(!visited){
+        //If not visited:
+        visited ||= (this.data[abstract.path] = new IndexData(abstract,this));
             
-            visited = (this.data[abstract.path] = new IndexData(abstract,this));
-            // console.warn(`Visiting node "${visited.name}"`)
-            
-        }
         return visited;
     }
 	/** Same as  {@link getNode} but for paths
@@ -307,9 +290,8 @@ export class IndexTree{
         let old = this.data[abstract.path];
         this.data[abstract.path] = data;
 
-        if(!data.isFolder){
-            let anyIndex = data.isIndex || old?.isIndex;
-            if (anyIndex) //If index was changed, update its corresponding folder
+        //If index was changed, update its corresponding folder
+        if(!data.isFolder && (data.isIndex || old?.isIndex)){ 
                 this.refreshNode(data.folder)
         }
     }
