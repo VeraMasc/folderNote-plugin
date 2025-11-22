@@ -55,7 +55,7 @@ export default class FI_Plugin extends Plugin {
 	activeLeafSave:EventRef = undefined;
 	layoutChange:EventRef = undefined;
 	metaChange:EventRef = undefined;
-	//TODO: transfer events to manager
+	// TODO: transfer events to manager
 	events:EventManager = new EventManager(this);
 	metaResolve = undefined;
 	metaInit= undefined;
