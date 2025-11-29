@@ -153,11 +153,12 @@ export class IndexData{
         }
         let linkEl:HTMLElement;
         if(stepNote){ //Si la step note existe
-            linkEl = createEl("a",{cls:"internal-link FN-link",
+            linkEl = createEl("a",{cls:"internal-link FN-link" + (this.isRoot?" FN-root":""),
                 href:link , title:this.name,text, 
 				attr:{
 					target:"_blank", rel:"noopener","data-href":link,
 				}})
+            
 			if(this.config.color){
 				try{
                     // TODO: Check if possible to do with CSS

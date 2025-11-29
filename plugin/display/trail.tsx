@@ -5,7 +5,6 @@ import { getContextOf } from '../blocks/BlockUtils';
 import { contentBlock } from '../blocks/Blocks';
 import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
-import { iterateCenter, iterateOuter } from './display';
 import { addNavArrows } from './nav';
 import { clearBlock } from '../blocks/contentBlock';
 
@@ -89,19 +88,20 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	plugin.trailResizeObs.observe(fnDiv);
 }
 let trailSize = null;
+
+
 /**Resizing observer to deal with trail overflowing */
-
 export function trailOverflow(elements, observer) {
-
+	// TODO: Improve and optimize overflow
 	for (let { target } of elements) {
 		let trail = target.querySelector(".FN-trail");
 		let hasOverflow = DOMu.isOverflowing(trail);
 
 		if (hasOverflow) {
 			let steps: HTMLElement[] = [...trail.querySelectorAll(".FN-link")];
-
-			for (let step of iterateCenter(steps)) {
-
+			
+			for (let step of steps) {
+				
 				step.addClass("FN-ellipsis");
 				if (!DOMu.isOverflowing(trail))
 					break;
@@ -109,7 +109,8 @@ export function trailOverflow(elements, observer) {
 		}
 		else if (DOMu.canGrow(trail, null, 10, "x")) {
 			let steps: HTMLElement[] = [...trail.querySelectorAll(".FN-link")];
-			for (let step of iterateOuter(steps)) {
+
+			for (let step of steps.reverse()) {
 				if (!step.hasClass("FN-ellipsis"))
 					continue;
 				step.removeClass("FN-ellipsis");

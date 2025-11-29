@@ -7,43 +7,8 @@ import {indexBlock } from '../blocks/Blocks';
 import { onHeadingLinkClick } from '../blocks/contentBlock';
 
 
-/**Iterates the array from te center */
-export function* iterateCenter(arr:Array<any>){
-    let center = Math.ceil(arr.length/2);
 
-    let top = arr.slice(center)
-    let bot = arr.slice(0,center)
 
- 
-    while(top.length){
-        while(bot.length>=top.length)
-            yield bot.pop();
-        yield top.shift();
-    }
-
-}
-
-/**Iterates the array from both sides */
-export function* iterateOuter(arr:Array<any>){
-    let center = Math.ceil(arr.length/2);
-
-    let top = arr.slice(center)
-    let bot = arr.slice(0,center)
-
- 
-    while(top.length){
-        
-        yield top.pop();
-        yield bot.shift();
-        
-    }
-    while(bot.length)
-            yield bot.shift();
-
-}
-
-(window as any).iterateCenter = iterateCenter;
-(window as any).iterateOuter = iterateOuter;
 
 /** Gets the currently active Markdown View */
 export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewModeType}{

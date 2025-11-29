@@ -5,7 +5,7 @@ import { getContextOf } from '../blocks/BlockUtils';
 import { contentBlock } from '../blocks/Blocks';
 import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
-import { iterateCenter, iterateOuter } from './display';
+
 import { IndexData } from '../indexing';
 
 

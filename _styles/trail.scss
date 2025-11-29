@@ -50,7 +50,7 @@
     text-align: center;
     white-space: nowrap;
     margin: auto 0;
-    padding: 0 5px;
+    padding: 0 0.28em;
 	color:var(--text-normal);
     
     &.FN-end-arrow:is(:hover,:active,:focus,:focus-visible){
@@ -61,13 +61,13 @@
     display: none;
     &+.FN-trail-arrow::before{
         content: "…";
-        margin-right: 5px;
+        margin-right: 0.2em;
         display: inline-block;
         text-align: center;
         font-size: 18px;
     }
    
-    &+*+.FN-ellipsis:not(:focus,:hover)+.FN-trail-arrow{
+    &:not(.FN-root)+*+.FN-ellipsis:not(:focus,:hover)+.FN-trail-arrow{
         // color:red;
         display: none;
     }
@@ -83,6 +83,26 @@
 	display: unset;
 	font-size: 0;
    
+}
+
+%noFocusTrail>.FN-root.FN-ellipsis{
+	&::before{
+        display: inline-block;
+		content: "⌅";
+		font-size: 1.4rem;
+        margin-bottom:  -0.2em;
+		vertical-align: bottom;
+        max-height: 100%;
+	}
+
+    &+.FN-trail-arrow::before{
+        display: none;
+    }
+	text-decoration-line: none;
+	display: unset;
+	font-size: 0;
+    max-height: 100%;
+    overflow-y: hidden;
 }
 
 
