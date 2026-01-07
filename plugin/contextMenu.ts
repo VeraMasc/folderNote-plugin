@@ -45,7 +45,8 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
     moreMenu??=menu;
     //Folder note
     actionItem(moreMenu, "Make Folder Note", "folder-root", (e) => {
-        new Notice("Update folder note creation process")
+        // TODO: Update folder note creation process
+        new Notice("FN-Index: Update folder note creation process")
         let data = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
         if (data.isIndex) {

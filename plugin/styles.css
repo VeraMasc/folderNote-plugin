@@ -303,6 +303,10 @@ body.is-mobile .FN-link {
   background-color: var(--background-secondary);
 }
 
+.FN-nav > .disabled {
+  filter: grayscale(90%);
+}
+
 .FN-div, .FN-div-block {
   max-width: 100%;
   margin-bottom: 10px;

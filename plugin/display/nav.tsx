@@ -15,16 +15,18 @@ import { IndexData } from '../indexing';
 export function addNavArrows(note:IndexData,fnDiv:HTMLDivElement){
     // TODO: Improve nav arrows
     // TODO: Handle index
-    var nav = fnDiv.createEl('span', { cls: "FN-nav" });
-    let prevButton = nav.createEl('button', { cls: "FN-nav-button", text:"<"})
-    let nextButton = nav.createEl('button', {  cls: "FN-nav-button",text:">"})
+    const nav = fnDiv.createEl('span', { cls: "FN-nav" });
+    const hasprev= getNavPrev(note);
+    const hasnext = getNavNext(note);
+    const prevButton = nav.createEl('button', { cls: "FN-nav-button"+ (hasprev?"":" disabled"), text:"<"})
+    const nextButton = nav.createEl('button', {  cls: "FN-nav-button"+ (hasnext?"":" disabled"),text:">"})
     nextButton.onclick = ()=> navigateNext(note);
     prevButton.onclick = ()=> navigatePrev(note);
 }
 
 /**Navigates to the next note */
 export function navigateNext(note:IndexData){
-    let nextNote = getNavNext(note);
+    const nextNote = getNavNext(note);
     if(nextNote == null)
         return;
     nextNote.OpenNote();
@@ -36,7 +38,6 @@ export function getNavNext(note:IndexData){
         return null;
     let list = [...note.parent.childNotes()].filter(n => n.config.nav)
     let index =  list.indexOf(note);
-    console.warn(list);
     index++;
     return list[index]
 }
@@ -56,7 +57,6 @@ export function getNavPrev(note:IndexData){
         return null;
     let list = [...note.parent.childNotes()].filter(n => n.config.nav)
     let index =  list.indexOf(note);
-    console.warn(list);
     index--;
     return list[index]
     

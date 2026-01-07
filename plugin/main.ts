@@ -55,6 +55,7 @@ export default class FI_Plugin extends Plugin {
 	activeLeafSave:EventRef = undefined;
 	layoutChange:EventRef = undefined;
 	metaChange:EventRef = undefined;
+	nameChange:EventRef = undefined;
 	// TODO: transfer events to manager
 	events:EventManager = new EventManager(this);
 	metaResolve = undefined;
@@ -78,6 +79,8 @@ export default class FI_Plugin extends Plugin {
 		FI_Plugin.instance = (window as any).FNindex=this;
 		await this.loadSettings();
 		globalThis.app=this.app;
+
+		// TODO: Add commands for ease of use
 
 		//Register Blocks
 		for(let block of Object.values(Blocks)){

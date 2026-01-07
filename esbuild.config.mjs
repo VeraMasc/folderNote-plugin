@@ -48,7 +48,7 @@ esbuild.build({
 	target: 'esNext',
 	logLevel: "debug",
 	sourcemap: true,
-	minifySyntax: prod? true : false,
+	minifySyntax:true,
 	minifyWhitespace:true,
 	minifyIdentifiers: prod? true : false,
 	treeShaking: true,

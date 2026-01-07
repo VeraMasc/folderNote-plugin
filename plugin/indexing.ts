@@ -297,11 +297,14 @@ export class IndexTree{
         }
     }
 
-    /**Removes the node from the tree */
+    /**Removes the node specified by the file from the tree */
     deleteNode(abstract:TFolder| TFile | TAbstractFile){
-        let old = this.data[abstract.path];
-        delete this.data[abstract.path];
-
+        this.deleteNodeAt(abstract.path)
+    }
+    /**Removes the node with the given path from the tree */
+    deleteNodeAt(path:string){
+        let old = this.data[path];
+        delete this.data[path];
         if(old && !old.isFolder && old.isIndex){
                 this.deleteNode(old.folder)
         }

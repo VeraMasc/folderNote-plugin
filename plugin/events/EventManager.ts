@@ -1,4 +1,4 @@
-import { EventRef } from 'obsidian';
+import { EventRef, TAbstractFile, TFile, TFolder } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
 import * as Display from "../display/display"
@@ -42,19 +42,31 @@ export class EventManager{
         this.plugin.registerEvent(this.plugin.layoutChange);
     }
      
-    /**Registers the event for when a file's metadata changes */
+    /**Registers the event for when a file's metadata (or Name) changes */
     regMetaChangeEvent() {
-        //Evento de archivo modificado
-        this.plugin.metaChange = this.plugin.app.metadataCache.on("changed", async (file) => {
-            //console.warn("File modified")
+        const metaChange = async (file:TFile) => {
+           // console.warn("File modified")
             this.plugin.tree.refreshNode(file)
             var view = Display.getActiveMDView();
             if(view.activeMDView?.file == file){
                 //console.warn("Active File modified")
                 await this.plugin.redrawFN();
             }
-        });
+        };
+
+        const nameChange = async (file:TFile|TFolder,oldpath:string) => {
+            if((file as TFile)?.extension){
+                this.plugin.tree.deleteNodeAt(oldpath)
+                await metaChange(file as TFile)
+            }
+        };
+        //On metadata change
+        this.plugin.metaChange = this.plugin.app.metadataCache.on("changed", metaChange);
         this.plugin.registerEvent(this.plugin.metaChange);
+        
+        //On name change
+        this.plugin.nameChange = this.plugin.app.vault.on("rename",nameChange)
+        this.plugin.registerEvent(this.plugin.nameChange);
 
         this.plugin.metaResolve = this.plugin.app.metadataCache.on("resolve", (data)=>(setLinkToIndex(data,this.plugin)))
         this.plugin.registerEvent(this.plugin.metaResolve);
