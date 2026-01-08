@@ -227,6 +227,7 @@ export class IndexData{
 
     /**Handles the order of nodes */
     sortNodes(nodes:IndexData[], config:NoteConfig=null) {
+        // TODO: Add sorting config
         //Locale Sort (Fixes number order and stuff)
         nodes = nodes.sort((a,b)=> a.fullName.localeCompare(b.fullName,undefined, {numeric: true}));
         //Priority sort

@@ -1,8 +1,8 @@
 
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
-import {sleep} from '../../.sharedModules/Async Utils'
-import {IndexTree} from "./indexing"
-import {setLinkToIndex} from "./metadata"
+import { sleep } from '../../.sharedModules/Async Utils'
+import { IndexTree } from "./indexing"
+import { setLinkToIndex } from "./metadata"
 import * as Display from "./display/display"
 import * as Trail from './display/trail';
 import * as Blocks from "./blocks/Blocks"
@@ -14,117 +14,113 @@ import { DEFAULT_SETTINGS, MyPluginSettings, SettingsTab } from './Settings';
 
 
 /**Exposed app interface */
-export interface xApp extends App{
-	commands:{
-		commands:{
-			[key:string]:Command
+export interface xApp extends App {
+	commands: {
+		commands: {
+			[key: string]: Command
 		},
-		editorCommands:{
-			[key:string]:Command
+		editorCommands: {
+			[key: string]: Command
 		}
 
 	},
-	viewRegistry:{
-		typeByExtension:any,
-		viewByType:any}
-	plugins:{
-		plugins:{
-			[key:string]:Plugin
+	viewRegistry: {
+		typeByExtension: any,
+		viewByType: any
+	}
+	plugins: {
+		plugins: {
+			[key: string]: Plugin
 		}
 	}
-	internalPlugins:{
-		plugins:{
-			[key:string]:{
-				instance:any
-			}|any
+	internalPlugins: {
+		plugins: {
+			[key: string]: {
+				instance: any
+			} | any
 		}
-		
+
 	}
 }
 
 //Declare the global variables that the plugin will have access to
 declare global {
-    var app: xApp;
+	var app: xApp;
 }
 
 /**Base structure of the Folder note Index plugin*/
 export default class FI_Plugin extends Plugin {
-	declare app:xApp;
+	declare app: xApp;
 	settings: MyPluginSettings;
-	activeLeafChange:EventRef = undefined;
-	activeLeafSave:EventRef = undefined;
-	layoutChange:EventRef = undefined;
-	metaChange:EventRef = undefined;
-	nameChange:EventRef = undefined;
-	// TODO: transfer events to manager
-	events:EventManager = new EventManager(this);
+	
+	events: EventManager = new EventManager(this);
 	metaResolve = undefined;
-	metaInit= undefined;
+	metaInit = undefined;
 	metaDel = undefined;
-	RootIndexList:Array<string>=[];
+	RootIndexList: Array<string> = [];
 	/**Tree of all indexes */
-	tree:IndexTree;
-	trailResizeObs:ResizeObserver;
-	divResizeObs:ResizeObserver;
+	tree: IndexTree;
+	trailResizeObs: ResizeObserver;
+	divResizeObs: ResizeObserver;
 	/** Codeblock Injectors */
-	injectors:{}={};
+	injectors: {} = {};
 	/** Codeblock Processors */
-	mdProcessors:{}={};
+	mdProcessors: {} = {};
 	/**Event that triggers when changes are made in the editor */
 	editorChange: any;
 	/**Singleton for the plugin */
-	static instance:FI_Plugin;
+	static instance: FI_Plugin;
 
 	async onload() {
-		FI_Plugin.instance = (window as any).FNindex=this;
+		FI_Plugin.instance = (window as any).FNindex = this;
 		await this.loadSettings();
-		globalThis.app=this.app;
+		globalThis.app = this.app;
 
 		// TODO: Add commands for ease of use
 
 		//Register Blocks
-		for(let block of Object.values(Blocks)){
-			if(!block?.Id) continue;
-			try{
-				this.mdProcessors[block?.Id] = await this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
-				this.injectors[block?.Id+'']=block;
-			}catch(err){
-				console.error("Blocks Plugin Error: ",err)
+		for (let block of Object.values(Blocks)) {
+			if (!block?.Id) continue;
+			try {
+				this.mdProcessors[block?.Id] = await this.registerMarkdownCodeBlockProcessor(block?.Id + '', (source, el, ctx) => block.generateBlock(source, el, ctx, this))
+				this.injectors[block?.Id + ''] = block;
+			} catch (err) {
+				console.error("Blocks Plugin Error: ", err)
 			}
 		}
 
-		
-		
+
+
 		// TODO: make main readable
 
 		this.tree = new IndexTree(this);
-		this.trailResizeObs = 
+		this.trailResizeObs =
 			new ResizeObserver(Trail.trailOverflow);
 
 
 		this.events.regMetaChangeEvent();
 
 		app.workspace.onLayoutReady(async () => {
-            var _a;
-            const noFiles = app.vault.getMarkdownFiles().length;
+			var _a;
+			const noFiles = app.vault.getMarkdownFiles().length;
 			await this.redrawFN()
-            
+
 			//Register suggest
 			this.registerEditorSuggest(new BlockSuggest(this))
 			//Register events 
-            this.events.regLeafChangeEv();
+			this.events.regLeafChangeEv();
 			this.events.regLayoutChangeEv();
 			this.events.regMetaDelEv();
 
 
-            app.workspace.iterateAllLeaves((leaf) => {
-                if (leaf instanceof MarkdownView)
-                    //@ts-ignore
-                    leaf.view.previewMode.rerender(true);
-            });
-			
+			app.workspace.iterateAllLeaves((leaf) => {
+				if (leaf instanceof MarkdownView)
+					//@ts-ignore
+					leaf.view.previewMode.rerender(true);
+			});
+
 		});
-		
+
 		// Custom Save command
 		// https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
 		const saveCmdDef = this.app.commands.commands["editor:save-file"];
@@ -133,20 +129,20 @@ export default class FI_Plugin extends Plugin {
 			saveCmdDef.callback = async () => {
 				await save();
 				if (this.settings.refreshOnNoteSave) {
-					
+
 					await this.redrawFN()
 				}
 			};
 		}
 
-        for(let block of Object.values(Blocks)){
-			if(!block?.Id) continue;
-			try{
-				this.registerMarkdownCodeBlockProcessor(block?.Id+'',(source, el, ctx)=>block.generateBlock(source, el, ctx,this))
-				this.injectors[block?.Id+'']=block;
-			}catch(err){
-				console.log({err})
-				console.warn("Blocks Plugin Error: ",err)
+		for (let block of Object.values(Blocks)) {
+			if (!block?.Id) continue;
+			try {
+				this.registerMarkdownCodeBlockProcessor(block?.Id + '', (source, el, ctx) => block.generateBlock(source, el, ctx, this))
+				this.injectors[block?.Id + ''] = block;
+			} catch (err) {
+				console.log({ err })
+				console.warn("Blocks Plugin Error: ", err)
 			}
 		}
 
@@ -157,33 +153,33 @@ export default class FI_Plugin extends Plugin {
 	async onUnload() {
 		this.trailResizeObs.disconnect()
 		//Unregister Blocks
-		for(let block of Object.values(Blocks)){
-			if(!block?.Id) continue;
-			try{
-				//TODO: Fix post processors not unregistering
+		for (let block of Object.values(Blocks)) {
+			if (!block?.Id) continue;
+			try {
+				// TODO: Fix post processors not unregistering
 				MarkdownPreviewRenderer.unregisterPostProcessor(this.mdProcessors[block?.Id]);
 				console.warn(`Unregistered block: ${block?.Id}`)
-			}catch(err){
-				console.error("Blocks Plugin Error: ",err)
+			} catch (err) {
+				console.error("Blocks Plugin Error: ", err)
 			}
 		}
 	}
- 
+
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 		this.parseRootIndex();
-			
+
 	}
 
 	/**Parses the root index names
 	 * @param [resetTree=false] indicates if the {@link IndexTree} should be reset after parsing
 	*/
-	parseRootIndex(resetTree=false){
+	parseRootIndex(resetTree = false) {
 		this.RootIndexList = this.settings.rootIndex?.match(/(?:[^,\\]|\\.)+/g)
-		?.map(s=>s?.trim())
-		if(resetTree)
+			?.map(s => s?.trim())
+		if (resetTree)
 			this.tree = new IndexTree(this);
-	} 
+	}
 
 	async saveSettings() {
 		await this.saveData(this.settings);
@@ -193,16 +189,16 @@ export default class FI_Plugin extends Plugin {
 
 	/**Redraws the Folder Note elements */
 	async redrawFN() {
-		
+
 		try {
-			const { RootIndexList=[], settings,  app } = this;
-			const {activeMDView, mode} = Display.getActiveMDView() 
-			if(activeMDView)
-				Trail.Trail(activeMDView,mode,this)	
+			const { RootIndexList = [], settings, app } = this;
+			const { activeMDView, mode } = Display.getActiveMDView()
+			if (activeMDView)
+				Trail.Trail(activeMDView, mode, this)
 		}
 		catch (err) {
 			console.error(err);
- 
+
 		}
 	}
 }

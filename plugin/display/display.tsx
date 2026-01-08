@@ -16,7 +16,7 @@ export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewMo
 	const { RootIndexList=[], settings,  app } = this;
 
 	const activeMDView = app.workspace.getActiveViewOfType(MarkdownView);
-	//TODO: Compatiblidad con Kanban y DB plugin
+	// TODO: Compatiblidad con Kanban y DB plugin
 	// const specialView = app.viewRegistry.viewByType?.["database-plugin"];
 	// const activeSpecialView = specialView &&app.workspace.getActiveViewOfType(specialView);
 	// console.log({activeSpecialView})

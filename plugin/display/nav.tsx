@@ -8,63 +8,69 @@ import FI_Plugin from '../main';
 
 import { IndexData } from '../indexing';
 
-
+// TODO: Add commands for navigation
 
 
 /**Adds the nav arrows to the dom */
-export function addNavArrows(note:IndexData,fnDiv:HTMLDivElement){
+export function addNavArrows(note: IndexData, fnDiv: HTMLDivElement) {
     // TODO: Improve nav arrows
-    // TODO: Handle index
+    // TODO: How should the index behave?
     const nav = fnDiv.createEl('span', { cls: "FN-nav" });
-    const hasprev= getNavPrev(note);
+    const hasprev = getNavPrev(note);
     const hasnext = getNavNext(note);
-    const prevButton = nav.createEl('button', { cls: "FN-nav-button"+ (hasprev?"":" disabled"), text:"<"})
-    const nextButton = nav.createEl('button', {  cls: "FN-nav-button"+ (hasnext?"":" disabled"),text:">"})
-    nextButton.onclick = ()=> navigateNext(note);
-    prevButton.onclick = ()=> navigatePrev(note);
+    const prevButton = nav.createEl('button', { cls: "FN-nav-button" + (hasprev ? "" : " disabled"), text: "<" })
+    const nextButton = nav.createEl('button', { cls: "FN-nav-button" + (hasnext ? "" : " disabled"), text: ">" })
+    nextButton.onclick = () => navigateNext(note);
+    prevButton.onclick = () => navigatePrev(note);
 }
 
 /**Navigates to the next note */
-export function navigateNext(note:IndexData){
+export function navigateNext(note: IndexData) {
     const nextNote = getNavNext(note);
-    if(nextNote == null)
+    if (nextNote == null)
         return;
     nextNote.OpenNote();
 }
 
 /**Gets the next note in navigation*/
-export function getNavNext(note:IndexData){
-    if(!note?.parent)
+export function getNavNext(note: IndexData) {
+    if (!note?.parent)
         return null;
-    let list = [...note.parent.childNotes()].filter(n => n.config.nav)
-    let index =  list.indexOf(note);
+    let list = getNavOrder(note);
+    let index = list.indexOf(note);
     index++;
     return list[index]
 }
 
+/**Gets the order of the navigable nodes in the environment of the note */
+function getNavOrder(note: IndexData) {
+    let list = [...note.parent.childNotes()].filter(n => n.config.nav);
+    list.sort((a, b) => (+b.isIndex - +a.isIndex));
+    return list;
+}
 
 /**Navigates to the prev note */
-export function navigatePrev(note:IndexData){
+export function navigatePrev(note: IndexData) {
     let prevNote = getNavPrev(note);
-    if(prevNote == null)
+    if (prevNote == null)
         return;
     prevNote.OpenNote();
 }
 
 /**Gets the prev note in navigation*/
-export function getNavPrev(note:IndexData){
-    if(!note?.parent)
+export function getNavPrev(note: IndexData) {
+    if (!note?.parent)
         return null;
-    let list = [...note.parent.childNotes()].filter(n => n.config.nav)
-    let index =  list.indexOf(note);
+    let list = getNavOrder(note);
+    let index = list.indexOf(note);
     index--;
     return list[index]
-    
+
 }
 
 /**Gets the note index in navigation */
-export function getNavIndex(note:IndexData):number{
-    if(!note?.parent)
+export function getNavIndex(note: IndexData): number {
+    if (!note?.parent)
         return null;
     let list = [...note.parent.childNotes()].filter(n => n.config.nav)
     return list.indexOf(note);

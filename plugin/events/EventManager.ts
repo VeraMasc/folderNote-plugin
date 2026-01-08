@@ -8,11 +8,11 @@ import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
 /**Manages all the plugin's events */
 export class EventManager{
     plugin:FI_Plugin;
-    //TODO: Move event references from main to this class
-    activeLeafChange:EventRef = undefined;
-	activeLeafSave:EventRef = undefined;
-	layoutChange:EventRef = undefined;
-	metaChange:EventRef = undefined;
+    activeLeafChange: EventRef = undefined;
+	activeLeafSave: EventRef = undefined;
+	layoutChange: EventRef = undefined;
+	metaChange: EventRef = undefined;
+	nameChange: EventRef = undefined;
 
     constructor(plugin:FI_Plugin){
         this.plugin=plugin;
@@ -26,20 +26,20 @@ export class EventManager{
                 //console.warn("Refresh event")
             };
         };
-        this.plugin.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
+        this.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
         this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", debounceReps(func,500));
-        this.plugin.registerEvent(this.plugin.activeLeafChange);
+        this.plugin.registerEvent(this.plugin.events.activeLeafChange);
         this.plugin.registerEvent(this.plugin.editorChange);
     }
     
     /**Registers the obsidian layout changes*/
     regLayoutChangeEv() {
-        this.plugin.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
-            //TODO: Make this handle config changes
+        this.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
+            // TODO: Make this handle config changes
             await this.plugin.redrawFN();
             //console.warn("Layout event")
         });
-        this.plugin.registerEvent(this.plugin.layoutChange);
+        this.plugin.registerEvent(this.layoutChange);
     }
      
     /**Registers the event for when a file's metadata (or Name) changes */
@@ -61,12 +61,12 @@ export class EventManager{
             }
         };
         //On metadata change
-        this.plugin.metaChange = this.plugin.app.metadataCache.on("changed", metaChange);
-        this.plugin.registerEvent(this.plugin.metaChange);
+        this.metaChange = this.plugin.app.metadataCache.on("changed", metaChange);
+        this.plugin.registerEvent(this.metaChange);
         
         //On name change
-        this.plugin.nameChange = this.plugin.app.vault.on("rename",nameChange)
-        this.plugin.registerEvent(this.plugin.nameChange);
+        this.nameChange = this.plugin.app.vault.on("rename",nameChange)
+        this.plugin.registerEvent(this.nameChange);
 
         this.plugin.metaResolve = this.plugin.app.metadataCache.on("resolve", (data)=>(setLinkToIndex(data,this.plugin)))
         this.plugin.registerEvent(this.plugin.metaResolve);

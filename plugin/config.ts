@@ -35,7 +35,7 @@ export class NoteConfig {
 
     fromMeta(metadata: Object) {
         this.clear();
-        //TODO: Improve NoteConfig documentation
+        // TODO: Improve NoteConfig documentation
 
         for (let [prop, val] of Object.entries(metadata) as Array<[string, any]>) {
             if (!prop.startsWith("FN-"))
