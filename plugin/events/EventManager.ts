@@ -11,6 +11,8 @@ export class EventManager{
     activeLeafChange: EventRef = undefined;
 	activeLeafSave: EventRef = undefined;
 	layoutChange: EventRef = undefined;
+    /**Event that triggers when changes are made in the editor */
+	editorChange: EventRef=undefined;
 	metaChange: EventRef = undefined;
 	nameChange: EventRef = undefined;
 
@@ -27,9 +29,9 @@ export class EventManager{
             };
         };
         this.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
-        this.plugin.editorChange = this.plugin.app.workspace.on("editor-change", debounceReps(func,500));
-        this.plugin.registerEvent(this.plugin.events.activeLeafChange);
-        this.plugin.registerEvent(this.plugin.editorChange);
+        this.editorChange = this.plugin.app.workspace.on("editor-change", debounceReps(func,500));
+        this.plugin.registerEvent(this.activeLeafChange);
+        this.plugin.registerEvent(this.editorChange);
     }
     
     /**Registers the obsidian layout changes*/

@@ -66,8 +66,7 @@ export default class FI_Plugin extends Plugin {
 	injectors: {} = {};
 	/** Codeblock Processors */
 	mdProcessors: {} = {};
-	/**Event that triggers when changes are made in the editor */
-	editorChange: any;
+
 	/**Singleton for the plugin */
 	static instance: FI_Plugin;
 
@@ -163,6 +162,10 @@ export default class FI_Plugin extends Plugin {
 				console.error("Blocks Plugin Error: ", err)
 			}
 		}
+		// TODO: Move unregister events
+		this.app.workspace.offref(this.events.activeLeafChange)
+		this.app.workspace.offref(this.events.activeLeafSave)
+		this.app.workspace.offref(this.events.layoutChange)
 	}
 
 	async loadSettings() {

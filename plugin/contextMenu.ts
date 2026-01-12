@@ -190,6 +190,5 @@ function actionItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons,
         item.setTitle(title)
             .setIcon(icon)
             .onClick(onclick)
-        //TODO: add option for expanding submenus on hover
     );
 }
