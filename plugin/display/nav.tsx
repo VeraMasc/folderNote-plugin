@@ -44,8 +44,28 @@ export function getNavNext(note: IndexData) {
 
 /**Gets the order of the navigable nodes in the environment of the note */
 function getNavOrder(note: IndexData) {
-    let list = [...note.parent.childNotes()].filter(n => n.config.nav);
-    list.sort((a, b) => (+b.isIndex - +a.isIndex));
+    const index = note.parent.findIndex();
+    let list = [...note.parent.childNotes()]
+        .filter(n => n.config.nav && (!n.isIndex || n.file===index || n.config.flatNav));
+    // HACK: make better comparison
+    
+    list.sort((a, b) => (+(b.file === index) - +(a.file === index)));
+    if(note.parent.config.flatNav){
+        console.log("flat")
+        console.log(note)
+        let superList = getNavOrder(note.parent);
+        console.log(superList)
+        const index = superList.findIndex((e) => e == note.parent);
+        console.log(index)
+        if(index != -1){
+            superList.splice(index,1,...list)
+            list = superList;
+        }
+
+
+    }
+    // TODO: Fix reverse flattened navigation
+    console.log(list)
     return list;
 }
 

@@ -27,7 +27,7 @@ export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plu
 
 let cache:HeadingCache[];
 
-/**Como generate block, pero lo regenera */
+/**Regenerates an existing block to keep it updated*/
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	try {
 		let temp = createDiv({ cls: "block-language-contentIndex" });
@@ -42,7 +42,6 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		}
 		
 	} catch (err) {
-		console.error(err);
 		el.innerText = err + "";
 		cache=[]
 	}

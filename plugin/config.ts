@@ -12,6 +12,8 @@ export class NoteConfig {
     expand: boolean;
     /**Enables navigation between files */
     nav: boolean;
+    /**Flattens the navigation (like the contents of the folder are in the parent) */
+    flatNav: boolean;
     /** Hide folders with no index */
     hideEmpty: boolean;
     /**Regex for hiding files */
