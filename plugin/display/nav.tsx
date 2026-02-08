@@ -34,40 +34,50 @@ export function navigateNext(note: IndexData) {
 
 /**Gets the next note in navigation*/
 export function getNavNext(note: IndexData) {
-    if (!note?.parent)
+    if (!note?.parentFolder)
         return null;
-    let list = getNavOrder(note);
+    let list = getNavOrderRoot(note);
     let index = list.indexOf(note);
     index++;
     return list[index]
 }
 
 /**Gets the order of the navigable nodes in the environment of the note */
-function getNavOrder(note: IndexData) {
-    const index = note.parent.findIndex();
-    let list = [...note.parent.childNotes()]
-        .filter(n => n.config.nav && (!n.isIndex || n.file===index || n.config.flatNav));
+function getNavOrderRoot(note: IndexData) {
+    //Is in flat subdirectory
+    if(note.parentFolder.config.flatNav)
+        return getNavOrderRoot(note.parentFolder.parentFolder)
+    const index = note.parentFolder.index;
+    let list = [...note.parentFolder.childNotes()]
+        .filter(n => n.config.nav && (!n.isIndex || n===index || n.config.flatNav));
     // HACK: make better comparison
     
-    list.sort((a, b) => (+(b.file === index) - +(a.file === index)));
-    if(note.parent.config.flatNav){
-        console.log("flat")
-        console.log(note)
-        let superList = getNavOrder(note.parent);
-        console.log(superList)
-        const index = superList.findIndex((e) => e == note.parent);
-        console.log(index)
-        if(index != -1){
-            superList.splice(index,1,...list)
-            list = superList;
-        }
-
-
-    }
+    list.sort((a, b) => (+(b === index) - +(a === index)));
+    //Has flat subdirectories
+    let flats = list.filter(n => n.config.flatNav)
+    console.log(flats);
+    
     // TODO: Fix reverse flattened navigation
     console.log(list)
     return list;
 }
+
+/**Gets the order of the navigable nodes in the specific subdirectory*/
+function getNavOrderSub(note: IndexData) {
+    const index = note.parentFolder.index;
+    let list = [...note.parentFolder.childNotes()]
+        .filter(n => n.config.nav && (!n.isIndex || n===index || n.config.flatNav));
+    // HACK: make better comparison
+    
+    list.sort((a, b) => (+(b === index) - +(a === index)));
+    //Has flat subdirectories
+    let flats = list.filter(n => n.config.flatNav)
+    console.log(flats);
+    
+    console.log(list)
+    return list;
+}
+
 
 /**Navigates to the prev note */
 export function navigatePrev(note: IndexData) {
@@ -79,9 +89,9 @@ export function navigatePrev(note: IndexData) {
 
 /**Gets the prev note in navigation*/
 export function getNavPrev(note: IndexData) {
-    if (!note?.parent)
+    if (!note?.parentFolder)
         return null;
-    let list = getNavOrder(note);
+    let list = getNavOrderRoot(note);
     let index = list.indexOf(note);
     index--;
     return list[index]
@@ -90,8 +100,8 @@ export function getNavPrev(note: IndexData) {
 
 /**Gets the note index in navigation */
 export function getNavIndex(note: IndexData): number {
-    if (!note?.parent)
+    if (!note?.parentFolder)
         return null;
-    let list = [...note.parent.childNotes()].filter(n => n.config.nav)
+    let list = [...note.parentFolder.childNotes()].filter(n => n.config.nav)
     return list.indexOf(note);
 }
