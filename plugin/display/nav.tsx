@@ -7,6 +7,7 @@ import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
 
 import { IndexData } from '../indexing';
+import {FolderData} from '../indexing/folderData'
 
 // TODO: Add commands for navigation
 
@@ -43,38 +44,35 @@ export function getNavNext(note: IndexData) {
 }
 
 /**Gets the order of the navigable nodes in the environment of the note */
-function getNavOrderRoot(note: IndexData) {
+function getNavOrderRoot(note: IndexData):IndexData[] {
+    const index = note?.index;
+    if(index == null)
+        return [];
     //Is in flat subdirectory
-    if(note.parentFolder.config.flatNav)
-        return getNavOrderRoot(note.parentFolder.parentFolder)
-    const index = note.parentFolder.index;
-    let list = [...note.parentFolder.childNotes()]
+    if(index?.config?.flatNav){
+        const val = getNavOrderRoot(index.parentFolder.parentFolder)
+        return val
+    }
+    
+    let list = [...index.parentFolder.childNotes()]
         .filter(n => n.config.nav && (!n.isIndex || n===index || n.config.flatNav));
     // HACK: make better comparison
     
     list.sort((a, b) => (+(b === index) - +(a === index)));
     //Has flat subdirectories
-    let flats = list.filter(n => n.config.flatNav)
-    console.log(flats);
-    
-    // TODO: Fix reverse flattened navigation
-    console.log(list)
+    list = list.flatMap(n => (n.isFolder && n.config.flatNav)?(getNavOrderSub(n)):n)
     return list;
 }
 
 /**Gets the order of the navigable nodes in the specific subdirectory*/
-function getNavOrderSub(note: IndexData) {
-    const index = note.parentFolder.index;
-    let list = [...note.parentFolder.childNotes()]
+function getNavOrderSub(note: IndexData):IndexData[] {
+    
+    const index = note.index;
+    let list = [...index.parentFolder.childNotes()]
         .filter(n => n.config.nav && (!n.isIndex || n===index || n.config.flatNav));
     // HACK: make better comparison
     
     list.sort((a, b) => (+(b === index) - +(a === index)));
-    //Has flat subdirectories
-    let flats = list.filter(n => n.config.flatNav)
-    console.log(flats);
-    
-    console.log(list)
     return list;
 }
 

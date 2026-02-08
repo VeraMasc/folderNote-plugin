@@ -3,6 +3,7 @@ import FI_Plugin from "./main"
 import { NoteConfig } from "./config"
 import { lighten, getLuminance } from "color2k"
 import { linkMenu } from './contextMenu';
+import {FolderData} from './indexing/folderData'
 
 /**Indexing data of a specific folder or file*/
 export class IndexData {
@@ -101,7 +102,7 @@ export class IndexData {
         this.updateConfig()
     }
     /**Checks that the data is still valid */
-    checkIsOutdated() {
+    checkIsOutdated() { // TODO: Find way to use it to remove outdated shit
         if (this.isOutdated)
             return;
         let path = this.isFolder ? this.folder?.path : this.file?.path;
@@ -109,21 +110,15 @@ export class IndexData {
             this.isOutdated = true;
 
     }
-
+    /**Gets the index of the file if available or calculates it */
     get index(): IndexData {
-        let file: TFile;
-        this.checkIsOutdated()
-        if (!this.isOutdated) {
-            if (this.isFolder) { //Is folder
-                return this.explore(file)
-            }else{
-                return this.parentFolder.index;
-            }
+
+        if (this.isFolder) { //Is folder
+            return this.explore(this.file)
+        }else{
+            return this.parentFolder?.index;
         }
         
-        this.tree.refreshNodeAt(this.id)
-
-        return ;
     }
 
 
@@ -358,6 +353,7 @@ export class IndexTree {
     /**Cleans up the tree to avoid using too much memory */
     prune() {
         // TODO: Implement
+        this.data ={};
     }
 }
 
