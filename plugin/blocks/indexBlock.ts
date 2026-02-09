@@ -4,7 +4,7 @@ import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
 import * as Display from '../display/display';
 import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
-import { IndexData } from '../indexing';
+import { IndexData } from '../indexing/indexTree';
 import { PPContext } from '../../../.sharedModules/obsidianUtils';
 
 /**Block identifier */

@@ -6,7 +6,7 @@ import { contentBlock } from '../blocks/Blocks';
 import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
 
-import { IndexData } from '../indexing';
+import { IndexData } from '../indexing/indexData'
 import {FolderData} from '../indexing/folderData'
 
 // TODO: Add commands for navigation
