@@ -1,7 +1,8 @@
-/**Posibles parámetros de configuración de una nota */
+/**Configuration parameters a note can have */
 export class NoteConfig {
     /**If true, not will render with a header index */
     listContent: boolean;
+    /**Forces the file to be used as an index or not */
     useAsIndex: boolean;
     /** Ignore this file when displaying an index */
     ignore: boolean;

@@ -13,7 +13,7 @@ export function findParentCodeblock(pos:EditorPosition, editor:Editor, attempts:
             continue;
 
         //Detect codeblock start/end
-        if(line.startsWith("```")){ //TODO: Handle spaced or tabulated blocks
+        if(line.startsWith("```")){ // TODO: Handle spaced or tabulated blocks
             return line.match(/^\s*```(.*)/)?.[1]
         }
 

@@ -125,28 +125,33 @@ export class IndexData {
 
 
     /**Finds the file that will act as index of the folder */
-    private findIndex() {
+    private findIndex():TFile {
         let { folder, isRoot, isFolder, exists } = this;
         if (!isFolder || !exists)
             return null;
 
-        let indexes: TAbstractFile[];
+        //Find candidates
+        let files: TFile[] = (folder?.children ?? []).filter<TFile>(c => (c instanceof TFile))
+        
 
-        indexes = folder?.children ?? []
-        //How are indexes found?
-        let func = isRoot ?
+        /**Default index function*/
+        let findDefault = isRoot ?
             (f: TFile) => this.tree.plugin?.RootIndexList
                 ?.contains(f.basename)
-            : (f: TFile) => f.basename == folder.name; // TODO: implement non folder name indexes 
-        indexes = indexes.filter(c => {
-            if (!(c instanceof TFile))
-                return false
-            let f = c as TFile;
+            : (f: TFile) => f.basename == folder.name; // TODO: implement non folder name indexes
 
-            return func(f)
-        });
+        //Find default file
+        let index = this.explore(files.find(findDefault));
 
-        return indexes?.first() as TFile;
+        //Replace missing default index
+        if(!index || index.config?.useAsIndex==false){
+            let mapped = files.map(f => this.explore(f))
+            .filter(n => n.config.useAsIndex)
+            index = this.sortNodes(mapped)?.first()
+        }
+        
+
+        return index?.file as TFile;
     }
     /**Gets the indexData of the current folder */
     get thisFolder(): IndexData {

@@ -1,5 +1,5 @@
 import { MarkdownView, MarkdownViewModeType, OpenViewState } from 'obsidian';
-import { IndexData } from '../indexing/indexTree';
+import { IndexData } from '../indexing/indexData';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';
 import * as html from '../html';

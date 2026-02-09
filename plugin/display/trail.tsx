@@ -8,7 +8,7 @@ import FI_Plugin from '../main';
 import { addNavArrows } from './nav';
 import { clearBlock } from '../blocks/contentBlock';
 
-//TODO: Mejorar y documentar proceso de renderizado
+// TODO: Mejorar y documentar proceso de renderizado
 /**Renders the path trail and and additional elements
  * @param activeMDView what view we need to draw the trail on
  * @param mode mode of the view

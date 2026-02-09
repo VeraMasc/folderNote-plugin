@@ -5,7 +5,7 @@ import {findParentCodeblock} from "./suggestUtils"
 import { KeyOfType } from '../../../../.sharedModules/Type Utilities';
 import { Config } from '../contentBlock';
 
-//TODO: Replicate suggestions from https://github.com/aidenlx/obsidian-icon-shortcodes/blob/master/src/modules/suggester.ts#L115
+// TODO: Replicate suggestions from https://github.com/aidenlx/obsidian-icon-shortcodes/blob/master/src/modules/suggester.ts#L115
 
 /**Suggestions for the codeblocks */
 export class BlockSuggest extends EditorSuggest<string>{
@@ -13,7 +13,7 @@ export class BlockSuggest extends EditorSuggest<string>{
     /**Holds the suggestable options of each block */
     static blockOptions:BlocksOptions={
         contentIndex:["from",'maxDepth','excludeRoot', 'relative'],
-        //TODO: add suggestions for index
+        // TODO: add suggestions for index
         index:["FN-forceOpen","indexPath"]
     }
 
