@@ -9,6 +9,7 @@ import * as Blocks from "./blocks/Blocks"
 // import * as Suggest from "./suggestions"
 import { BlockSuggest } from './blocks/suggest/blockSuggest';
 import { EventManager } from './events/EventManager';
+import { addCommands } from './events/Commands';
 import { DEFAULT_SETTINGS, MyPluginSettings, SettingsTab } from './Settings';
 
 
@@ -89,13 +90,16 @@ export default class FI_Plugin extends Plugin {
 		}
 
 
-
 		// TODO: make main readable
 
 		this.tree = new IndexTree(this);
 		this.trailResizeObs =
 			new ResizeObserver(Trail.trailOverflow);
 
+
+		
+		//Commands and events 
+		addCommands.call(this)
 
 		this.events.regMetaChangeEvent();
 

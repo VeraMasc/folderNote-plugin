@@ -26,7 +26,7 @@ export function addNavArrows(note: IndexData, fnDiv: HTMLDivElement) {
 }
 
 /**Navigates to the next note */
-export function navigateNext(note: IndexData) {
+export function navigateNext(note: IndexData|null) {
     const nextNote = getNavNext(note);
     if (nextNote == null)
         return;
@@ -34,7 +34,7 @@ export function navigateNext(note: IndexData) {
 }
 
 /**Gets the next note in navigation*/
-export function getNavNext(note: IndexData) {
+export function getNavNext(note: IndexData|null) {
     if (!note?.parentFolder)
         return null;
     let list = getNavOrderRoot(note);
