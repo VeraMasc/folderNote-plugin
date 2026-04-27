@@ -77,7 +77,6 @@ export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewM
         let testSpan = createDiv({
             cls: `FN-content markdown-rendered`,
             attr: { contenteditable: false },
-            text: "test"
         });
 
 

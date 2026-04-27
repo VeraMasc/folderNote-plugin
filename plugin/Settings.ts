@@ -56,7 +56,7 @@ export interface MyPluginSettings {
 export const DEFAULT_SETTINGS: MyPluginSettings = {
 	refreshOnNoteSave: true,
 	refreshOnNoteChange: true,
-	rootIndex: null,
+	rootIndex: 'Index',
 	blockSuggestions:false,
 };
 

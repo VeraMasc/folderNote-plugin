@@ -1,7 +1,15 @@
 import {Editor, EditorPosition, EditorSuggest,EditorSuggestTriggerInfo,FuzzyMatch, Plugin, TFile,EditorSuggestContext} from "obsidian";
-import { noteConfig } from "./config";
+import { NoteConfig } from "./config";
 
-export class TestSuggestions extends EditorSuggest<FuzzyMatch<noteConfig>>{
+// TODO: Properly implement suggestions
+
+export class TestSuggestions extends EditorSuggest<FuzzyMatch<NoteConfig>>{
+	renderSuggestion(value: FuzzyMatch<NoteConfig>, el: HTMLElement): void {
+		throw new Error("Method not implemented.");
+	}
+	selectSuggestion(value: FuzzyMatch<NoteConfig>, evt: MouseEvent | KeyboardEvent): void {
+		throw new Error("Method not implemented.");
+	}
 	plugin;
 
 	constructor(plugin: Plugin) {
@@ -12,7 +20,7 @@ export class TestSuggestions extends EditorSuggest<FuzzyMatch<noteConfig>>{
 		
 	}
 
-	getSuggestions(context: EditorSuggestContext): FuzzyMatch<noteConfig>[] | Promise<FuzzyMatch<noteConfig>[]> {
-		return [{item=null, match=null,new noteConfig()}];
+	getSuggestions(context: EditorSuggestContext): FuzzyMatch<NoteConfig>[] | Promise<FuzzyMatch<NoteConfig>[]> {
+		return [{item=null, match=null,new NoteConfig()}];
 	}
 }

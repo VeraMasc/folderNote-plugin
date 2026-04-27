@@ -35,6 +35,7 @@
 			"titleBar.inactiveForeground": "#15202b99"
 		},
 		"peacock.color": "#f9e64f",
+		"js/ts.tsdk.path": "folderNote-plugin\\node_modules\\typescript\\lib",
 		
 		
 
