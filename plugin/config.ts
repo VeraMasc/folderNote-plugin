@@ -3,12 +3,13 @@ export class NoteConfig {
     /**If true, not will render with a header index */
     listContent: boolean;
     /**Forces the file to be used as an index or not */
-    useAsIndex: boolean;
+    useAsIndex: boolean | null;
     /** Ignore this file when displaying an index */
     ignore: boolean;
-    /** Use custom index */
+    /** Use other file as index instead*/
     indexFile: any;
-    forceOpen: boolean;
+    /** Forces the index to be open or closed. Null to not force*/
+    forceOpen: boolean | null;
     /** Show in expanded mode by default */
     expand: boolean;
     /**Enables navigation between files */
@@ -31,8 +32,8 @@ export class NoteConfig {
     bgColor: string;
     /** Make index and trail sticky */
     isSticky: boolean;
-
-    icon: string; /** Prueba */
+    /** Changes its icon */
+    icon: string; 
     /** Allows Unknown Properties*/
     [key: string]: any;
 
