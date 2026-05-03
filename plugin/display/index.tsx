@@ -135,7 +135,9 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
             li.setAttr("data-icon", child.config.icon);
         }
 
+        
         let icon = li.createEl("span", { cls: "FN-icon" });
+        icon.style.setProperty("--fn-color",child.config.color)
         icon.innerHTML = child.isFolder ? 
             html.folder_icon 
             : child.ext =="md"?

@@ -108,19 +108,14 @@ ul.FN-indexList{
             content:"";
             vertical-align: middle;
         }
-        &::marker,>.FN-icon>svg{
+        >.FN-icon>svg{
             color:var(--text-faint);
             font-size: 12px;
-        }
-        >a{
-            padding: { 
-                    left: $iconSep;
-                    right: $iconSep;
-                }
-        }
 
-        &[data-icon]>.FN-icon{
-            //display: none;
+        }
+        
+        >a{
+            padding-right: $iconSep;
         }
 
         >.FN-icon{
@@ -128,9 +123,13 @@ ul.FN-indexList{
             white-space: nowrap;
             position: relative;
             min-width: 10px;
-            // right: $iconSep ;
+            
+            // Displays the custom icons
             &::after{
+                margin-left: $iconSep;
                 content:var(--icon);
+                color: var(--fn-color);
+                white-space: preserve nowrap;
             }
         }
         &.FN-isFolder{

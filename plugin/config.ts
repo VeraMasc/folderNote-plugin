@@ -32,7 +32,7 @@ export class NoteConfig {
     bgColor: string;
     /** Make index and trail sticky */
     isSticky: boolean;
-    /** Changes its icon */
+    /** Adds a custom icon. Allows any unicode*/
     icon: string; 
     /** Allows Unknown Properties*/
     [key: string]: any;
@@ -56,6 +56,10 @@ export class NoteConfig {
         this.hideExt &&= [this.hideExt].flat();
         this.hideNote &&= [this.hideNote].flat();
         this.color &&= this.color.trim();
+        this.icon &&= this.icon.trim();
+        if(this.icon?.startsWith("'") && this.icon?.endsWith("'")){
+            this.icon = this.icon.slice(1,-1)
+        }
     }
 
     clear() {

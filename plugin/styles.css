@@ -187,12 +187,11 @@ ul.FN-indexList > li::marker {
   content: "";
   vertical-align: middle;
 }
-ul.FN-indexList > li::marker, ul.FN-indexList > li > .FN-icon > svg {
+ul.FN-indexList > li > .FN-icon > svg {
   color: var(--text-faint);
   font-size: 12px;
 }
 ul.FN-indexList > li > a {
-  padding-left: 0.5em;
   padding-right: 0.5em;
 }
 ul.FN-indexList > li > .FN-icon {
@@ -202,7 +201,10 @@ ul.FN-indexList > li > .FN-icon {
   min-width: 10px;
 }
 ul.FN-indexList > li > .FN-icon::after {
+  margin-left: 0.5em;
   content: var(--icon);
+  color: var(--fn-color);
+  white-space: preserve nowrap;
 }
 ul.FN-indexList > li.FN-isFolder > .FN-icon > svg {
   color: var(--text-accent);
