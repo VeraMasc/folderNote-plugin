@@ -129,18 +129,19 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (child.isFolder)
             li.addClass("FN-isFolder");
 
-
+        // Adds the Icons
         if (child.config.icon) {
             //li.style.setProperty("--icon",child.config.icon)
             li.setAttr("data-icon", child.config.icon);
-        } else {
-            let icon = li.createEl("span", { cls: "FN-icon" });
-            icon.innerHTML = child.isFolder ? 
-                html.folder_icon 
-                : child.ext =="md"?
-                    html.note_icon
-                    : html.unknown_file_icon;
         }
+
+        let icon = li.createEl("span", { cls: "FN-icon" });
+        icon.innerHTML = child.isFolder ? 
+            html.folder_icon 
+            : child.ext =="md"?
+                html.note_icon
+                : html.unknown_file_icon;
+        
         li.append(child.fileLink());
         if (!child.isFolder && child.ext != "md")
             li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
@@ -164,7 +165,6 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
 
 }
 /**Adds a title to the index */
-
 export function addIndexTitle(summEl: HTMLElement, indexData: IndexData) {
 	let title = indexData.config?.indexPath ?? indexData?.name;
 	summEl.append(` ${title} `);

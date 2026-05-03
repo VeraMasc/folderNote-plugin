@@ -1,6 +1,6 @@
 .FN-index{
 	position: relative;
-    margin:{
+    margin: {
         left: 5px;
         right: auto;
         top:10px;
@@ -77,7 +77,7 @@
 
 	z-index: 4;
 	padding: 0px 15px;
-	margin:{
+	margin: {
 		left: 55px;
 		right: auto
 	};
@@ -90,12 +90,11 @@
 
 ul.FN-indexList{
     margin: 0;
-    margin-left: 10px;
     max-height: 30vh;
     // max-height: 60vh;
     overflow-y: auto;
 	margin-bottom: -3px;
-    padding-left: 15px;
+    padding-left: 5px;
     @at-root .FN-index.isExpanded>&{
         max-height: none;
     }
@@ -103,44 +102,40 @@ ul.FN-indexList{
         $iconSep: .5em;
         padding-left: $iconSep;
         margin-bottom: 7px;
+        --icon:attr(data-icon) "";
         &::marker{
-            // content:"\f249";
-            //content: var(--icon);
-            // content:"\f249";
-            content: "";
-
+            // content:attr(data-icon) "";
+            content:"";
             vertical-align: middle;
         }
         &::marker,>.FN-icon>svg{
             color:var(--text-faint);
             font-size: 12px;
         }
+        >a{
+            padding: { 
+                    left: $iconSep;
+                    right: $iconSep;
+                }
+        }
 
-        &[data-icon]{
-            &::marker{
-                content:attr(data-icon)
-            }
-            >.FN-icon{
-                display: none;
-            }
+        &[data-icon]>.FN-icon{
+            //display: none;
         }
 
         >.FN-icon{
             display: inline-block;
-            direction:rtl;
-            max-width: 1px;
+            white-space: nowrap;
             position: relative;
-            right: $iconSep ;
-
+            min-width: 10px;
+            // right: $iconSep ;
+            &::after{
+                content:var(--icon);
+            }
         }
         &.FN-isFolder{
-
-            &::marker{
-				content: "";
-			}
-
 			>.FN-icon>svg{
-            color:var(--text-accent);
+                color:var(--text-accent);
 			}
 		}
 

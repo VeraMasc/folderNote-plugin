@@ -167,11 +167,10 @@
 
 ul.FN-indexList {
   margin: 0;
-  margin-left: 10px;
   max-height: 30vh;
   overflow-y: auto;
   margin-bottom: -3px;
-  padding-left: 15px;
+  padding-left: 5px;
   --text-accent: hsl(248, 84%, 69%);
   --text-accent-hover: hsl(248, 100%, 73%);
 }
@@ -182,6 +181,7 @@ ul.FN-indexList {
 ul.FN-indexList > li {
   padding-left: 0.5em;
   margin-bottom: 7px;
+  --icon:attr(data-icon) "";
 }
 ul.FN-indexList > li::marker {
   content: "";
@@ -191,21 +191,18 @@ ul.FN-indexList > li::marker, ul.FN-indexList > li > .FN-icon > svg {
   color: var(--text-faint);
   font-size: 12px;
 }
-ul.FN-indexList > li[data-icon]::marker {
-  content: attr(data-icon);
-}
-ul.FN-indexList > li[data-icon] > .FN-icon {
-  display: none;
+ul.FN-indexList > li > a {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 ul.FN-indexList > li > .FN-icon {
   display: inline-block;
-  direction: rtl;
-  max-width: 1px;
+  white-space: nowrap;
   position: relative;
-  right: 0.5em;
+  min-width: 10px;
 }
-ul.FN-indexList > li.FN-isFolder::marker {
-  content: "";
+ul.FN-indexList > li > .FN-icon::after {
+  content: var(--icon);
 }
 ul.FN-indexList > li.FN-isFolder > .FN-icon > svg {
   color: var(--text-accent);

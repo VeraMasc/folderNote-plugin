@@ -36,6 +36,8 @@
 		},
 		"peacock.color": "#f9e64f",
 		"js/ts.tsdk.path": "folderNote-plugin\\node_modules\\typescript\\lib",
+		"scss.showErrors": true,
+		"css.validate": false,
 		
 		
 
