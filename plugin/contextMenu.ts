@@ -9,13 +9,20 @@ import { getRandomColor } from "./colors";
 
 import { MenuItemAPI } from "../../.sharedModules/obsidianUtils";
 
+// TODO: Fix neeeding to use "as any" for icon
+
 /**Context menu of the index element of the index file*/
 export function indexMenu(ev: MouseEvent) {
     ev.preventDefault();
     const menu = new Menu();
+    //Label
+    menu.addItem(
+        (item)=>item.setIsLabel(true).setTitle("Index Menu")
+    )
+    //Options
     setPropItem(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
     setPropItem(menu, "Expanded by default", "fullscreen", "FN-expand")
-    setPropItem(menu, "Hide files", "scissors", "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
+    setPropItem(menu, "Hide files", "eye-off" as any, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
     noteOptions(menu, ev)
     menu.showAtMouseEvent(ev);
@@ -35,8 +42,16 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
     }
 
 }
+/**Adds the Context menu options that are universal to all notes
+ * @param [moreMenu=null] optional menu for extra options
+*/
+function globalOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null) {
+    moreMenu??=menu;
+    actionItem(moreMenu, 'Rebuild Tree','folder-sync' as any,()=>{FI_Plugin.instance.tree.prune()})
+}
 
-/**Generates the Context menu that is universal to all notes
+
+/**Adds the Context menu options that are universal to all notes
  * @param [moreMenu=null] optional menu for extra options
 */
 function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null) {
@@ -80,11 +95,16 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
         applyHighlight(fileElement?.selfEl);
 
     })
+    //Add global options to menu
+    globalOptions(menu,ev,moreMenu)
 }
 
-/**Generates the Context menu of all the currently opened file*/
+/**Adds the Context menu options of all the currently opened files*/
 function currentNoteOptions(menu: Menu, ev: MouseEvent) {
-
+    let file = getOptionsTargetFile(ev)
+    menu.addItem(
+        (item)=>item.setIsLabel(true).setTitle(`'${file?.basename}' Note Menu`)
+    )
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
     setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", getRandomColor)//Custom link color
     let moreMenu = new DeferredMenu();
@@ -119,6 +139,11 @@ export function linkMenu(ev: MouseEvent) {
     let link = ev.target as HTMLAnchorElement;
     ev.preventDefault();
     const menu = new Menu();
+    menu
+    
+    menu.addItem(
+        (item)=>item.setIsLabel(true).setTitle(`'${link?.text}' Note Menu`)
+    )
     actionItem(menu, "Go to note", "note-glyph", () => link.click())
     actionItem(menu, "Open in new tab", "open-elsewhere-glyph", (e) => {
         if (!link?.dataset?.href)
