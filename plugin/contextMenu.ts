@@ -110,6 +110,7 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
     let moreMenu = new DeferredMenu();
     insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
+    setPropItem(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
     noteOptions(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu
     moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
