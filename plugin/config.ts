@@ -1,30 +1,33 @@
-/**Configuration parameters a note can have */
+import { type Config } from "./blocks/contentBlock";
+/** Configuration parameters a note can have */
 export class NoteConfig {
-    /**If true, not will render with a header index */
+    /** If true, note will render with a header TOC */
     listContent: boolean;
-    /**Forces the file to be used as an index or not */
+    /** Requires {@link listContent}. Same as {@link Config.listBlocks} makes blocks be treated as headings in the TOC.*/
+    listBlocks:boolean;
+    /** Forces the file to be used as an index or not */
     useAsIndex: boolean | null;
     /** Ignore this file when displaying an index */
     ignore: boolean;
     /** Use other file as index instead*/
     indexFile: any;
-    /** Forces the index to be open or closed. Null to not force*/
+    /** Forces this index to be open or closed. Null to not force*/
     forceOpen: boolean | null;
-    /** Show in expanded mode by default */
+    /** Show index in expanded mode by default */
     expand: boolean;
-    /**Enables navigation between files */
+    /** Enables sequential navigation between files */
     nav: boolean;
-    /**Flattens the navigation (like the contents of the folder are in the parent) */
+    /** Requires {@link nav}Flattens the navigation (like the contents of the folder are in the parent) */
     flatNav: boolean;
     /** Hide folders with no index */
     hideEmpty: boolean;
-    /**Regex for hiding files */
+    /** Regex for hiding files */
     hideRegExp: Array<string> | string;
-    /**Hides files by extension */
+    /** Hides files by extension */
     hideExt: string | string[];
-    /**Hides specific notes by name */
+    /** Hides specific notes by name. Use {@link hideRegExp} for pattern*/
     hideNote: string | string[];
-    /** How much to prioritize showing this file first. */
+    /** How much to prioritize showing this file first in the index */
     priority: number;
     /** Note text color */
     color: string;
@@ -50,7 +53,7 @@ export class NoteConfig {
         this.normalize();
     }
 
-    /**Normalizes all the config data for consistency*/
+    /** Normalizes all the config data for consistency*/
     normalize() {
         //Flatten
         this.hideExt &&= [this.hideExt].flat();

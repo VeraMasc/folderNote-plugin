@@ -1,5 +1,5 @@
 import { dotCommaObj as getConfig } from "../../../.sharedModules/Data Parsing"
-import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from "obsidian";
+import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache, BlockCache } from "obsidian";
 
 export const Id = "contentIndex";
 
@@ -29,22 +29,28 @@ let cache:HeadingCache[];
 
 /**Regenerates an existing block to keep it updated*/
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
+	let temp = createDiv({ cls: "block-language-contentIndex" });
 	try {
-		let temp = createDiv({ cls: "block-language-contentIndex" });
+		
 		let data = getMetaData(ctx);
-		let hasChanged = !checkSameHeadings(data.headings,cache);
+		let contents = data.headings;
+		if(config?.listBlocks)
+			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
+		let hasChanged = !checkSameHeadings(contents,cache);
 		if(hasChanged && !!cache){ // HACK: For testing 
-			console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...data.headings]})
+			console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...contents]})
 		}
 		if(hasChanged){
-			renderContents(temp, data, config, ctx, plugin);
+			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
 			cache = data?.headings;
 			//Replace previous
 			el.replaceChildren(temp);
 		}
 		cache = data?.headings; // ? Redundant?
 	} catch (err) {
-		el.innerText = err + "";
+		debugger;
+		temp.innerText = err + "";
+		el.replaceChildren(temp);
 		cache=[]
 		console.error(err)
 	}
@@ -65,6 +71,34 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 
 }
 
+/**Converts the blocks and makes them be treated as headings */
+function insertBlockAsHeading(headings:HeadingCache[], blocks:BlockCache[]){
+	let ret = [...headings]
+	let iHead = 0, iBlock = 0;
+	while(iHead < ret.length && iBlock < blocks.length){
+		//Find position to insert
+		if(ret[iHead].position.start.offset > blocks[iBlock].position.start.offset){
+			//Create fake heading
+			let headedBlock= blockAsHeading(blocks[iBlock]);
+			ret.splice(iHead,0,headedBlock)
+			iBlock++;
+		}
+		iHead++;
+	}
+	// Add missing
+	ret.push(...blocks.slice(iBlock).map(blockAsHeading))
+	console.log(ret);
+	return ret;
+}
+
+/** Converts a block into a heading */
+function blockAsHeading(block:BlockCache):HeadingCache{
+	return {
+		heading: '^'+block.id,
+		level: 7, //Treat as super deep block
+		position: block.position
+	};
+}
 
 
 /**Renders the content of the block */
@@ -119,8 +153,7 @@ function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, c
  * @param el Parent element where the headings should be rendered
 */
 function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElement) {
-	let maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth))
-		|| 4; 
+	let maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
 
 	let list = [el.createEl("ol", { cls: "noteContents" })]
 	let line: HTMLLIElement | null = null;
@@ -197,6 +230,8 @@ export type Config = {
 	excludeRoot?: boolean,
 	/**Overrides the default click event in case it's blocked */
 	customLinkEv?: boolean,
+	/** Makes blocks get treated as headings*/
+	listBlocks?:boolean;
 }
 
 /**Gets the metadata of the current file */

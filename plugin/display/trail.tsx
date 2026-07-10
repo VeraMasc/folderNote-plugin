@@ -25,7 +25,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	let note = plugin.tree.getNode(file);
 
 	let { isIndex } = note;
-	let { ignore, color: fnColor, listContent, nav } = note.config;
+	let { ignore, color: fnColor, listContent, nav, listBlocks } = note.config;
 	const { basename, parent } = file;
 
 	/*	Is Index?	*/
@@ -44,7 +44,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	if (listContent && contDiv) { // * List content
 		let ctx = getContextOf(note.file);
 		
-		contentBlock.regenerateBlock({customLinkEv:true}, contDiv, ctx, plugin);
+		contentBlock.regenerateBlock({customLinkEv:true, listBlocks, maxDepth:null}, contDiv, ctx, plugin);
 
 	}else{
 		clearBlock(contDiv);
