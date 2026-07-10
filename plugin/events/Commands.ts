@@ -32,14 +32,33 @@ export function addCommands(this:FI_Plugin){
             })
         });
         
+        this.addCommand({
+            id: 'goto-bookmark',
+            name: 'Go to bookmarked block',
+            checkCallback: noteCallback(this,(note, checking, view)=>{
+                let cache = note?.getMetaData()
+                let bookmark = cache?.blocks?.['---']
+                if(bookmark){
+                    if(!checking){
+                        view.editor.hasFocus()
+                        const location = view.editor.offsetToPos(bookmark.position.end.offset)
+                        view.editor.setCursor(location);
+                        view.editor.scrollIntoView({from:location, to:location})
+                    }   
+                    return true
+                }
+            })
+        });
 }
 
 /**Acts as a base for note based commands */
-export function noteCallback(plugin:FI_Plugin ,fn:(note:IndexData,checking:boolean)=>boolean):(checking:boolean)=>boolean{
-    const view = plugin.app.workspace.getActiveViewOfType(MarkdownView);
-    if(view?.file){
-        const note = plugin.tree.getNode(view?.file)
-        return (checking:boolean)=>fn(note,checking);
+export function noteCallback(plugin:FI_Plugin ,fn:(note:IndexData,checking:boolean, view?:MarkdownView)=>boolean):(checking:boolean)=>boolean{
+    return (checking:boolean)=>{
+        const view = plugin.app.workspace.getActiveViewOfType(MarkdownView);
+        if(view?.file){
+            const note = plugin.tree.getNode(view?.file)
+            return fn(note,checking, view);
+        }
+        return false;
     }
-    return (_)=>false;
 }

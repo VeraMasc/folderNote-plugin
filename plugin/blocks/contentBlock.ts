@@ -34,8 +34,11 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		
 		let data = getMetaData(ctx);
 		let contents = data.headings;
-		if(config?.listBlocks)
+		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
+		// TODO: Improve bookmark display
+		if(data.blocks['---'])
+			contents.unshift(blockAsHeading(data.blocks['---'],2))
 		let hasChanged = !checkSameHeadings(contents,cache);
 		if(hasChanged && !!cache){ // HACK: For testing 
 			console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...contents]})
@@ -92,10 +95,10 @@ function insertBlockAsHeading(headings:HeadingCache[], blocks:BlockCache[]){
 }
 
 /** Converts a block into a heading */
-function blockAsHeading(block:BlockCache):HeadingCache{
+function blockAsHeading(block:BlockCache, level:number=null):HeadingCache{
 	return {
 		heading: '^'+block.id,
-		level: 7, //Treat as super deep block
+		level: level ?? 7, //Treat as super deep block
 		position: block.position
 	};
 }

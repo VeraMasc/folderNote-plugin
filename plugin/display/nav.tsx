@@ -30,7 +30,7 @@ export function navigateNext(note: IndexData|null) {
     const nextNote = getNavNext(note);
     if (nextNote == null)
         return;
-    nextNote.OpenNote();
+    nextNote.openNote();
 }
 
 /**Gets the next note in navigation*/
@@ -82,7 +82,7 @@ export function navigatePrev(note: IndexData) {
     let prevNote = getNavPrev(note);
     if (prevNote == null)
         return;
-    prevNote.OpenNote();
+    prevNote.openNote();
 }
 
 /**Gets the prev note in navigation*/

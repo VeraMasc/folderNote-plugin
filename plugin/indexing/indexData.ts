@@ -175,6 +175,7 @@ export class IndexData {
         }
         return ret;
     }
+
     /** Generates an obsidian link to the file or folder index */
     fileLink() {
         let stepNote = this?.file;
@@ -237,7 +238,7 @@ export class IndexData {
     }
 
     /**Opens the specified note */
-    OpenNote() {
+    openNote() {
         let mode = (app.vault as any).getConfig("defaultViewMode");
         app.workspace.activeLeaf?.openFile(this.file,
             { active: true, mode } as OpenViewState);
@@ -274,7 +275,7 @@ export class IndexData {
         return nodes.sort((a, b) => (b?.config?.priority ?? 0) - (a?.config?.priority ?? 0))
     }
 
-    /**Refreshes the config data of the file*/
+    /** Refreshes the config data of the file*/
     updateConfig() {
         let { file, exists } = this;
         if (!(file && exists)) {
@@ -287,8 +288,12 @@ export class IndexData {
         this.config.fromMeta(frontmatter)
     }
 
-    /**Explores another node in the tree */
+    /** Explores another node in the tree */
     explore(abstract: TFolder | TFile | TAbstractFile) {
         return this.tree.getNode(abstract);
+    }
+    /** Gets the metadata of the note */
+    getMetaData() {
+        return (!this.isFolder) && app.metadataCache.getFileCache(this.file);
     }
 }
