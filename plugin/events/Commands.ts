@@ -1,3 +1,4 @@
+import { bmPattern } from "../blocks/bookmark";
 import { navigateNext, navigatePrev } from "../display/nav";
 import { IndexData } from "../indexing/indexData";
 import FI_Plugin from "../main"
@@ -37,7 +38,7 @@ export function addCommands(this:FI_Plugin){
             name: 'Go to bookmarked block',
             checkCallback: noteCallback(this,(note, checking, view)=>{
                 let cache = note?.getMetaData()
-                let bookmark = cache?.blocks?.['---']
+                let bookmark = cache?.blocks?.[bmPattern]
                 if(bookmark){
                     if(!checking){
                         view.editor.hasFocus()

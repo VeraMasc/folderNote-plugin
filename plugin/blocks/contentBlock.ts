@@ -1,22 +1,22 @@
 import { dotCommaObj as getConfig } from "../../../.sharedModules/Data Parsing"
-import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache, BlockCache } from "obsidian";
+import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from "obsidian";
 
 export const Id = "contentIndex";
 
 import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
 import { getActiveMDView } from "../display/display";
+import * as bm from "./bookmark"
+import { insertBlockAsHeading, blockAsHeading, bmPattern } from "./bookmark";
 
 
-
+// TODO: Refactor this entire file
 
 /**Block Markdown processor */
 export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	try {
 		let config = getConfig(source) as Config;
 		let data = getMetaData(ctx);
-
 		renderContents(el, data, config, ctx, plugin);
-		
 
 	} catch (err) {
 		console.error(err);
@@ -31,19 +31,19 @@ let cache:HeadingCache[];
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	let temp = createDiv({ cls: "block-language-contentIndex" });
 	try {
-		
 		let data = getMetaData(ctx);
 		let contents = data.headings;
 		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
 		// TODO: Improve bookmark display
-		if(data.blocks['---'])
-			contents.unshift(blockAsHeading(data.blocks['---'],2))
+		if(data.blocks[bmPattern])
+			contents.unshift(blockAsHeading(data.blocks[bmPattern],2))
 		let hasChanged = !checkSameHeadings(contents,cache);
-		if(hasChanged && !!cache){ // HACK: For testing 
-			console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...contents]})
-		}
+		
 		if(hasChanged){
+			if(hasChanged && !!cache){ // HACK: For testing 
+				console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...contents]})
+			}
 			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
 			cache = data?.headings;
 			//Replace previous
@@ -51,7 +51,6 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		}
 		cache = data?.headings; // ? Redundant?
 	} catch (err) {
-		debugger;
 		temp.innerText = err + "";
 		el.replaceChildren(temp);
 		cache=[]
@@ -74,72 +73,50 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 
 }
 
-/**Converts the blocks and makes them be treated as headings */
-function insertBlockAsHeading(headings:HeadingCache[], blocks:BlockCache[]){
-	let ret = [...headings]
-	let iHead = 0, iBlock = 0;
-	while(iHead < ret.length && iBlock < blocks.length){
-		//Find position to insert
-		if(ret[iHead].position.start.offset > blocks[iBlock].position.start.offset){
-			//Create fake heading
-			let headedBlock= blockAsHeading(blocks[iBlock]);
-			ret.splice(iHead,0,headedBlock)
-			iBlock++;
-		}
-		iHead++;
-	}
-	// Add missing
-	ret.push(...blocks.slice(iBlock).map(blockAsHeading))
-	console.log(ret);
-	return ret;
-}
-
-/** Converts a block into a heading */
-function blockAsHeading(block:BlockCache, level:number=null):HeadingCache{
-	return {
-		heading: '^'+block.id,
-		level: level ?? 7, //Treat as super deep block
-		position: block.position
-	};
-}
-
-
 /**Renders the content of the block */
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
+	el.parentElement?.addClass("compactBlock");
 	data ??= { }; //If no cached data
+	
+	//TODO: add message for when there's no headings (?)
+	let headings = restrictContents( ctx, el,  data, config);
+	renderListElements(el, config, headings);
+}
+
+/** Limits the rendering to a specific set of headings if needed
+ * @returns list of the contents to display
+*/
+function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, data: CachedMetadata, config: Config) {
 	let  headings  = [...(data?.headings ?? [])]; //Avoid operating on metadata
 	let { from, relative, excludeRoot=true } = config;
-	//TODO: refactor renderContents for readability
-	//TODO: add message for when there's no headings
-	//Render from heading
 	if (relative) {
 		//Use parent heading
-		let section = ctx.getSectionInfo(el)
-		let parentHeader = headings.filter(
+		let section = ctx.getSectionInfo(el);
+		let parentH = headings.filter(
 			(h) => h.position.start.line < section.lineStart
-		).last()
-		from = parentHeader?.heading;
+		).last();
+		from = parentH?.heading;
 	}
 
 	if (from) {
-		headings = getSubheaders(ctx, el, data, from || null)
+		headings = getSubheadings(ctx, el, data, from || null);
 		//Remove excess root
 		if (excludeRoot && headings?.length) {
-			headings.shift()
+			headings.shift();
 		}
 	}
+	return headings;
+}
 
-	
-	//Render list
-	el.parentElement?.addClass("compactBlock");
-	let list = renderHeadingList(config, headings,el)
-
+/** Renders the list elements of the table of contents */
+function renderListElements(el: HTMLElement, config: Config, headings: HeadingCache[]) {
+	let list = renderHeadingList(config, headings, el);
 
 	//Remove unnecessary indentation
 	let element: Element = list[0].firstElementChild;
 	var count = 1;
 	while (element?.children.length == 1 && element.firstElementChild.tagName == "OL") {
-		element.addClass("no-indent")
+		element.addClass("no-indent");
 		element = element?.firstElementChild?.firstElementChild;
 		count++;
 	}
@@ -206,7 +183,7 @@ function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIEleme
 /**Obtains headers and subheaders of the given file
  * @param from Header to use as root for the index
 */
-function getSubheaders(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
+function getSubheadings(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
 	let ret = data.headings;
 	//Ignore if from is null
 	if (!from)
