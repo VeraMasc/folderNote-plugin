@@ -17,14 +17,17 @@ export class SettingsTab extends PluginSettingTab {
 		const context = {containerEl, plugin, settings} as SettingsContext<MyPluginSettings>;
 		containerEl.empty();
 		containerEl.createEl('h2', { text: 'Folder Index settings' });
+		containerEl.createEl('a', { text: 'see documentation', href:"https://github.com/VeraMasc/folderNote-plugin" });
 
 		//Refresh on save
 		addToggle<MyPluginSettings>(context,'refreshOnNoteSave',"Refresh on Save","Refresh Folder note index when a note is saved");
 
 		//Refresh on change
-		addToggle<MyPluginSettings>(context,'refreshOnNoteChange',"Refresh on Change","Refresh Folder note index when changing notes")		
-		//Block suggestions
+		addToggle<MyPluginSettings>(context,'refreshOnNoteChange',"Refresh on Change","Refresh Folder note index when changing notes");
+		
 		addToggle<MyPluginSettings>(context,'blockSuggestions',"Codeblock Suggestions","Shows suggestions for the plugin's codeblock parameters")
+		//Block suggestions
+		addToggle<MyPluginSettings>(context,'bookmarkStartup',"Go to bookmark after vault startup","Ensures vault will open the last active file at the bookmarked ('^-' block identifier) location")
 		
 		
 
@@ -50,6 +53,8 @@ export interface MyPluginSettings {
 	rootIndex: string;
 	/**Enables suggestions for the plugin's blocks */
 	blockSuggestions:boolean;
+	/** Indicates that the app should go to the active file's bookmark after startup */
+	bookmarkStartup:boolean;
 }
 
 /**Describes the default settings of the plugin */
@@ -58,5 +63,6 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	refreshOnNoteChange: true,
 	rootIndex: 'Index',
 	blockSuggestions:false,
+	bookmarkStartup:true,
 };
 

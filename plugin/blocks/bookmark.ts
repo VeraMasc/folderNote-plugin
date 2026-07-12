@@ -1,7 +1,7 @@
 import { HeadingCache, BlockCache } from "obsidian"
 
 /** Defines the bookmark pattern */
-export const bmPattern = "---"
+export const bmPattern = "-"
 
 /** Defines what the bookmark pattern looks like as a heading */
 export const bmHeadingPattern = "^" + bmPattern

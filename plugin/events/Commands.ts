@@ -41,10 +41,30 @@ export function addCommands(this:FI_Plugin){
                 let bookmark = cache?.blocks?.[bmPattern]
                 if(bookmark){
                     if(!checking){
-                        view.editor.hasFocus()
+                        view.editor.hasFocus() // TODO: Make command work in reading view too
                         const location = view.editor.offsetToPos(bookmark.position.end.offset)
                         view.editor.setCursor(location);
                         view.editor.scrollIntoView({from:location, to:location})
+                    }   
+                    return true
+                }
+            })
+        });
+
+        this.addCommand({
+            id: 'create-bookmark',
+            name: 'Bookmark current block',
+            checkCallback: noteCallback(this,(note, checking, view)=>{
+                let cache = note?.getMetaData()
+                let bookmark = cache?.blocks?.[bmPattern]
+                if((view as MarkdownView)?.getMode?.() == 'source'){ //Check if in edit mode
+                    if(!checking){
+                        
+                        const location = view.editor.getCursor("head");
+                        location.line++;
+                        location.ch=0;
+                        view.editor.setCursor(location);
+                        view.editor.replaceRange("\n^-\n", location)
                     }   
                     return true
                 }

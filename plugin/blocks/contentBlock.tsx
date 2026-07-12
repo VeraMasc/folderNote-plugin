@@ -38,13 +38,13 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
 		// TODO: Improve bookmark display
-		if(data.blocks[bmPattern])
-			contents.unshift(blockAsHeading(data.blocks[bmPattern],2))
+		if(data.blocks?.[bmPattern])
+			contents.unshift(blockAsHeading(data.blocks?.[bmPattern],2))
 		let hasChanged = !checkSameHeadings(contents,cache);
 		
 		if(hasChanged){
 			if(hasChanged && !!cache){ // HACK: For testing 
-				console.warn(`Headings changed ${[...cache].length}=>${[...data.headings].length}`,{old:[...cache], "new":[...contents]})
+				console.warn(`Headings changed ${[...cache].length}=>${[...(data.headings??[])].length}`,{old:[...cache], "new":[...contents]})
 			}
 			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
 			cache = data?.headings;
@@ -188,6 +188,8 @@ function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIEleme
 */
 function getSubheadings(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
 	let ret = data.headings;
+	if(!ret)
+		return [];
 	//Ignore if from is null
 	if (!from)
 		return [...ret];

@@ -72,6 +72,8 @@ export default class FI_Plugin extends Plugin {
 	static instance: FI_Plugin;
 
 	async onload() {
+		//Detect startup of vault
+		let isStartup = this.app.workspace.layoutReady;
 		FI_Plugin.instance = (window as any).FNindex = this;
 		await this.loadSettings();
 		globalThis.app = this.app;
