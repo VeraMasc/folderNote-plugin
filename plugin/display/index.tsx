@@ -3,7 +3,7 @@ import { IndexData } from '../indexing/indexData';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';
 import * as html from '../html';
-
+import * as JSX from "../../../.sharedModules/JSX obj"
 
 /**Creates the container for the trail and index */
 export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeType, fData: IndexData) {
@@ -124,25 +124,20 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
 
         if (config.hideEmpty && child?.file == null)
             continue;
-        let li = indexList.createEl("li");
-
-        if (child.isFolder)
-            li.addClass("FN-isFolder");
-
-        // Adds the Icons
-        if (child.config.icon) {
-            //li.style.setProperty("--icon",child.config.icon)
-            li.setAttr("data-icon", child.config.icon);
-        }
-
-        
-        let icon = li.createEl("span", { cls: "FN-icon" });
-        icon.style.setProperty("--fn-color",child.config.color)
-        icon.innerHTML = child.isFolder ? 
-            html.folder_icon 
-            : child.ext =="md"?
-                html.note_icon
-                : html.unknown_file_icon;
+        // TODO: Use JSX factory for all the HTML
+        let li = <li className={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
+            <span className='FN-icon' style={`--fn-color:${child.config?.color??''};`}
+                dangerouslySetInnerHTML={
+                    child.isFolder ? 
+                        html.folder_icon 
+                        : (child.ext =="md"?
+                            html.note_icon
+                            : html.unknown_file_icon)
+                }
+            >
+            </span>
+        </li>;
+        indexList.append(li);
         
         li.append(child.fileLink());
         if (!child.isFolder && child.ext != "md")

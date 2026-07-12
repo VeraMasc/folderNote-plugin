@@ -8,6 +8,8 @@ import { getActiveMDView } from "../display/display";
 import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern } from "./bookmark";
 
+import {obsJSX as JSX} from "../../../.sharedModules/JSX"
+
 
 // TODO: Refactor this entire file
 
@@ -32,7 +34,7 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 	let temp = createDiv({ cls: "block-language-contentIndex" });
 	try {
 		let data = getMetaData(ctx);
-		let contents = data.headings;
+		let contents = restrictContents( ctx, el,  data, config);
 		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
 		// TODO: Improve bookmark display
@@ -182,12 +184,13 @@ function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIEleme
 
 /**Obtains headers and subheaders of the given file
  * @param from Header to use as root for the index
+ * @returns new list with subheadings
 */
 function getSubheadings(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
 	let ret = data.headings;
 	//Ignore if from is null
 	if (!from)
-		return ret;
+		return [...ret];
 	let start = Math.max(ret.findIndex((h) => h.heading == from), 0)
 	let maxLevel = ret[start]?.level ?? 0
 	ret = ret.slice(start + 1)

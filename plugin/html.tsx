@@ -1,4 +1,4 @@
-import {JSX} from "../../.sharedModules/JSX"
+import * as JSX from "../../.sharedModules/JSX str"
 
 // TODO: Use icons already in obsidian
 
