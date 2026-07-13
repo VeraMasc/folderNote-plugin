@@ -3,6 +3,7 @@ import { OpenViewState, TAbstractFile, TextFileView, TFile, TFolder } from "obsi
 import { NoteConfig } from "../config";
 import { linkMenu } from "../contextMenu";
 import { IndexTree } from "./indexTree";
+import * as JSX from ".sharedModules/JSX obj";
 
 
 
@@ -178,62 +179,46 @@ export class IndexData {
 
     /** Generates an obsidian link to the file or folder index */
     fileLink() {
-        let stepNote = this?.file;
-
-        let link = this.filePath;
-        let text = this.name;
+        let stepNote = this?.file, link = this.filePath;
+        let text = this.name, content:any[]=[];
         let extraText = null;
         //Truncate
         if (text.length > 17) {
             extraText = text?.slice(15);
             text = text?.slice(0, 15);
+            content = [<span className="ellipsed" data-text={extraText}></span>]
         }
+        content.unshift(text);
+
         let linkEl: HTMLElement;
+        let props = {className:"internal-link FN-link",target:"_blank", rel:"noopener"};
         if (stepNote) { //Si la step note existe
-            linkEl = createEl("a", {
-                cls: "internal-link FN-link" + (this.isRoot ? " FN-root" : ""),
-                href: link, title: this.name, text,
-                attr: {
-                    target: "_blank", rel: "noopener", "data-href": link,
-                }
-            })
-
-            if (this.config.color) {
-                try {
-                    // TODO: Check if possible to do with CSS
-                    linkEl.style.setProperty("--link-color", this.config.color)
-                    let lum = 1 - getLuminance(this.config.color)
-                    linkEl.style.setProperty("--link-color-hover", lighten(this.config.color, 0.15 * lum))
-                } catch (err) {
-                    console.error(err);
-                }
-            }
-
-            linkEl.onclick = (e) => {
-                e.preventDefault()
-                let mode = (app.vault as any).getConfig("defaultViewMode");
-                let view = app.workspace.getActiveViewOfType(TextFileView)
-                view?.leaf?.openFile(stepNote,
-                    { active: true, mode } as OpenViewState)
-            }
-            linkEl.oncontextmenu = linkMenu;
-        } else { //Si la step note no existe
-            linkEl = createEl("a", {
-                cls: "internal-link FN-link",
-                attr: { target: "_blank", rel: "noopener", text },
-                text
-            })
-            linkEl.ondblclick = (e) => {
-                e.preventDefault()
-                let mode = (app.vault as any).getConfig("defaultViewMode");
-                let state = { mode } as OpenViewState;
-                app.workspace.openLinkText(this.folder.path + "/" + this.folder.name, ".", false, state)
-            }
-
+            // Calculate color
+            let baseCol =this.config.color || null;
+            let hoverCol = baseCol && lighten(this.config.color, 0.15 * (1 - getLuminance(this.config.color)));
+            let style = this.config.color?{"--link-color": this.config.color, "--link-color-hover":hoverCol}:null
+            if(this.isRoot)
+                props.className+=" FN-root";
+            Object.assign(props,{style, title:this.name, href:link, 'data-href':link});
         }
-        //Has excess overflowing text
-        if (extraText)
-            linkEl.createEl("span", { cls: "ellipsed", attr: { "data-text": extraText } })
+
+        linkEl = <a {...props}>
+                {...content}
+            </a>;
+        
+        linkEl.onclick = stepNote ? (e) => {
+            e.preventDefault()
+            let mode = (app.vault as any).getConfig("defaultViewMode");
+            let view = app.workspace.getActiveViewOfType(TextFileView)
+            view?.leaf?.openFile(stepNote,
+                { active: true, mode } as OpenViewState)
+        }:null;
+        linkEl.oncontextmenu = stepNote? linkMenu : (e) => {
+            e.preventDefault()
+            let state = { mode:(app.vault as any).getConfig("defaultViewMode") } as OpenViewState;
+            app.workspace.openLinkText(this.folder.path + "/" + this.folder.name, ".", false, state)
+        };
+
         return linkEl;
     }
 

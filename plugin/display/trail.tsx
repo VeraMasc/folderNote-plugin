@@ -7,6 +7,7 @@ import { currentNoteMenu } from '../contextMenu';
 import FI_Plugin from '../main';
 import { addNavArrows } from './nav';
 import { clearBlock } from '../blocks/contentBlock';
+import * as JSX from '.sharedModules/JSX obj';
 
 // TODO: Mejorar y documentar proceso de renderizado
 /**Renders the path trail and and additional elements
@@ -50,8 +51,10 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		clearBlock(contDiv);
 	}
 	// Trail
-	let trailScroll = fnDiv.createEl('div', { cls: "FN-trail-scroller", attr: { tabindex: 0 } });
-	let trailDiv = trailScroll.createEl('span', { cls: "FN-trail" });
+	let trailDiv; 
+	fnDiv.append(<div tabindex="0" className='FN-trail-scroller'>
+		{trailDiv = <span className='FN-trail'></span>}
+	</div>);
 
 
 	let pathList = index?.getSplitPath() ?? [];
@@ -61,9 +64,9 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	trailDiv.appendChild(el);
 
 	for (let step of pathList) {
-		trailDiv.createEl("span", { cls: "FN-trail-arrow", text: " → " });
+		let span = <span className="FN-trail-arrow"> → </span>
 		el = step?.fileLink();
-		trailDiv.appendChild(el);
+		trailDiv.append(span, el);
 	}
 	el.addClass("FN-current");
 
@@ -77,10 +80,8 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		addIndex(fnDiv, index);
 	}
 	else {
-		let arrow = trailDiv.createEl("span", { cls: "FN-trail-arrow FN-end-arrow", text: " ↓ " });
-		cnEl=arrow;
-		if (fnColor)
-			arrow.style.setProperty("--text-normal", fnColor);
+		let arrow = <span className="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})}> ↓ </span>
+		trailDiv.append(cnEl=arrow);
 	}
 	
 	cnEl.ondblclick = cnEl.oncontextmenu = currentNoteMenu; //Set context menu

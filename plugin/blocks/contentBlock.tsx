@@ -8,7 +8,7 @@ import { getActiveMDView } from "../display/display";
 import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern } from "./bookmark";
 
-import {obsJSX as JSX} from "../../../.sharedModules/JSX"
+import * as JSX from "../../../.sharedModules/JSX obj"
 
 
 // TODO: Refactor this entire file
@@ -147,11 +147,11 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 			continue;
 
 		line = getLine(level, list, line)
-
-		let link = line.createEl("a", {
-			href: "#" + heading, cls: "internal-link", text: heading,
-			attr: { target: "_blank", rel: "noopener", "data-href": "#" + heading }
-		});
+		let link = <a href={"#" + heading} data-href={"#" + heading} className="internal-link" target="_blank" rel="noopener"
+		>
+			{heading}
+		</a>;
+		line.append(link)
 
 		if (config.customLinkEv) {
 			link.onclick = onHeadingLinkClick(); //It doesn't trigger otherwise
