@@ -47,11 +47,10 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 				console.warn(`Headings changed ${[...cache].length}=>${[...(data.headings??[])].length}`,{old:[...cache], "new":[...contents]})
 			}
 			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
-			cache = data?.headings;
 			//Replace previous
 			el.replaceChildren(temp);
 		}
-		cache = data?.headings; // ? Redundant?
+		cache = contents; // ? Redundant?
 	} catch (err) {
 		temp.innerText = err + "";
 		el.replaceChildren(temp);

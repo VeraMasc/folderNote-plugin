@@ -45,7 +45,6 @@ export function addCommands(this:FI_Plugin){
                         const location:EditorPosition = {line:bookmark.position.end.line, ch:bookmark.position.end.col};//view.editor.offsetToPos(bookmark.position.end.offset)
                         // TODO: Fix a weird scroll bug on mobile
                         let path = note.filePath;
-                        new Notice("Deferred: " + this.app.workspace.getActiveViewOfType(MarkdownView).leaf.isDeferred)
                         this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
                             .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,))
                             .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,)) // HACK: Repeated to force proper loading and scroll
