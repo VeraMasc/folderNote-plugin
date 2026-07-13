@@ -36,21 +36,26 @@ export function addCommands(this:FI_Plugin){
         this.addCommand({
             id: 'goto-bookmark',
             name: 'Go to bookmarked block',
-            checkCallback: noteCallback(this,(note, checking, view)=>{
+            checkCallback: noteCallback(this,(note, checking, view:MarkdownView)=>{
                 let cache = note?.getMetaData()
                 let bookmark = cache?.blocks?.[bmPattern]
                 if(bookmark){
                     if(!checking){
-                        view.editor.hasFocus() // TODO: Make command work in reading view too
-                        const location = view.editor.offsetToPos(bookmark.position.end.offset)
-                        view.editor.setCursor(location);
-                        view.editor.scrollIntoView({from:location, to:location})
+                        view.editor.hasFocus() 
+                        const location:EditorPosition = {line:bookmark.position.end.line, ch:bookmark.position.end.col};//view.editor.offsetToPos(bookmark.position.end.offset)
+                        // TODO: Fix a weird scroll bug on mobile
+                        let path = note.filePath;
+                        new Notice("Deferred: " + this.app.workspace.getActiveViewOfType(MarkdownView).leaf.isDeferred)
+                        this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
+                            .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,))
+                            .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,)) // HACK: Repeated to force proper loading and scroll
+                        
                     }   
                     return true
                 }
             })
         });
-
+        
         this.addCommand({
             id: 'create-bookmark',
             name: 'Bookmark current block',

@@ -1,4 +1,4 @@
-import { HeadingCache, BlockCache } from "obsidian"
+import { HeadingCache, BlockCache, Plugin } from "obsidian"
 
 /** Defines the bookmark pattern */
 export const bmPattern = "-"
@@ -33,4 +33,14 @@ export function blockAsHeading(block: BlockCache, level: number = null): Heading
 		level: level ?? 7, //Treat as super deep block
 		position: block.position
 	};
+}
+
+/** Jumps to the active note's bookmark on startup */
+export function bmStartupEvent(plugin:Plugin){
+    try{
+        console.log("Startup");
+        (plugin.app as any).commands.executeCommandById('FolderNote-index:goto-bookmark')
+    }catch(err){
+        console.error(err)
+    }
 }

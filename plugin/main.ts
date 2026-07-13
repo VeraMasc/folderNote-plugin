@@ -11,6 +11,7 @@ import { BlockSuggest } from './blocks/suggest/blockSuggest';
 import { EventManager } from './events/EventManager';
 import { addCommands } from './events/Commands';
 import { DEFAULT_SETTINGS, MyPluginSettings, SettingsTab } from './Settings';
+import { bmStartupEvent } from './blocks/bookmark';
 
 
 
@@ -73,7 +74,7 @@ export default class FI_Plugin extends Plugin {
 
 	async onload() {
 		//Detect startup of vault
-		let isStartup = this.app.workspace.layoutReady;
+		let isStartup = !this.app.workspace.layoutReady;
 		FI_Plugin.instance = (window as any).FNindex = this;
 		await this.loadSettings();
 		globalThis.app = this.app;
@@ -117,6 +118,7 @@ export default class FI_Plugin extends Plugin {
 			this.events.regLayoutChangeEv();
 			this.events.regMetaDelEv();
 
+			
 
 			app.workspace.iterateAllLeaves((leaf) => {
 				if (leaf instanceof MarkdownView)
@@ -124,6 +126,10 @@ export default class FI_Plugin extends Plugin {
 					leaf.view.previewMode.rerender(true);
 			});
 
+			if(isStartup && this.settings.bookmarkStartup){
+				bmStartupEvent(this)
+			}
+				
 		});
 
 		// Custom Save command
