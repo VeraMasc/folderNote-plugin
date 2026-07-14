@@ -1,7 +1,7 @@
 import { type Config } from "./blocks/contentBlock";
 /** Configuration parameters a note can have */
 export class NoteConfig {
-    /** If true, note will render with a header TOC */
+    /** If true, note will render with a heading TOC */
     listContent: boolean;
     /** Requires {@link listContent}. Same as {@link Config.listBlocks} makes blocks be treated as headings in the TOC.*/
     listBlocks:boolean;

@@ -19,8 +19,4 @@ Alternatively, the content list will always display the bookmark as if it were t
 If you also want to add shortcuts or make automated use of this feature, there are commands for both creating/erasing bookmarks and jumping to their location.
 
 
-## Comically Answered Questions
-
-"But why make this when you can simply not close the tab and continue later?"
-
-Because, my dear strawman, my phone's battery manager loves to close Obsidian the moment I stop looking at my screen, Microsoft restarts my computer without my consent and things go really bad the moment I start opening tabs in any program. I must have been a memory leak in my past life the way I refuse to free any memory.
+Also see [Q&A (Bookmarks)](Q&A.md#bookmarks)

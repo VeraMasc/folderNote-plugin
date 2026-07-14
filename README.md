@@ -26,17 +26,28 @@ Folders default to using the file with the same name inside them as index, but y
 
 // TODO: trail
 
+// TODO: Add picture
+
 ### Tables of contents
 
-// TODO: TOC
+The plugin also provides a Table/List of contents functionality to make navigation easier both within a note and between them by providing a clear summary of what's inside. They can be automatically to notes through the property `FN-listContent` or made using the codeblock `contentList`. They only show headings by default, but they can be made to display block identifiers through the property `FN-listBlocks`.
+
+For more details on the properties and features of the codeblock see the [Content List Block](documentation/codeblocks.md#content-list-block) documentation.
+
+## Other Features
+
+- [Bookmakrs](documentation/bookmarks.md)
 
 ## Full list of properties
 
+These are all the note properties that can be used to change the plugin's behavior. For information on how codeblocks are affected consult [Content List Block](documentation/codeblocks.md).
 
 ```ts
 class NoteConfig {
-    /**If true, not will render with a header index */
+    /** If true, note will render with a heading TOC */
     FN-listContent: boolean;
+    /** Requires {@link listContent}. Same as {@link Config.listBlocks} makes blocks be treated as headings in the TOC.*/
+    FN-listBlocks:boolean;
     /** Forces the file to be (or not be) used as an index*/
     FN-useAsIndex: boolean | null;
     /** Ignore this file when displaying an index */
@@ -77,3 +88,7 @@ class NoteConfig {
 
 - Text might randomly move up and down for a second while you're writing in a note with FN-listContent.
   - I have reduced it a lot, but for some reason the TOC seems to not render for a frame.
+
+## Also see
+
+- [Q&A](documentation/Q&A.md)

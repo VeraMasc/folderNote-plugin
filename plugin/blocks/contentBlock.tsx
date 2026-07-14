@@ -1,14 +1,15 @@
 import { dotCommaObj as getConfig } from "../../../.sharedModules/Data Parsing"
 import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from "obsidian";
 
-export const Id = "contentIndex";
+export const Id = "contentList";
 
 import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
 import { getActiveMDView } from "../display/display";
 import * as bm from "./bookmark"
-import { insertBlockAsHeading, blockAsHeading, bmPattern } from "./bookmark";
+import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
 
 import * as JSX from "../../../.sharedModules/JSX obj"
+import { longBookmark_icon } from "../html";
 
 
 // TODO: Refactor this entire file
@@ -31,7 +32,7 @@ let cache:HeadingCache[];
 
 /**Regenerates an existing block to keep it updated*/
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
-	let temp = createDiv({ cls: "block-language-contentIndex" });
+	let temp = createDiv({ cls: "block-language-contentList" });
 	try {
 		let data = getMetaData(ctx);
 		let contents = restrictContents( ctx, el,  data, config);
@@ -147,10 +148,12 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 			continue;
 
 		line = getLine(level, list, line)
-		let link = <a href={"#" + heading} data-href={"#" + heading} className="internal-link" target="_blank" rel="noopener"
-		>
+
+		let link = <a href={"#" + heading} data-href={"#" + heading} className="internal-link" target="_blank" rel="noopener">
 			{heading}
 		</a>;
+		if (heading == bmHeadingPattern) // HACK: Inserts the icon in a really haphazard way
+			link.innerHTML = longBookmark_icon;
 		line.append(link)
 
 		if (config.customLinkEv) {
@@ -233,7 +236,7 @@ export function onHeadingLinkClick() {
 		e.preventDefault()
 		let mode = (app.vault as any).getConfig("defaultViewMode");
 		let target = e.target as HTMLAnchorElement;
-		let path = target?.getAttribute("data-href");
+		let path = target.closest('a').getAttribute("data-href");
 		let match = path.match(/^(.*)#(.*?)$/)
 		let [, filepath, heading] = match; //Separates heading from path
 

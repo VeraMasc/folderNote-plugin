@@ -108,7 +108,7 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
     setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", getRandomColor)//Custom link color
     let moreMenu = new DeferredMenu();
-    insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentIndex", "") //Insert header index
+    insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
     setPropItem(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
     noteOptions(menu, ev,moreMenu) //Generate regular options
