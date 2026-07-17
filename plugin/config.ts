@@ -13,6 +13,8 @@ export class NoteConfig {
     indexFile: any;
     /** Forces this index to be open or closed. Null to not force*/
     forceOpen: boolean | null;
+    /** Shows a title in the index. Useful for codeblocks*/
+    showTitle:boolean;
     /** Show index in expanded mode by default */
     expand: boolean;
     /** Enables sequential navigation between files */
@@ -38,7 +40,7 @@ export class NoteConfig {
     /** Adds a custom icon. Allows any unicode*/
     icon: string; 
     /** Allows Unknown Properties*/
-    [key: string]: any;
+    // [key: string]: any;
 
     fromMeta(metadata: Object) {
         this.clear();

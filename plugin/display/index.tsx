@@ -1,4 +1,4 @@
-import { MarkdownView, MarkdownViewModeType, Notice, OpenViewState } from 'obsidian';
+import { MarkdownView, MarkdownViewModeType, Notice, OpenViewState, TFile } from 'obsidian';
 import { IndexData } from '../indexing/indexData';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';
@@ -13,15 +13,10 @@ export function createFNDiv(activeMDView: MarkdownView, mode: MarkdownViewModeTy
 
     //Remove old
     activeMDView.containerEl?.querySelectorAll(".FN-div")?.forEach((div) => { div.remove(); });
-
+    let {isIndex, config:{isSticky}={}} = fData??{};
     const fnDiv = createDiv({
-        cls: `FN-div`,
+        cls: `FN-div`+ (isIndex?" isIndex":"") + (isSticky?" isSticky":""),
     });
-    //Set Css settings
-    if (fData?.config?.isIndex)
-        fnDiv.addClass("isIndex");
-    if (fData?.config?.isSticky)
-        fnDiv.addClass("isSticky");
 
     //Set position in view
     if (mode === "preview") {
@@ -58,29 +53,16 @@ export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewM
     divs?.forEach((div) => { div.remove(); });
 
     //Create new content div if none exists
-    contDiv ??= createDiv({
-        cls: `FN-content markdown-rendered`,
-        attr: { contenteditable: false },
-    });
+    contDiv ??= <div cls='FN-content markdown-rendered' contenteditable='false'/> as HTMLDivElement;
 
     //Set position in view
     if (mode === "preview") {
-
         //Insert last in note header (after title and metadata)
         view.querySelector("div.markdown-preview-sizer>.mod-header")?.appendChild(contDiv);
-
     }
     else {
-
         //Insert Content Div right before content in a non editable section
         view.querySelector("div.cm-contentContainer")?.before(contDiv);
-        let testSpan = createDiv({
-            cls: `FN-content markdown-rendered`,
-            attr: { contenteditable: false },
-        });
-
-
-
     }
 
     return contDiv;
@@ -106,16 +88,16 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         open: config.forceOpen || IndexOpen || null
     }}>
         <summary cls='FN-icon icon-index' innerHTML={html.index_icon} {...sumEv}>
-            {indexData?.config?.showTitle? addIndexTitle(indexData) : ''}
+            {...Array.from(indexData?.config?.showTitle? addIndexTitle(indexData) : [])}
         </summary>
+        {indexList=<ul cls='FN-indexList'/>}
     </details>;
     fnDiv.append(indexEl);
 
     // TODO: Make with JSX
 
-    const indexList = indexEl.createEl("ul", {
-        cls: `FN-indexList`,
-    });
+    var indexList:HTMLElement;
+ 
 
     //Children
     for (let child of indexData.childNotes(config)) {
@@ -125,23 +107,19 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (config.hideEmpty && child?.file == null)
             continue;
         // TODO: Use JSX factory for all the HTML
+        let icon = child.isFolder ? html.folder_icon : (child.ext =="md"? html.note_icon : html.unknown_file_icon)
         let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
             <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}
-                innerHTML={
-                    child.isFolder ? 
-                        html.folder_icon 
-                        : (child.ext =="md"?
-                            html.note_icon
-                            : html.unknown_file_icon)
-                }
-            >
-            </span>
+                innerHTML={icon} />
+            {(!child.isFolder && child.ext != "md") && <span cls='FN-ext'>{`.${child.ext}`}</span>}
         </li>;
+        if(child.config.icon)
+            console.log(li)
         indexList.append(li);
         
         li.append(child.fileLink());
-        if (!child.isFolder && child.ext != "md")
-            li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
+        // if (!child.isFolder && child.ext != "md")
+        //     li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
     }
     var frag = <>
         <div cls='FN-cover'/>
@@ -156,22 +134,24 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
 
         </div>
     </>
-    indexEl.append(frag)
+    indexEl.append(...frag.childNodes)
 
 }
+
+
 /**Adds a title to the index */
-export function addIndexTitle( indexData: IndexData) {
-    // TODO: Rework as JSX
-	let title = indexData.config?.indexPath ?? indexData?.name;
+export function addIndexTitle(indexData: IndexData) {
+	let title = indexData?.name;
+    let {filePath:href, file}=indexData
 	let ret = <>
         {` ${title} `}
-        <a cls="FN-link internal-link FN-gotoIndex" href={indexData.filePath} title={indexData.name} target='_blank' rel='noopener' data-href={indexData.filePath} innerHTML={html.gotoIndex_icon} onclick={(e) => {
+    <a cls="FN-link internal-link FN-gotoIndex" href={href} title={title} target='_blank' rel='noopener' data-href={href} innerHTML={html.gotoIndex_icon}  onclick={(e) => {
             e.preventDefault();
             let mode = (app.vault as any).getConfig("defaultViewMode");
-            app.workspace.activeLeaf?.openFile(indexData.file,
+            app.workspace.activeLeaf?.openFile(file,
                 { active: true, mode } as OpenViewState);
 	    }}/>
     </>
-    return ret;
+    return [...ret.childNodes];
 }
 
