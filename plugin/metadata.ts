@@ -17,7 +17,7 @@ export function setLinkToIndex(file:TAbstractFile, plugin:FI_Plugin){
 
     var indexPath:string;
     if( file.parent.name == ""){
-        indexPath = plugin?.RootIndexList?.first() // TODO: Mejorar
+        indexPath = plugin?.RootIndexList?.first() // TODO: Mejorar (Mejorar qué?)
     }
     else{
         indexPath = `${file.parent.path}/${name?.[0]}.md`;

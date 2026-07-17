@@ -1,4 +1,4 @@
-import { MarkdownView, MarkdownViewModeType, OpenViewState } from 'obsidian';
+import { MarkdownView, MarkdownViewModeType, Notice, OpenViewState } from 'obsidian';
 import { IndexData } from '../indexing/indexData';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';
@@ -98,6 +98,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         attr: { open: config.forceOpen || IndexOpen || null }
     });
 
+    // TODO: Make with JSX
     const indexSum = indexEl.createEl("summary", {
         cls: `FN-icon icon-index`,
     });
@@ -143,38 +144,35 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (!child.isFolder && child.ext != "md")
             li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
     }
-    indexEl.createDiv({ cls: "FN-cover" });
-    let indexBottom = indexEl.createDiv({ cls: "FN-bottom" });
-    let expandIndex = indexBottom.createEl("span", { cls: "FN-expand FN-icon", attr: { tabindex: 0 } });
-    expandIndex.innerHTML = html.expand_icon;
-    expandIndex.onclick = (ev: MouseEvent) => {
+    let expandIndex;
+    let addNote;
+    var frag = <>
+        <div className='FN-cover'/>
+        <div className='FN-bottom'>
+            <span className="FN-expand FN-icon" tabindex={0} dangerouslySetInnerHTML={html.expand_icon} 
+                onclick={(ev: MouseEvent) => {
+                    indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
+            }}/>
+            {<span className="FN-newNote FN-icon" tabindex={0} dangerouslySetInnerHTML={html.newNote_icon} ondblclick={(ev: MouseEvent) => {
+                (app as any).commands.executeCommandById("file-explorer:new-file");
+            }} />}
 
-        indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
-    };
-
-
-    let addNote = indexBottom.createEl("span", { cls: "FN-icon FN-newNote", attr: { tabindex: 0 } });
-    addNote.innerHTML = html.newNote_icon;
-    addNote.ondblclick = (ev: MouseEvent) => {
-
-        (app as any).commands.executeCommandById("file-explorer:new-file");
-    };
+        </div>
+    </>
+    indexEl.append(frag)
 
 }
 /**Adds a title to the index */
 export function addIndexTitle(summEl: HTMLElement, indexData: IndexData) {
 	let title = indexData.config?.indexPath ?? indexData?.name;
 	summEl.append(` ${title} `);
-	let link = summEl.createEl("a", {
-		cls: "FN-link internal-link FN-gotoIndex", href: indexData.filePath, title: indexData.name, attr: { target: "_blank", rel: "noopener", "data-href": indexData.filePath, }
-	});
-	link.innerHTML = html.gotoIndex_icon;
-	link.onclick = (e) => {
+    // TODO: Make custom JSX element for note links
+    summEl.append((<a className="FN-link internal-link FN-gotoIndex" href={indexData.filePath} title={indexData.name} target='_blank' rel='noopener' data-href={indexData.filePath} dangerouslySetInnerHTML={html.gotoIndex_icon} onclick={(e) => {
 		e.preventDefault();
 		let mode = (app.vault as any).getConfig("defaultViewMode");
 		app.workspace.activeLeaf?.openFile(indexData.file,
 			{ active: true, mode } as OpenViewState);
-	};
+	}}/>))
 
 }
 

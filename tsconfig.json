@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "jsxFactory": "JSX.createElement",
+    "jsxFragmentFactory": "JSX.fragment",
     "moduleResolution": "node",
     "importHelpers": true,
     "isolatedModules": true,

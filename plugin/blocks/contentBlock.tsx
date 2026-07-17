@@ -79,8 +79,6 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
 	el.parentElement?.addClass("compactBlock");
 	data ??= { }; //If no cached data
-	
-	//TODO: add message for when there's no headings (?)
 	let headings = restrictContents( ctx, el,  data, config);
 	renderListElements(el, config, headings);
 }

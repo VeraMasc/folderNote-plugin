@@ -9,7 +9,6 @@ import { getRandomColor } from "./colors";
 
 import { MenuItemAPI } from "../../.sharedModules/obsidianUtils";
 
-// TODO: Fix neeeding to use "as any" for icon
 
 /**Context menu of the index element of the index file*/
 export function indexMenu(ev: MouseEvent) {
@@ -22,7 +21,7 @@ export function indexMenu(ev: MouseEvent) {
     //Options
     setPropItem(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
     setPropItem(menu, "Expanded by default", "fullscreen", "FN-expand")
-    setPropItem(menu, "Hide files", "eye-off" as any, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
+    setPropItem(menu, "Hide files", "eye-off" as obsidianIcons, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
     noteOptions(menu, ev)
     menu.showAtMouseEvent(ev);
@@ -47,7 +46,7 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
 */
 function globalOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null) {
     moreMenu??=menu;
-    actionItem(moreMenu, 'Rebuild Tree','folder-sync' as any,()=>{FI_Plugin.instance.tree.prune()})
+    actionItem(moreMenu, 'Rebuild Tree','folder-sync' as obsidianIcons,()=>{FI_Plugin.instance.tree.prune()})
 }
 
 
@@ -69,10 +68,10 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
             return;
         }
 
-        //TODO: move files
+        // TODO: move files
 
     });
-    setPropItem(moreMenu, "Make Navigable", "arrow-right-left" as any, "FN-nav")
+    setPropItem(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav")
     //View file in explorer
     actionItem(menu, "View in explorer", "eye", (e) => {
         let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function

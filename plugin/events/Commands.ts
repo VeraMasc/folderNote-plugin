@@ -43,7 +43,7 @@ export function addCommands(this:FI_Plugin){
                     if(!checking){
                         view.editor.hasFocus() 
                         const location:EditorPosition = {line:bookmark.position.end.line, ch:bookmark.position.end.col};//view.editor.offsetToPos(bookmark.position.end.offset)
-                        // TODO: Fix a weird scroll bug on mobile
+                        // FIXME: Fix a weird scroll bug on mobile
                         let path = note.filePath;
                         this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
                             .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,))
