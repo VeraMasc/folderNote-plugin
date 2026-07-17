@@ -186,7 +186,7 @@ export class IndexData {
         if (text.length > 17) {
             extraText = text?.slice(15);
             text = text?.slice(0, 15);
-            content = [<span className="ellipsed" data-text={extraText}></span>]
+            content = [<span cls="ellipsed" data-text={extraText}></span>]
         }
         content.unshift(text);
 

@@ -93,26 +93,25 @@ export function createContentDiv(activeMDView: MarkdownView, mode: MarkdownViewM
 export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
     //Index
     let { config } = indexData;
-    const indexEl = fnDiv.createEl("details", {
+    
+    let sumEv = {
+        onclick: (ev) => {
+            setIndexOpen(!(ev?.target as HTMLElement).parentElement
+                .hasAttribute("open"));
+        },
+        oncontextmenu : indexMenu
+    }
+    const indexEl =<details {...{
         cls: `FN-index` + (config.expand ? " isExpanded" : ""),
-        attr: { open: config.forceOpen || IndexOpen || null }
-    });
+        open: config.forceOpen || IndexOpen || null
+    }}>
+        <summary cls='FN-icon icon-index' innerHTML={html.index_icon} {...sumEv}>
+            {indexData?.config?.showTitle? addIndexTitle(indexData) : ''}
+        </summary>
+    </details>;
+    fnDiv.append(indexEl);
 
     // TODO: Make with JSX
-    const indexSum = indexEl.createEl("summary", {
-        cls: `FN-icon icon-index`,
-    });
-    //Summary
-    indexSum.innerHTML = html.index_icon;
-    if (indexData?.config?.showTitle)
-        addIndexTitle(indexSum, indexData); //Show Title if needed
-
-    indexSum.onclick = (ev) => {
-        setIndexOpen(!(ev?.target as HTMLElement).parentElement
-            .hasAttribute("open"));
-    };
-
-    indexSum.oncontextmenu = indexMenu;
 
     const indexList = indexEl.createEl("ul", {
         cls: `FN-indexList`,
@@ -126,9 +125,9 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (config.hideEmpty && child?.file == null)
             continue;
         // TODO: Use JSX factory for all the HTML
-        let li = <li className={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
-            <span className='FN-icon' style={`--fn-color:${child.config?.color??''};`}
-                dangerouslySetInnerHTML={
+        let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
+            <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}
+                innerHTML={
                     child.isFolder ? 
                         html.folder_icon 
                         : (child.ext =="md"?
@@ -144,16 +143,14 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (!child.isFolder && child.ext != "md")
             li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
     }
-    let expandIndex;
-    let addNote;
     var frag = <>
-        <div className='FN-cover'/>
-        <div className='FN-bottom'>
-            <span className="FN-expand FN-icon" tabindex={0} dangerouslySetInnerHTML={html.expand_icon} 
+        <div cls='FN-cover'/>
+        <div cls='FN-bottom'>
+            <span cls="FN-expand FN-icon" tabindex={0} innerHTML={html.expand_icon} 
                 onclick={(ev: MouseEvent) => {
                     indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
             }}/>
-            {<span className="FN-newNote FN-icon" tabindex={0} dangerouslySetInnerHTML={html.newNote_icon} ondblclick={(ev: MouseEvent) => {
+            {<span cls="FN-newNote FN-icon" tabindex={0} innerHTML={html.newNote_icon} ondblclick={(ev: MouseEvent) => {
                 (app as any).commands.executeCommandById("file-explorer:new-file");
             }} />}
 
@@ -163,16 +160,18 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
 
 }
 /**Adds a title to the index */
-export function addIndexTitle(summEl: HTMLElement, indexData: IndexData) {
+export function addIndexTitle( indexData: IndexData) {
+    // TODO: Rework as JSX
 	let title = indexData.config?.indexPath ?? indexData?.name;
-	summEl.append(` ${title} `);
-    // TODO: Make custom JSX element for note links
-    summEl.append((<a className="FN-link internal-link FN-gotoIndex" href={indexData.filePath} title={indexData.name} target='_blank' rel='noopener' data-href={indexData.filePath} dangerouslySetInnerHTML={html.gotoIndex_icon} onclick={(e) => {
-		e.preventDefault();
-		let mode = (app.vault as any).getConfig("defaultViewMode");
-		app.workspace.activeLeaf?.openFile(indexData.file,
-			{ active: true, mode } as OpenViewState);
-	}}/>))
-
+	let ret = <>
+        {` ${title} `}
+        <a cls="FN-link internal-link FN-gotoIndex" href={indexData.filePath} title={indexData.name} target='_blank' rel='noopener' data-href={indexData.filePath} innerHTML={html.gotoIndex_icon} onclick={(e) => {
+            e.preventDefault();
+            let mode = (app.vault as any).getConfig("defaultViewMode");
+            app.workspace.activeLeaf?.openFile(indexData.file,
+                { active: true, mode } as OpenViewState);
+	    }}/>
+    </>
+    return ret;
 }
 

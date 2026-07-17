@@ -147,7 +147,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 
 		line = getLine(level, list, line)
 
-		let link = <a href={"#" + heading} data-href={"#" + heading} className="internal-link" target="_blank" rel="noopener">
+		let link = <a href={"#" + heading} data-href={"#" + heading} cls="internal-link" target="_blank" rel="noopener">
 			{heading}
 		</a>;
 		if (heading == bmHeadingPattern) // HACK: Inserts the icon in a really haphazard way

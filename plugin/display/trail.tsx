@@ -52,8 +52,8 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}
 	// Trail
 	let trailDiv; 
-	fnDiv.append(<div tabindex="0" className='FN-trail-scroller'>
-		{trailDiv = <span className='FN-trail'></span>}
+	fnDiv.append(<div tabindex="0" cls='FN-trail-scroller'>
+		{trailDiv = <span cls='FN-trail'></span>}
 	</div>);
 
 
@@ -64,7 +64,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	trailDiv.appendChild(el);
 
 	for (let step of pathList) {
-		let span = <span className="FN-trail-arrow"> → </span>
+		let span = <span cls="FN-trail-arrow"> → </span>
 		el = step?.fileLink();
 		trailDiv.append(span, el);
 	}
@@ -80,7 +80,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		addIndex(fnDiv, index);
 	}
 	else {
-		let arrow = <span className="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})}> ↓ </span>
+		let arrow = <span cls="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})}> ↓ </span>
 		trailDiv.append(cnEl=arrow);
 	}
 	
