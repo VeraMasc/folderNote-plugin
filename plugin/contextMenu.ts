@@ -161,27 +161,17 @@ export function linkMenu(ev: MouseEvent) {
 
 /**Sets contextual option to add a specific prop to the file */
 function setPropItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
-    menu.addItem((item) =>
-        item.setTitle(title)
-            .setIcon(icon)
-            .onClick(() => {
-                let view = app.workspace.getActiveViewOfType(MarkdownView)
-                var propDict = {};
-                propDict[prop] = value;
-                view?.["metadataEditor"].insertProperties(propDict)
-            }
-            )
-    );
+    return setPropItemFunction(menu, title, icon, prop, ()=>value)
 }
 
 /**Same as {@link setPropItem} but sets the value through a function */
-function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent) => any) {
+function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent) => any){
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
             .onClick((e: MouseEvent) => {
                 let view = app.workspace.getActiveViewOfType(MarkdownView)
-                var propDict = {};
+                let propDict = {};
                 propDict[prop] = valueFunc(e);
                 view?.["metadataEditor"].insertProperties(propDict)
             }

@@ -113,13 +113,9 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
                 innerHTML={icon} />
             {(!child.isFolder && child.ext != "md") && <span cls='FN-ext'>{`.${child.ext}`}</span>}
         </li>;
-        if(child.config.icon)
-            console.log(li)
         indexList.append(li);
         
         li.append(child.fileLink());
-        // if (!child.isFolder && child.ext != "md")
-        //     li.createEl("span", { cls: "FN-ext", text: `.${child.ext}` });
     }
     var frag = <>
         <div cls='FN-cover'/>

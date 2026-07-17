@@ -107,8 +107,6 @@ export default class FI_Plugin extends Plugin {
 		this.events.regMetaChangeEvent();
 
 		app.workspace.onLayoutReady(async () => {
-			var _a;
-			const noFiles = app.vault.getMarkdownFiles().length;
 			await this.redrawFN()
 
 			//Register suggest
@@ -175,9 +173,10 @@ export default class FI_Plugin extends Plugin {
 			}
 		}
 		// TODO: Move unregister events
-		this.app.workspace.offref(this.events.activeLeafChange)
-		this.app.workspace.offref(this.events.activeLeafSave)
-		this.app.workspace.offref(this.events.layoutChange)
+		const workspace = this.app.workspace;
+		workspace.offref(this.events.activeLeafChange)
+		workspace.offref(this.events.activeLeafSave)
+		workspace.offref(this.events.layoutChange)
 	}
 
 	async loadSettings() {

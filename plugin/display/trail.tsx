@@ -25,9 +25,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 
 	let note = plugin.tree.getNode(file);
 
-	let { isIndex } = note;
-	let { ignore, color: fnColor, listContent, nav, listBlocks } = note.config;
-	const { basename, parent } = file;
+	let { isIndex, config:{ ignore, color: fnColor, listContent, nav, listBlocks }={}} = note;
 
 	/*	Is Index?	*/
 	if (ignore) {
@@ -50,25 +48,21 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}else{
 		clearBlock(contDiv);
 	}
+	//Root
+	let pathList = index?.getSplitPath() ?? [];
+	let root = pathList.shift();
 	// Trail
-	let trailDiv; 
+	let trailDiv: HTMLElement, el: HTMLElement; 
 	fnDiv.append(<div tabindex="0" cls='FN-trail-scroller'>
-		{trailDiv = <span cls='FN-trail'></span>}
+		{trailDiv = <span cls='FN-trail'>
+			{el=root?.fileLink()}
+		</span>}
 	</div>);
 
-
-	let pathList = index?.getSplitPath() ?? [];
-	//Root
-	let root = pathList.shift();
-	let el = root?.fileLink();
-	trailDiv.appendChild(el);
-
-	for (let step of pathList) {
-		let span = <span cls="FN-trail-arrow"> → </span>
-		el = step?.fileLink();
-		trailDiv.append(span, el);
-	}
-	el.addClass("FN-current");
+	let elements = [el].concat(pathList.flatMap(step=>[<span cls="FN-trail-arrow"> → </span>,step?.fileLink()]))
+	
+	elements.last().addClass("FN-current");
+	trailDiv.append(...elements)
 
 	if (nav){
 		addNavArrows(note,fnDiv);
@@ -80,43 +74,37 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		addIndex(fnDiv, index);
 	}
 	else {
-		let arrow = <span cls="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})}> ↓ </span>
-		trailDiv.append(cnEl=arrow);
+		trailDiv.append(<span cls="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})} ondblclick={currentNoteMenu} oncontextmenu={currentNoteMenu} > ↓ </span>);
 	}
-	
-	cnEl.ondblclick = cnEl.oncontextmenu = currentNoteMenu; //Set context menu
 	//Observer
 	plugin.trailResizeObs.observe(fnDiv);
 }
-let trailSize = null;
+
 
 
 /**Resizing observer to deal with trail overflowing */
 export function trailOverflow(elements, observer) {
+	const cls = "FN-ellipsis";
 	// TODO: Improve and optimize overflow
 	for (let { target } of elements) {
-		let trail = target.querySelector(".FN-trail");
+		let trail:HTMLElement = target.querySelector(".FN-trail");
 		let hasOverflow = DOMu.isOverflowing(trail);
-
+		let steps= ()=>trail.querySelectorAll(".FN-link");
 		if (hasOverflow) {
-			let steps: HTMLElement[] = [...trail.querySelectorAll(".FN-link")];
-			
-			for (let step of steps) {
+			for (let step of steps()) {
 				
-				step.addClass("FN-ellipsis");
+				step.addClass(cls);
 				if (!DOMu.isOverflowing(trail))
 					break;
 			}
 		}
 		else if (DOMu.canGrow(trail, null, 10, "x")) {
-			let steps: HTMLElement[] = [...trail.querySelectorAll(".FN-link")];
-
-			for (let step of steps.reverse()) {
-				if (!step.hasClass("FN-ellipsis"))
+			for (let step of [...steps()].reverse()) {
+				if (!step.hasClass(cls))
 					continue;
-				step.removeClass("FN-ellipsis");
+				step.removeClass(cls);
 				if (DOMu.isOverflowing(trail)) {
-					step.addClass("FN-ellipsis");
+					step.addClass(cls);
 					break;
 				}
 			}

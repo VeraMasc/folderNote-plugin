@@ -61,9 +61,11 @@ export class NoteConfig {
         this.hideExt &&= [this.hideExt].flat();
         this.hideNote &&= [this.hideNote].flat();
         this.color &&= this.color.trim();
-        this.icon &&= this.icon.trim();
-        if(this.icon?.startsWith("'") && this.icon?.endsWith("'")){
-            this.icon = this.icon.slice(1,-1)
+        this.icon &&= this.icon.trimEnd();
+        if(this.icon?.length>1 && this.icon?.startsWith("'") && this.icon?.endsWith("'")){
+            let match = this.icon.match(/^'(.+)'$/);
+            if(match)
+                this.icon= match[1];
         }
     }
 

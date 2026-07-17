@@ -22,7 +22,6 @@ export function insertBlockAsHeading(headings: HeadingCache[], blocks: BlockCach
 	}
 	// Add missing
 	ret.push(...blocks.slice(iBlock).map(blockAsHeading));
-	console.log(ret);
 	return ret;
 }
 
@@ -38,7 +37,6 @@ export function blockAsHeading(block: BlockCache, level: number = null): Heading
 /** Jumps to the active note's bookmark on startup */
 export function bmStartupEvent(plugin:Plugin){
     try{
-        console.log("Startup");
         (plugin.app as any).commands.executeCommandById('FolderNote-index:goto-bookmark')
     }catch(err){
         console.error(err)
