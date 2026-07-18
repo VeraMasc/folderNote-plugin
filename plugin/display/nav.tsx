@@ -8,6 +8,7 @@ import FI_Plugin from '../main';
 
 import { IndexData } from '../indexing/indexData'
 import {FolderData} from '../indexing/folderData'
+import * as JSX from '.sharedModules/JSX obj';
 
 // TODO: Add commands for navigation
 
@@ -16,13 +17,17 @@ import {FolderData} from '../indexing/folderData'
 export function addNavArrows(note: IndexData, fnDiv: HTMLDivElement) {
     // TODO: Improve nav arrows
     // TODO: How should the index behave?
-    const nav = fnDiv.createEl('span', { cls: "FN-nav" });
+    
+
+      // TODO: Nav implement go to last
     const hasprev = getNavPrev(note);
     const hasnext = getNavNext(note);
-    const prevButton = nav.createEl('button', { cls: "FN-nav-button" + (hasprev ? "" : " disabled"), text: "<" })
-    const nextButton = nav.createEl('button', { cls: "FN-nav-button" + (hasnext ? "" : " disabled"), text: ">" })
-    nextButton.onclick = () => navigateNext(note);
-    prevButton.onclick = () => navigatePrev(note);
+    const baseCls= "FN-nav-button"
+    fnDiv.append(<span cls="FN-nav">
+        <button cls={baseCls+(hasprev ? "" : " disabled")} onclick={() => navigatePrev(note)}>{"<"}</button>
+        <button cls={baseCls+(hasnext ? "" : " disabled")} onclick={() => navigateNext(note)}>{">"}</button>
+    </span>)
+    
 }
 
 /**Navigates to the next note */
