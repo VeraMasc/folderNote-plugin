@@ -87,7 +87,8 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         cls: `FN-index` + (config.expand ? " isExpanded" : ""),
         open: config.forceOpen || IndexOpen || null
     }}>
-        <summary cls='FN-icon icon-index' innerHTML={html.index_icon} {...sumEv}>
+        <summary cls='FN-icon icon-index' {...sumEv}>
+            <html.Index_icon/>
             {...Array.from(indexData?.config?.showTitle? addIndexTitle(indexData) : [])}
         </summary>
         {indexList=<ul cls='FN-indexList'/>}
@@ -107,10 +108,11 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (config.hideEmpty && child?.file == null)
             continue;
         // TODO: Use JSX factory for all the HTML
-        let icon = child.isFolder ? html.folder_icon : (child.ext =="md"? html.note_icon : html.unknown_file_icon)
+        let Icon = child.isFolder ? html.Folder_icon : (child.ext =="md"? html.Note_icon : html.Unknown_file_icon)
         let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
-            <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}
-                innerHTML={icon} />
+            <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}>
+                <Icon/>
+            </span>
             {(!child.isFolder && child.ext != "md") && <span cls='FN-ext'>{`.${child.ext}`}</span>}
         </li>;
         indexList.append(li);
@@ -120,13 +122,13 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
     var frag = <>
         <div cls='FN-cover'/>
         <div cls='FN-bottom'>
-            <span cls="FN-expand FN-icon" tabindex={0} innerHTML={html.expand_icon} 
+            <span cls="FN-expand FN-icon" tabindex={0}
                 onclick={(ev: MouseEvent) => {
                     indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
-            }}/>
-            {<span cls="FN-newNote FN-icon" tabindex={0} innerHTML={html.newNote_icon} ondblclick={(ev: MouseEvent) => {
+            }}><html.Expand_icon/></span>
+            {<span cls="FN-newNote FN-icon" tabindex={0} ondblclick={(ev: MouseEvent) => {
                 (app as any).commands.executeCommandById("file-explorer:new-file");
-            }} />}
+            }}><html.NewNote_icon/></span>}
 
         </div>
     </>
@@ -141,12 +143,12 @@ export function addIndexTitle(indexData: IndexData) {
     let {filePath:href, file}=indexData
 	let ret = <>
         {` ${title} `}
-    <a cls="FN-link internal-link FN-gotoIndex" href={href} title={title} target='_blank' rel='noopener' data-href={href} innerHTML={html.gotoIndex_icon}  onclick={(e) => {
+    <a cls="FN-link internal-link FN-gotoIndex" href={href} title={title} target='_blank' rel='noopener' data-href={href}  onclick={(e) => {
             e.preventDefault();
             let mode = (app.vault as any).getConfig("defaultViewMode");
             app.workspace.activeLeaf?.openFile(file,
                 { active: true, mode } as OpenViewState);
-	    }}/>
+	    }}><html.GotoIndex_icon/></a>
     </>
     return [...ret.childNodes];
 }

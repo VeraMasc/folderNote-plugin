@@ -9,7 +9,7 @@ import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
 
 import * as JSX from "../../../.sharedModules/JSX obj"
-import { longBookmark_icon } from "../html";
+import { LongBookmark_icon } from "../html";
 
 
 // TODO: Refactor this entire file
@@ -135,6 +135,7 @@ function renderListElements(el: HTMLElement, config: Config, headings: HeadingCa
 function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElement) {
 	let maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
 
+	// TODO: Remake with JSX because it's unreadable
 	let list = [el.createEl("ol", { cls: "noteContents" })]
 	let line: HTMLLIElement | null = null;
 
@@ -146,17 +147,19 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 			continue;
 
 		line = getLine(level, list, line)
-
-		let link = <a href={"#" + heading} data-href={"#" + heading} cls="internal-link" target="_blank" rel="noopener">
-			{heading}
+		let href= "#" + heading;
+		let props= {
+			href, 
+			'data-href':href, 
+			onclick:config.customLinkEv?
+				onHeadingLinkClick()
+				:null,
+		}
+		let link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
+			{heading == bmHeadingPattern? LongBookmark_icon():heading}
 		</a>;
-		if (heading == bmHeadingPattern) // HACK: Inserts the icon in a really haphazard way
-			link.innerHTML = longBookmark_icon;
 		line.append(link)
 
-		if (config.customLinkEv) {
-			link.onclick = onHeadingLinkClick(); //It doesn't trigger otherwise
-		}
 	}
 	return list;
 }
