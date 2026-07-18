@@ -69,12 +69,12 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}
 
 	//Index
-	let cnEl =el;
+	debugger
 	if (isIndex) {
 		addIndex(fnDiv, index);
 	}
 	else {
-		trailDiv.append(<span cls="FN-trail-arrow FN-end-arrow" {...(fnColor && {"--text-normal":fnColor})} ondblclick={currentNoteMenu} oncontextmenu={currentNoteMenu} > ↓ </span>);
+		trailDiv.append(<span cls="FN-trail-arrow FN-end-arrow" {...(fnColor && {style:{"--text-normal":fnColor}})} ondblclick={currentNoteMenu} oncontextmenu={currentNoteMenu} > ↓ </span>);
 	}
 	//Observer
 	plugin.trailResizeObs.observe(fnDiv);
