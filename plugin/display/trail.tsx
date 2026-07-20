@@ -69,7 +69,6 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	}
 
 	//Index
-	debugger
 	if (isIndex) {
 		addIndex(fnDiv, index);
 	}

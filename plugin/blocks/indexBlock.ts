@@ -5,7 +5,7 @@ import * as Display from '../display/display';
 import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
 import { IndexData } from '../indexing/indexData';
-import { PPContext } from '../../../.sharedModules/obsidianUtils';
+import { PPContext } from '../../../.sharedModules/obsidian/obsidianUtils';
 
 /**Block identifier */
 export const Id = "index";
@@ -15,7 +15,7 @@ export const Id = "index";
 export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_Plugin){
 	try{
 		//Get Config
-		let config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};
+		const config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};
 		let path: string = null;
 		if (config.indexPath) {
 			let meta = plugin.app.metadataCache.getFirstLinkpathDest(config.indexPath, ctx.sourcePath);
@@ -34,7 +34,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 		
 		
 		
-		let data = plugin.tree.getNodeAt(path)
+		const data = plugin.tree.getNodeAt(path)
 		if (data == null)
 			throw new Error(`No node in path "${path}"`)
 		//Fill according to config
@@ -47,7 +47,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 
 /**Fills block according to the configuration */
 function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:IndexData){
-	let fnDiv=el.createDiv({
+	const fnDiv=el.createDiv({
         cls: `FN-div-block`,
         
 	});

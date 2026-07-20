@@ -1,3 +1,4 @@
+import { locToPos } from ".sharedModules/obsidian/obsidianUtils";
 import { bmPattern } from "../blocks/bookmark";
 import { navigateNext, navigatePrev } from "../display/nav";
 import { IndexData } from "../indexing/indexData";
@@ -37,14 +38,13 @@ export function addCommands(this:FI_Plugin){
             id: 'goto-bookmark',
             name: 'Go to bookmarked block',
             checkCallback: noteCallback(this,(note, checking, view:MarkdownView)=>{
-                let cache = note?.getMetaData()
-                let bookmark = cache?.blocks?.[bmPattern]
+                const cache = note?.getMetaData()
+                const bookmark = cache?.blocks?.[bmPattern]
                 if(bookmark){
                     if(!checking){
-                        view.editor.hasFocus() 
-                        const location:EditorPosition = {line:bookmark.position.end.line, ch:bookmark.position.end.col};//view.editor.offsetToPos(bookmark.position.end.offset)
+                        view.editor.hasFocus()
                         // FIXME: Fix a weird scroll bug on mobile
-                        let path = note.filePath;
+                        const path = note.filePath;
                         this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
                             .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,))
                             .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,)) // HACK: Repeated to force proper loading and scroll
@@ -59,16 +59,30 @@ export function addCommands(this:FI_Plugin){
             id: 'create-bookmark',
             name: 'Bookmark current block',
             checkCallback: noteCallback(this,(note, checking, view)=>{
-                let cache = note?.getMetaData()
-                let bookmark = cache?.blocks?.[bmPattern]
+                const cache = note?.getMetaData(), editor = view.editor;
+                const bookmark = cache?.blocks?.[bmPattern]
                 if((view as MarkdownView)?.getMode?.() == 'source'){ //Check if in edit mode
+                    const location = editor.getCursor("head");
+                    let blockLine = editor.getLine(location.line)
+                    
                     if(!checking){
+                        if(!blockLine){
+                            new Notice("Can't bookmark empty blocks");
+                            return false; //No block to bookmark
+                        }
+                        if(bookmark){
+                            const end = bookmark.position.end
+                            let str = editor.getLine(end.line);
+                            console.log(str)
+                            if(str.endsWith("^-"))
+                                editor.setLine(end.line,str.slice(0,-2))
+                        }
                         
-                        const location = view.editor.getCursor("head");
-                        location.line++;
-                        location.ch=0;
-                        view.editor.setCursor(location);
-                        view.editor.replaceRange("\n^-\n", location)
+
+                        location.ch=blockLine.length;
+                        editor.setSelection(location)
+                        editor.replaceSelection("^-","FN-index")
+
                     }   
                     return true
                 }

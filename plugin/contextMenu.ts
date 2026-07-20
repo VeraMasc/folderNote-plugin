@@ -1,13 +1,13 @@
 import { addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache, Events, Notice, TFolder, View } from "obsidian";
 
 import { fromView as fmFromView, valueRegex } from "../../.sharedModules/FrontMatter";
-import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../../.sharedModules/obsidianUtils';
+import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../../.sharedModules/obsidian/obsidianUtils';
 import { BlockName } from './blocks/Blocks';
 import FI_Plugin from "./main"
 import { xApp } from "./main"
 import { getRandomColor } from "./colors";
 
-import { MenuItemAPI } from "../../.sharedModules/obsidianUtils";
+import { MenuItemAPI } from "../../.sharedModules/obsidian/obsidianUtils";
 
 
 /**Context menu of the index element of the index file*/

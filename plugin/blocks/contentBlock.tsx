@@ -3,7 +3,7 @@ import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Comp
 
 export const Id = "contentList";
 
-import { PPContext as Context } from "../../../.sharedModules/obsidianUtils"
+import { PPContext as Context } from "../../../.sharedModules/obsidian/obsidianUtils"
 import { getActiveMDView } from "../display/display";
 import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
@@ -17,8 +17,8 @@ import { LongBookmark_icon } from "../html";
 /**Block Markdown processor */
 export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	try {
-		let config = getConfig(source) as Config;
-		let data = getMetaData(ctx);
+		const config = getConfig(source) as Config;
+		const data = getMetaData(ctx);
 		renderContents(el, data, config, ctx, plugin);
 
 	} catch (err) {
@@ -32,16 +32,16 @@ let cache:HeadingCache[];
 
 /**Regenerates an existing block to keep it updated*/
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
-	let temp = createDiv({ cls: "block-language-contentList" });
+	const temp = createDiv({ cls: "block-language-contentList" });
 	try {
-		let data = getMetaData(ctx);
+		const data = getMetaData(ctx);
 		let contents = restrictContents( ctx, el,  data, config);
 		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
 		// TODO: Improve bookmark display
 		if(data.blocks?.[bmPattern])
 			contents.unshift(blockAsHeading(data.blocks?.[bmPattern],2))
-		let hasChanged = !checkSameHeadings(contents,cache);
+		const hasChanged = !checkSameHeadings(contents,cache);
 		
 		if(hasChanged){
 			if(hasChanged && !!cache){ // HACK: For testing 
@@ -79,7 +79,7 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
 	el.parentElement?.addClass("compactBlock");
 	data ??= { }; //If no cached data
-	let headings = restrictContents( ctx, el,  data, config);
+	const headings = restrictContents( ctx, el,  data, config);
 	renderListElements(el, config, headings);
 }
 
@@ -91,8 +91,8 @@ function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, d
 	let { from, relative, excludeRoot=true } = config;
 	if (relative) {
 		//Use parent heading
-		let section = ctx.getSectionInfo(el);
-		let parentH = headings.filter(
+		const section = ctx.getSectionInfo(el);
+		const parentH = headings.filter(
 			(h) => h.position.start.line < section.lineStart
 		).last();
 		from = parentH?.heading;
@@ -110,7 +110,7 @@ function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, d
 
 /** Renders the list elements of the table of contents */
 function renderListElements(el: HTMLElement, config: Config, headings: HeadingCache[]) {
-	let list = renderHeadingList(config, headings, el);
+	const list = renderHeadingList(config, headings, el);
 
 	//Remove unnecessary indentation
 	let element: Element = list[0].firstElementChild;
@@ -133,10 +133,10 @@ function renderListElements(el: HTMLElement, config: Config, headings: HeadingCa
  * @param el Parent element where the headings should be rendered
 */
 function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElement) {
-	let maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
+	const maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
 
 	// TODO: Remake with JSX because it's unreadable
-	let list = [el.createEl("ol", { cls: "noteContents" })]
+	const list = [el.createEl("ol", { cls: "noteContents" })]
 	let line: HTMLLIElement | null = null;
 
 	//Render headings
@@ -147,15 +147,15 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 			continue;
 
 		line = getLine(level, list, line)
-		let href= "#" + heading;
-		let props= {
+		const href= "#" + heading;
+		const props= {
 			href, 
 			'data-href':href, 
 			onclick:config.customLinkEv?
 				onHeadingLinkClick()
 				:null,
 		}
-		let link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
+		const link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
 			{heading == bmHeadingPattern? LongBookmark_icon():heading}
 		</a>;
 		line.append(link)
@@ -172,7 +172,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 */
 function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIElement | null) {
 	while (level > list.length) { //Loop to generate nested lines
-		let noMarker = level > list.length ? "noMarker" : "";
+		const noMarker = level > list.length ? "noMarker" : "";
 		line ??= list.last().createEl("li", { cls: `header-level:${list.length} ${noMarker}` })
 		list.push(line.createEl("ol"));
 		line = null; //This allows for depth increases > 1. (the while loops)
@@ -196,8 +196,8 @@ function getSubheadings(ctx: Context, el: HTMLElement, data: CachedMetadata, fro
 	//Ignore if from is null
 	if (!from)
 		return [...ret];
-	let start = Math.max(ret.findIndex((h) => h.heading == from), 0)
-	let maxLevel = ret[start]?.level ?? 0
+	const start = Math.max(ret.findIndex((h) => h.heading == from), 0)
+	const maxLevel = ret[start]?.level ?? 0
 	ret = ret.slice(start + 1)
 	let end = ret.findIndex((h) => h.level <= maxLevel)
 	if (end == -1) end = undefined;
@@ -224,8 +224,8 @@ export type Config = {
 
 /**Gets the metadata of the current file */
 function getMetaData(ctx: Context) {
-	let file = app.vault.getAbstractFileByPath(ctx.sourcePath) as TFile;
-	let cache = app.metadataCache.getFileCache(file);
+	const file = app.vault.getAbstractFileByPath(ctx.sourcePath) as TFile;
+	const cache = app.metadataCache.getFileCache(file);
 	// console.log({cache,ctx})
 	return cache;
 }
@@ -235,15 +235,15 @@ function getMetaData(ctx: Context) {
 export function onHeadingLinkClick() {
 	return (e: MouseEvent) => {
 		e.preventDefault()
-		let mode = (app.vault as any).getConfig("defaultViewMode");
-		let target = e.target as HTMLAnchorElement;
-		let path = target.closest('a').getAttribute("data-href");
-		let match = path.match(/^(.*)#(.*?)$/)
-		let [, filepath, heading] = match; //Separates heading from path
+		const mode = (app.vault as any).getConfig("defaultViewMode");
+		const target = e.target as HTMLAnchorElement;
+		const path = target.closest('a').getAttribute("data-href");
+		const match = path.match(/^(.*)#(.*?)$/)
+		const [, filepath, heading] = match; //Separates heading from path
 
-		let activeMDView: MarkdownView = getActiveMDView()?.activeMDView;
-		let current = activeMDView?.file;
-		let linkFile = (app.metadataCache).getFirstLinkpathDest(filepath, current.path);
+		const activeMDView: MarkdownView = getActiveMDView()?.activeMDView;
+		const current = activeMDView?.file;
+		const linkFile = (app.metadataCache).getFirstLinkpathDest(filepath, current.path);
 
 		if (target) {
 			app.workspace.activeLeaf?.openFile(linkFile,
