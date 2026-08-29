@@ -70,6 +70,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 
 	//Index
 	if (isIndex) {
+		elements.last().oncontextmenu=currentNoteMenu;
 		addIndex(fnDiv, index);
 	}
 	else {
