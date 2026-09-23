@@ -1,7 +1,7 @@
 {
 	"id": "FolderNote-index",
 	"name": "Folder Note Index Plugin",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"minAppVersion": "0.12.0",
 	"description": "Auto-indexing and navigation plugin meant to help organize and find information faster. Designed to be usde alongside 'folder note' plugins.",
 	"author": "VeraMasc",
