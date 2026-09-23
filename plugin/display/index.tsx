@@ -119,6 +119,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         
         li.append(child.fileLink());
     }
+    // TODO: Fix new-note depending on obsidian new file creation settings
     var frag = <>
         <div cls='FN-cover'/>
         <div cls='FN-bottom'>
@@ -126,6 +127,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
                 onclick={(ev: MouseEvent) => {
                     indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
             }}><html.Expand_icon/></span>
+            
             {<span cls="FN-newNote FN-icon" tabindex={0} ondblclick={(ev: MouseEvent) => {
                 (app as any).commands.executeCommandById("file-explorer:new-file");
             }}><html.NewNote_icon/></span>}

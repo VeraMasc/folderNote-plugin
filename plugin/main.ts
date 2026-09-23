@@ -53,7 +53,7 @@ declare global {
 /**Base structure of the Folder note Index plugin*/
 export default class FI_Plugin extends Plugin {
 	declare app: xApp;
-	settings: MyPluginSettings;
+	declare settings: MyPluginSettings;
 	
 	events: EventManager = new EventManager(this);
 	metaResolve = undefined;

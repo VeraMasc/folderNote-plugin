@@ -2,21 +2,25 @@
   "compilerOptions": {
     "paths": {
       "tslib": [
-        "node_modules/tslib/tslib.d.ts"
-      ]
+        "./node_modules/tslib/tslib.d.ts"
+      ],
+      ".sharedModules/*":["../.sharedModules/*"]
     },
-    "baseUrl": "../",
     "inlineSourceMap": true,
     "module": "ESNext",
     "target": "ESNext",
     "allowJs": true,
     "resolveJsonModule": true,
+    "strict": false,
+    "noImplicitAny":false,
     "jsx": "react",
     "jsxFactory": "JSX.createElement",
     "jsxFragmentFactory": "JSX.fragment",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "isolatedModules": true,
+    "types": ["node"],
+    "skipLibCheck": true,
     "lib": [
       "DOM",
       "ES5",
@@ -31,7 +35,8 @@
       "ES2022",
       "ES2023",
     ],
-    "outDir": "./plugin/",
+    "rootDir": "../",
+    "outDir": "./FolderNote Plugin/plugin/",
   },
   "files": [
     "./plugin/main.ts",

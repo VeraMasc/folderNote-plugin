@@ -191,14 +191,14 @@ export class IndexData {
         content.unshift(text);
 
         let linkEl: HTMLElement;
-        let props = {className:"internal-link FN-link",target:"_blank", rel:"noopener"};
+        let props = {cls:"internal-link FN-link",target:"_blank", rel:"noopener"};
         if (stepNote) { //Si la step note existe
             // Calculate color
             let baseCol =this.config.color || null;
             let hoverCol = baseCol && lighten(this.config.color, 0.15 * (1 - getLuminance(this.config.color)));
             let style = this.config.color?{"--link-color": this.config.color, "--link-color-hover":hoverCol}:null
             if(this.isRoot)
-                props.className+=" FN-root";
+                props.cls+=" FN-root";
             Object.assign(props,{style, title:this.name, href:link, 'data-href':link});
         }
 
