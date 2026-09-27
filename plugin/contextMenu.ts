@@ -5,7 +5,7 @@ import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../.
 import { BlockName } from './blocks/Blocks';
 import FI_Plugin from "./main"
 import { xApp } from "./main"
-import { getRandomColor } from "./colors";
+import { getRandomColor, getAnotherColor } from "./colors";
 
 import { MenuItemAPI } from "../../.sharedModules/obsidian/obsidianUtils";
 
@@ -105,7 +105,10 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
         (item)=>item.setIsLabel(true).setTitle(`'${file?.basename}' Note Menu`)
     )
     setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
-    setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", getRandomColor)//Custom link color
+    setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", (e,v)=>{ 
+        var oldColor = app.metadataCache.getFileCache(v.file)?.frontmatter['FN-color'];
+        return getAnotherColor(oldColor);
+    })//Custom link color
     let moreMenu = new DeferredMenu();
     insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
     setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
@@ -165,14 +168,14 @@ function setPropItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons
 }
 
 /**Same as {@link setPropItem} but sets the value through a function */
-function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent) => any){
+function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent, v?: MarkdownView) => any){
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
             .onClick((e: MouseEvent) => {
                 let view = app.workspace.getActiveViewOfType(MarkdownView)
                 let propDict = {};
-                propDict[prop] = valueFunc(e);
+                propDict[prop] = valueFunc(e,view);
                 view?.["metadataEditor"].insertProperties(propDict)
             }
             )
