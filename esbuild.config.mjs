@@ -44,7 +44,7 @@ esbuild.build({
 		'@codemirror/view',
 		...builtins],
 	format: 'cjs',
-	watch: false,
+	// watch: false,
 	target: 'esNext',
 	logLevel: "debug",
 	sourcemap: true,

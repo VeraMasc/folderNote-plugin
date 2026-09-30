@@ -26,7 +26,7 @@
 		"@typescript-eslint/parser": "^5.2.0",
 		"builtin-modules": "^3.2.0",
 		"color2k": "^2.0.3",
-		"esbuild": "^0.15.18",
+		"esbuild": "^0.28.2",
 		"lucide-react": "^0.446.0",
 		"lucide-static": "^0.446.0",
 		"tslib": "^2.8.1",
@@ -36,6 +36,7 @@
 	"dependencies": {
 		"copyfiles": "^2.4.1",
 		"cssnano": "^5.0.17",
+		"moment": "^2.31.0",
 		"npm-run-all": "^4.1.5",
 		"obsidian": "^1.13.1",
 		"onchange": "^7.1.0",
