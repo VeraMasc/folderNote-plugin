@@ -1,5 +1,5 @@
 import { getLuminance, lighten } from "color2k";
-import { OpenViewState, TAbstractFile, TextFileView, TFile, TFolder } from "obsidian";
+import { OpenViewState, PaneType, TAbstractFile, TextFileView, TFile, TFolder } from "obsidian";
 import { NoteConfig } from "../config";
 import { linkMenu } from "../contextMenu";
 import { IndexTree } from "./indexTree";
@@ -206,19 +206,26 @@ export class IndexData {
                 {...content}
             </a>;
         
-        linkEl.onclick = stepNote ? (e) => {
-            e.preventDefault()
-            let mode = (app.vault as any).getConfig("defaultViewMode");
-            let view = app.workspace.getActiveViewOfType(TextFileView)
-            view?.leaf?.openFile(stepNote,
-                { active: true, mode } as OpenViewState)
-        }:null;
-        linkEl.oncontextmenu = stepNote? linkMenu : (e) => {
-            e.preventDefault()
-            let state = { mode:(app.vault as any).getConfig("defaultViewMode") } as OpenViewState;
-            app.workspace.openLinkText(this.folder.path + "/" + this.folder.name, ".", false, state)
-        };
-
+        if(stepNote){
+            linkEl.onclick = (e) => {
+                e.preventDefault()
+                let newLeaf:boolean | PaneType = e.ctrlKey? "tab":false;
+                let mode = (app.vault as any).getConfig("defaultViewMode");
+                let view = app.workspace.getActiveViewOfType(TextFileView)
+                app.workspace.getLeaf(newLeaf).openFile(stepNote,
+                   { active: true, mode, } as OpenViewState)
+                // view?.leaf?.openFile(stepNote,
+                //     { active: true, mode, } as OpenViewState)
+            };
+            linkEl.oncontextmenu = linkMenu;
+        }
+        else{
+             linkEl.oncontextmenu = (e) => {
+                e.preventDefault()
+                let state = { mode:(app.vault as any).getConfig("defaultViewMode") } as OpenViewState;
+                app.workspace.openLinkText(this.folder.path + "/" + this.folder.name, ".", false, state)
+            };
+        }
         return linkEl;
     }
 
