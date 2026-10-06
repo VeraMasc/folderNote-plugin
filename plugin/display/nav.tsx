@@ -10,7 +10,6 @@ import { IndexData } from '../indexing/indexData'
 import {FolderData} from '../indexing/folderData'
 import * as JSX from '.sharedModules/JSX obj';
 
-// TODO: Add commands for navigation
 
 
 /**Adds the nav arrows to the dom */

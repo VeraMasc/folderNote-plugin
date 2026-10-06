@@ -37,7 +37,6 @@ export class EventManager{
     /**Registers the obsidian layout changes*/
     regLayoutChangeEv() {
         this.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
-            // TODO: Make this handle config changes
             await this.plugin.redrawFN();
             //console.warn("Layout event")
         });

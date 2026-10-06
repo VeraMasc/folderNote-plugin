@@ -85,7 +85,6 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 /**Resizing observer to deal with trail overflowing */
 export function trailOverflow(elements, observer) {
 	const cls = "FN-ellipsis";
-	// TODO: Improve and optimize overflow
 	for (let { target } of elements) {
 		let trail:HTMLElement = target.querySelector(".FN-trail");
 		let hasOverflow = DOMu.isOverflowing(trail);

@@ -44,9 +44,9 @@ export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, pl
 		const hasChanged = !checkSameHeadings(contents,cache);
 		
 		if(hasChanged){
-			if(hasChanged && !!cache){ // HACK: For testing 
-				console.warn(`Headings changed ${[...cache].length}=>${[...(data.headings??[])].length}`,{old:[...cache], "new":[...contents]})
-			}
+			// if(hasChanged && !!cache){ // HACK: For testing 
+			// 	console.warn(`Headings changed ${[...cache].length}=>${[...(data.headings??[])].length}`,{old:[...cache], "new":[...contents]})
+			// }
 			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
 			//Replace previous
 			el.replaceChildren(temp);
@@ -135,7 +135,6 @@ function renderListElements(el: HTMLElement, config: Config, headings: HeadingCa
 function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElement) {
 	const maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
 
-	// TODO: Remake with JSX because it's unreadable
 	const list = [el.createEl("ol", { cls: "noteContents" })]
 	let line: HTMLLIElement | null = null;
 

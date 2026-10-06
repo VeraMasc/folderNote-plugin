@@ -95,7 +95,6 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
     </details>;
     fnDiv.append(indexEl);
 
-    // TODO: Make with JSX
 
     var indexList:HTMLElement;
  

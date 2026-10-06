@@ -1,4 +1,4 @@
-import {Editor, EditorPosition, EditorSuggest,EditorSuggestTriggerInfo,FuzzyMatch, Plugin, TFile,EditorSuggestContext} from "obsidian";
+import {Editor, EditorPosition, EditorSuggest,EditorSuggestTriggerInfo,FuzzyMatch, Plugin, TFile,EditorSuggestContext, SearchResult} from "obsidian";
 import { NoteConfig } from "./config";
 
 // TODO: Properly implement suggestions
@@ -17,10 +17,11 @@ export class TestSuggestions extends EditorSuggest<FuzzyMatch<NoteConfig>>{
 		this.plugin = plugin;
 	}
 	onTrigger(cursor: EditorPosition, editor: Editor, file: TFile): EditorSuggestTriggerInfo {
-		
+		throw new Error("Method not implemented.");
 	}
 
 	getSuggestions(context: EditorSuggestContext): FuzzyMatch<NoteConfig>[] | Promise<FuzzyMatch<NoteConfig>[]> {
-		return [{item=null, match=null,new NoteConfig()}];
+		
+		return [{item:new NoteConfig(), match:(null as any) } as FuzzyMatch<NoteConfig> ];
 	}
 }
