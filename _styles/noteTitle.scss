@@ -1,0 +1,15 @@
+.FN-note-title-UI{
+    background-color: rgba(37, 1, 37, 0.329);
+    border-radius: 5px;
+    margin: 0px 0.3em;
+    >button{
+        padding: initial;
+        display: inline-block;
+        height: 2em;
+        aspect-ratio: 1;
+        
+        &::after{
+            content: "△";
+        }
+    }
+}

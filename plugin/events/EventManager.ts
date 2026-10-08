@@ -1,8 +1,9 @@
-import { EventRef, TAbstractFile, TFile, TFolder } from 'obsidian';
+import { EventRef, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
 import * as Display from "../display/display"
 import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
+import {getHeaderUI} from '../display/headerUI'
 
 
 /**Manages all the plugin's events */
@@ -22,9 +23,11 @@ export class EventManager{
 
     /**Registers events for when you write, switch Obsidian "leafs" or switch editor modes */
     regLeafChangeEv() {
-        var func = async () => {
+        var func = async (leaf:WorkspaceLeaf) => {
             if (this.plugin.settings.refreshOnNoteChange) {
                 await this.plugin.redrawFN();
+                
+                getHeaderUI(leaf?.view);
                 //console.warn("Refresh event")
             };
         };

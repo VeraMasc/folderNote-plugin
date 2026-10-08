@@ -306,6 +306,21 @@ body.is-mobile .FN-link {
   filter: grayscale(90%);
 }
 
+.FN-note-title-UI {
+  background-color: rgba(37, 1, 37, 0.329);
+  border-radius: 5px;
+  margin: 0px 0.3em;
+}
+.FN-note-title-UI > button {
+  padding: initial;
+  display: inline-block;
+  height: 2em;
+  aspect-ratio: 1;
+}
+.FN-note-title-UI > button::after {
+  content: "△";
+}
+
 .FN-div, .FN-div-block {
   max-width: 100%;
   margin-bottom: 10px;
