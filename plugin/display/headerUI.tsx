@@ -3,7 +3,7 @@ import { EventRef, TAbstractFile, TFile, TFolder, WorkspaceLeaf, View} from 'obs
 
 /** Finds the header of the specified view */
 export function findHeader(view:View):HTMLElement{
-    return view.containerEl.querySelector(" div.view-header > .view-header-title-container") as HTMLElement
+    return view?.containerEl?.querySelector(" div.view-header > .view-header-title-container") as HTMLElement
 }
 
 /** Finds or generates the header of the specified view*/
@@ -50,7 +50,8 @@ export class HeaderUI{
     /** Regenerates the UI entirely when needed */
     reload(){
         this.clear();
-
+        if(this.container == null)
+            return; // No proper header found
         // TODO: Extract as method
         // Generate go to top button
         this.toTopButton = this.container.createEl('button',);

@@ -1,4 +1,4 @@
-import { EventRef, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
+import { EventRef, FileView, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
 import FI_Plugin from '../main';
 import { setLinkToIndex } from '../metadata';
 import * as Display from "../display/display"
@@ -26,8 +26,10 @@ export class EventManager{
         var func = async (leaf:WorkspaceLeaf) => {
             if (this.plugin.settings.refreshOnNoteChange) {
                 await this.plugin.redrawFN();
+                if((leaf?.view as FileView)?.file){ // It's a leaf that views a file
+                    getHeaderUI(leaf.view);
+                }
                 
-                getHeaderUI(leaf?.view);
                 //console.warn("Refresh event")
             };
         };
