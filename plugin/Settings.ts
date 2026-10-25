@@ -20,6 +20,9 @@ export class SettingsTab extends PluginSettingTab {
 		containerEl.createEl('a', { text: 'see documentation', href:"https://github.com/VeraMasc/folderNote-plugin" });
 
 		//Refresh on save
+		addToggle<MyPluginSettings>(context,'hideNativeTrail',"Hide native trail","Hides the native trail in the header of the note");
+
+		//Refresh on save
 		addToggle<MyPluginSettings>(context,'refreshOnNoteSave',"Refresh on Save","Refresh Folder note index when a note is saved");
 
 		//Refresh on change
@@ -55,6 +58,8 @@ export interface MyPluginSettings {
 	blockSuggestions:boolean;
 	/** Indicates that the app should go to the active file's bookmark after startup */
 	bookmarkStartup:boolean;
+	/** Marks if the native trail in the tab header should be hidden */
+	hideNativeTrail:boolean;
 }
 
 /**Describes the default settings of the plugin */
@@ -64,5 +69,6 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	rootIndex: 'Index',
 	blockSuggestions:false,
 	bookmarkStartup:true,
+	hideNativeTrail:false
 };
 

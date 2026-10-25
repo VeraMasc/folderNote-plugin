@@ -61,6 +61,7 @@ export class EventManager{
         };
 
         const nameChange = async (file:TFile|TFolder,oldpath:string) => {
+            debugger;
             if((file as TFile)?.extension){
                 this.plugin.tree.deleteNodeAt(oldpath)
                 await metaChange(file as TFile)

@@ -11,6 +11,10 @@ import * as JSX from ".sharedModules/JSX obj";
 export class IndexData {
     /**Folder represented or folder that contains the file*/
     folder: TFolder;
+    /** Index data of the parent if exists */
+    parent:IndexData|null;
+    /** Represents the children that have already been mapped */
+    mappedChildren: IndexData[]=[];
     /**The file itself (index file if it's a folder)*/
     file: TFile;
     /**Detects if folder is a root of the Indexing Tree*/
@@ -32,6 +36,8 @@ export class IndexData {
     config = new NoteConfig();
     /**Unique Path Id of the node */
     id: string = null;
+    /**Final part of the Id that marks the file (no extension)*/
+    idPart:string = null;
     prev: IndexData;
     next: IndexData;
 
@@ -39,15 +45,13 @@ export class IndexData {
     get name() {
         if (!this.exists)
             return null;
-        let name = this.file?.basename;
-        name ??= this.folder?.name;
-        name ??= "Unknown";
-        return name
+        return this.file?.basename ?? this.folder?.name ?? "Unknown"
     }
 
     /**Gets full name of the file with extension (No path) */
     get fullName() {
-        return this.name + (this.ext ? `.${this.ext}` : '')
+        
+        return this.ext? `${this.idPart}.${this.ext}` : this.idPart;
     }
     /**Gets path of the folder containing the file () */
     get folderPath() {
@@ -81,7 +85,7 @@ export class IndexData {
         return isRoot ?
             this.tree.plugin?.RootIndexList
                 ?.contains(file.basename)
-            : folder.name == file.basename
+            : folder.name == this.idPart
     }
 
 
@@ -92,35 +96,30 @@ export class IndexData {
             return;
 
         this.id = abstract.path;
+        this.idPart = (abstract as TFile).basename ?? abstract.name;
         this.isFolder = abstract instanceof TFolder;
         this.tree = indexer;
 
 
         //Get file and folder
         this.folder = this.isFolder ? abstract as TFolder : abstract.parent;
-        this.file = this.isFolder ? this.findIndex() : abstract as TFile;
-        this.ext = this.isFolder ? null : this.file?.extension ?? null;
+        this.file = this.isFolder ? this.findIndex() : abstract as TFile; 
+        this.ext = (!this.isFolder && this.file?.extension) || null ;
 
         this.updateConfig()
     }
     /**Checks that the data is still valid */
     checkIsOutdated() { // TODO: Find way to use it to remove outdated shit
         if (this.isOutdated)
-            return;
-        let path = this.isFolder ? this.folder?.path : this.file?.path;
-        if (path != this.id)
-            this.isOutdated = true;
+            return this.isOutdated;
+        let source = this.isFolder ? this.folder : this.file;
+        return this.isOutdated = (source?.path != this.id)
 
     }
     /**Gets the index of the file if available or calculates it */
     get index(): IndexData {
-
-        if (this.isFolder) { //Is folder
-            return this.explore(this.file)
-        }else{
-            return this.parentFolder?.index;
-        }
-        
+        return this.isFolder? this.explore(this.file) : 
+            this.parentFolder?.index;        
     }
 
 
@@ -136,13 +135,13 @@ export class IndexData {
         
 
         /**Default index function*/
-        let findDefault = isRoot ?
+        let findDefault_ = isRoot ?
             (f: TFile) => this.tree.plugin?.RootIndexList
                 ?.contains(f.basename)
             : (f: TFile) => f.basename == folder.name; // TODO: implement non folder name indexes
 
         //Find default file
-        let index = this.explore(files.find(findDefault));
+        let index = this.explore(files.find(findDefault_));
 
         //Replace missing default index
         if(!index || index.config?.useAsIndex==false){
@@ -179,8 +178,9 @@ export class IndexData {
 
     /** Generates an obsidian link to the file or folder index */
     fileLink() {
+        let {name, config} = this;
         let stepNote = this?.file, link = this.filePath;
-        let text = this.name, content:any[]=[];
+        let text = name, content:any[]=[];
         let extraText = null;
         //Truncate
         if (text.length > 17) {
@@ -194,12 +194,13 @@ export class IndexData {
         let props = {cls:"internal-link FN-link",target:"_blank", rel:"noopener"};
         if (stepNote) { //Si la step note existe
             // Calculate color
-            let baseCol =this.config.color || null;
-            let hoverCol = baseCol && lighten(this.config.color, 0.15 * (1 - getLuminance(this.config.color)));
-            let style = this.config.color?{"--link-color": this.config.color, "--link-color-hover":hoverCol}:null
+            let {color} = config;
+            let baseCol = color || null;
+            let hoverCol = baseCol && lighten(color, 0.15 * (1 - getLuminance(color)));
+            let style = color?{"--link-color": color, "--link-color-hover":hoverCol}:null
             if(this.isRoot)
                 props.cls+=" FN-root";
-            Object.assign(props,{style, title:this.name, href:link, 'data-href':link});
+            Object.assign(props,{style, title:name, href:link, 'data-href':link});
         }
 
         linkEl = <a {...props}>
@@ -211,11 +212,8 @@ export class IndexData {
                 e.preventDefault()
                 let newLeaf:boolean | PaneType = e.ctrlKey? "tab":false;
                 let mode = (app.vault as any).getConfig("defaultViewMode");
-                let view = app.workspace.getActiveViewOfType(TextFileView)
                 app.workspace.getLeaf(newLeaf).openFile(stepNote,
                    { active: true, mode, } as OpenViewState)
-                // view?.leaf?.openFile(stepNote,
-                //     { active: true, mode, } as OpenViewState)
             };
             linkEl.oncontextmenu = linkMenu;
         }
@@ -242,10 +240,16 @@ export class IndexData {
         let mapped = this.sortNodes(this.folder.children
             .map(child => this.explore(child)));
 
-
-        let rawHideReg = config?.hideRegExp ?? [];
-        rawHideReg = [rawHideReg].flat()
-        let hideRegExp = rawHideReg?.map(exp => new RegExp(exp))
+        if(this.mappedChildren.length > mapped.length){
+            for(var child of [...this.mappedChildren]){
+                if(child.checkIsOutdated())
+                    this.tree.deleteNodeAt(child.filePath)
+            }
+        }
+        this.mappedChildren = mapped;
+        let {hideRegExp:hideRegExpRaw} = config??{};
+        let hideRegExp  = [(hideRegExpRaw??[])].flat()
+            .map(exp => new RegExp(exp))
 
         for (let cData of mapped) {
             //Hide files from index
@@ -274,15 +278,20 @@ export class IndexData {
             this.config = new NoteConfig();
             return;
         }
-
-        const { frontmatter = {} } = (app.metadataCache.getFileCache(file) ?? {});
-
-        this.config.fromMeta(frontmatter)
+        this.config.fromMeta(app.metadataCache.getFileCache(file) ?? {})
     }
 
     /** Explores another node in the tree */
     explore(abstract: TFolder | TFile | TAbstractFile) {
         return this.tree.getNode(abstract);
+    }
+
+    /** Explores the parent node in the tree */
+    exploreParent() {
+        var parentFolder:TFolder = this.isFolder || this.isIndex? this.folder.parent: this.folder;
+        if(!parentFolder || parentFolder == this.folder) // HACK: Avoids recursion, but it should not happen in the first place
+            return null;
+        return this.parent = this.explore(parentFolder)
     }
     /** Gets the metadata of the note */
     getMetaData() {

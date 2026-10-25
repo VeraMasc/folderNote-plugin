@@ -48,9 +48,12 @@ esbuild.build({
 	target: 'esNext',
 	logLevel: "debug",
 	sourcemap: true,
+	drop: prod? ['debugger']:[],
 	minifySyntax:true,
 	minifyWhitespace:true,
-	minifyIdentifiers: prod? true : false,
+	minifyIdentifiers: true,
+	mangleProps: /_$/,
+	reserveProps : /^__.*__$/,
 	treeShaking: true,
 	outfile: 'plugin/main.js',
 }).catch(() => process.exit(1));

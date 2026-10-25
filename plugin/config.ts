@@ -1,3 +1,4 @@
+import { CachedMetadata } from "obsidian";
 import { type Config } from "./blocks/contentBlock";
 /** Configuration parameters a note can have */
 export class NoteConfig {
@@ -42,11 +43,11 @@ export class NoteConfig {
     /** Allows Unknown Properties*/
     // [key: string]: any;
 
-    fromMeta(metadata: Object) {
+    fromMeta(metadata: CachedMetadata) {
         this.clear();
         // TODO: Improve NoteConfig documentation
 
-        for (let [prop, val] of Object.entries(metadata) as Array<[string, any]>) {
+        for (let [prop, val] of Object.entries(metadata?.frontmatter??{}) as Array<[string, any]>) {
             if (!prop.startsWith("FN-"))
                 continue;
             prop = prop.slice(3)

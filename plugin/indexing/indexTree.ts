@@ -28,6 +28,8 @@ export class IndexTree {
         let visited = this.data[abstract.path];
         //If not visited:
         visited ||= (this.data[abstract.path] = new IndexData(abstract, this));
+        //If not explored
+        visited?.exploreParent?.()
 
         return visited;
     }
@@ -64,9 +66,19 @@ export class IndexTree {
     deleteNodeAt(path: string) {
         let old = this.data[path];
         delete this.data[path];
-        if (old && !old.isFolder && old.isIndex) {
-            this.deleteNode(old.folder)
+        // Deleted node existed
+        if(old){
+            debugger;
+            // Delete folder data if index
+            if (!old.isFolder && old.isIndex) {
+                debugger;
+                this.deleteNode(old.folder)
+            }
+            if(old.parent){
+                old.parent.mappedChildren.remove(old);
+            }
         }
+        
     }
 
     /**Cleans up the tree to avoid using too much memory */
