@@ -15,8 +15,6 @@ import * as JSX from '.sharedModules/JSX obj';
  * @param mode mode of the view
  * @param plugin reference to the plugin
 */
-
-
 export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, plugin: FI_Plugin) {
 	if (!activeMDView)
 		return;

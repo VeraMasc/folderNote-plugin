@@ -28,10 +28,9 @@ export class IndexData {
     /**Is index hidden */
     hidden?: boolean;
     /**Reference to the full index tree */
-    tree: IndexTree;
+    tree_: IndexTree;
     /** File extension (without leading ".") */
     ext?: string;
-    type;
     /** Configuration of the file*/
     config = new NoteConfig();
     /**Unique Path Id of the node */
@@ -83,7 +82,7 @@ export class IndexData {
             return false;
 
         return isRoot ?
-            this.tree.plugin?.RootIndexList
+            this.tree_.plugin?.RootIndexList
                 ?.contains(file.basename)
             : folder.name == this.idPart
     }
@@ -98,7 +97,7 @@ export class IndexData {
         this.id = abstract.path;
         this.idPart = (abstract as TFile).basename ?? abstract.name;
         this.isFolder = abstract instanceof TFolder;
-        this.tree = indexer;
+        this.tree_ = indexer;
 
 
         //Get file and folder
@@ -136,7 +135,7 @@ export class IndexData {
 
         /**Default index function*/
         let findDefault_ = isRoot ?
-            (f: TFile) => this.tree.plugin?.RootIndexList
+            (f: TFile) => this.tree_.plugin?.RootIndexList
                 ?.contains(f.basename)
             : (f: TFile) => f.basename == folder.name; // TODO: implement non folder name indexes
 
@@ -243,7 +242,7 @@ export class IndexData {
         if(this.mappedChildren.length > mapped.length){
             for(var child of [...this.mappedChildren]){
                 if(child.checkIsOutdated())
-                    this.tree.deleteNodeAt(child.filePath)
+                    this.tree_.deleteNodeAt(child.filePath)
             }
         }
         this.mappedChildren = mapped;
@@ -283,7 +282,7 @@ export class IndexData {
 
     /** Explores another node in the tree */
     explore(abstract: TFolder | TFile | TAbstractFile) {
-        return this.tree.getNode(abstract);
+        return this.tree_.getNode(abstract);
     }
 
     /** Explores the parent node in the tree */

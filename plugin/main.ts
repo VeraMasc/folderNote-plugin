@@ -104,7 +104,7 @@ export default class FI_Plugin extends Plugin {
 		//Commands and events 
 		addCommands.call(this)
 
-		this.events.regMetaChangeEvent();
+		this.events.regMetaChangeEvent_();
 
 		app.workspace.onLayoutReady(async () => {
 			await this.redrawFN()
@@ -112,9 +112,9 @@ export default class FI_Plugin extends Plugin {
 			//Register suggest
 			this.registerEditorSuggest(new BlockSuggest(this))
 			//Register events 
-			this.events.regLeafChangeEv();
-			this.events.regLayoutChangeEv();
-			this.events.regMetaDelEv();
+			this.events.regLeafChangeEv_();
+			this.events.regLayoutChangeEv_();
+			this.events.regMetaDelEv_();
 
 			
 

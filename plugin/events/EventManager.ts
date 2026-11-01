@@ -22,10 +22,11 @@ export class EventManager{
     }
 
     /**Registers events for when you write, switch Obsidian "leafs" or switch editor modes */
-    regLeafChangeEv() {
+    regLeafChangeEv_() {
+        let {plugin} = this;
         var func = async (leaf:WorkspaceLeaf) => {
-            if (this.plugin.settings.refreshOnNoteChange) {
-                await this.plugin.redrawFN();
+            if (plugin.settings.refreshOnNoteChange) {
+                await plugin.redrawFN();
                 if((leaf?.view as FileView)?.file){ // It's a leaf that views a file
                     getHeaderUI(leaf.view);
                 }
@@ -33,14 +34,14 @@ export class EventManager{
                 //console.warn("Refresh event")
             };
         };
-        this.activeLeafChange = this.plugin.app.workspace.on("active-leaf-change", func);
-        this.editorChange = this.plugin.app.workspace.on("editor-change", debounceReps(func,500));
-        this.plugin.registerEvent(this.activeLeafChange);
-        this.plugin.registerEvent(this.editorChange);
+        this.activeLeafChange = plugin.app.workspace.on("active-leaf-change", func);
+        this.editorChange = plugin.app.workspace.on("editor-change", debounceReps(func,500));
+        plugin.registerEvent(this.activeLeafChange);
+        plugin.registerEvent(this.editorChange);
     }
     
     /**Registers the obsidian layout changes*/
-    regLayoutChangeEv() {
+    regLayoutChangeEv_() {
         this.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
             await this.plugin.redrawFN();
             //console.warn("Layout event")
@@ -49,42 +50,44 @@ export class EventManager{
     }
      
     /**Registers the event for when a file's metadata (or Name) changes */
-    regMetaChangeEvent() {
+    regMetaChangeEvent_() {
+        let {plugin} = this;
         const metaChange = async (file:TFile) => {
            // console.warn("File modified")
-            this.plugin.tree.refreshNode(file)
+            plugin.tree.refreshNode(file)
             var view = Display.getActiveMDView();
             if(view.activeMDView?.file == file){
                 //console.warn("Active File modified")
-                await this.plugin.redrawFN();
+                await plugin.redrawFN();
             }
         };
 
         const nameChange = async (file:TFile|TFolder,oldpath:string) => {
-            debugger;
             if((file as TFile)?.extension){
-                this.plugin.tree.deleteNodeAt(oldpath)
+                plugin.tree.deleteNodeAt(oldpath)
                 await metaChange(file as TFile)
             }
         };
+        let {metadataCache, vault} = plugin.app;
         //On metadata change
-        this.metaChange = this.plugin.app.metadataCache.on("changed", metaChange);
-        this.plugin.registerEvent(this.metaChange);
+        this.metaChange = metadataCache.on("changed", metaChange);
+        plugin.registerEvent(this.metaChange);
         
         //On name change
-        this.nameChange = this.plugin.app.vault.on("rename",nameChange)
-        this.plugin.registerEvent(this.nameChange);
+        this.nameChange = vault.on("rename",nameChange)
+        plugin.registerEvent(this.nameChange);
 
-        this.plugin.metaResolve = this.plugin.app.metadataCache.on("resolve", (data)=>(setLinkToIndex(data,this.plugin)))
-        this.plugin.registerEvent(this.plugin.metaResolve);
+        plugin.metaResolve = metadataCache.on("resolve", (data)=>(setLinkToIndex(data,plugin)))
+        plugin.registerEvent(plugin.metaResolve);
 
     }
     
     /**Registers the delete event*/
-    regMetaDelEv() {
-        this.plugin.metaDel = this.plugin.app.metadataCache.on("deleted", async (file) => {
-            this.plugin.tree.deleteNode(file)
+    regMetaDelEv_() {
+        let {plugin} = this;
+        plugin.metaDel = plugin.app.metadataCache.on("deleted", async (file) => {
+            plugin.tree.deleteNode(file)
         });
-        this.plugin.registerEvent(this.plugin.metaDel);
+        plugin.registerEvent(plugin.metaDel);
     }
 }

@@ -68,10 +68,8 @@ export class IndexTree {
         delete this.data[path];
         // Deleted node existed
         if(old){
-            debugger;
             // Delete folder data if index
             if (!old.isFolder && old.isIndex) {
-                debugger;
                 this.deleteNode(old.folder)
             }
             if(old.parent){

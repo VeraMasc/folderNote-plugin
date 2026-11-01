@@ -45,9 +45,10 @@ export function addCommands(this:FI_Plugin){
                         view.editor.hasFocus()
                         // FIXME: Fix a weird scroll bug on mobile
                         const path = note.filePath;
+                        let action = ()=>this.app.workspace.openLinkText(path+"#^-", "",false,);
                         this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
-                            .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,))
-                            .then(()=>this.app.workspace.openLinkText(path+"#^-", "",false,)) // HACK: Repeated to force proper loading and scroll
+                            .then(action)
+                            .then(action) // HACK: Repeated to force proper loading and scroll
                         
                     }   
                     return true

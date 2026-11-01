@@ -142,7 +142,7 @@ export function linkMenu(ev: MouseEvent) {
     let link = ev.target as HTMLAnchorElement;
     ev.preventDefault();
     const menu = new Menu();
-    menu
+
     
     menu.addItem(
         (item)=>item.setIsLabel(true).setTitle(`'${link?.text}' Note Menu`)

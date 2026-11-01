@@ -1,14 +1,5 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from 'obsidian';
 
-import {JSX} from "../../../.sharedModules/JSX"
-import {noteMenu} from '../contextMenu';
-import { NoteConfig } from '../config';
-import {indexBlock } from '../blocks/Blocks';
-import { onHeadingLinkClick } from '../blocks/contentBlock';
-
-
-
-
 
 /** Gets the currently active Markdown View */
 export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewModeType}{

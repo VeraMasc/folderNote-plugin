@@ -4,17 +4,17 @@ import {addToggle, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
 
 
 export class SettingsTab extends PluginSettingTab {
-	plugin: FI_Plugin;
+	plugin_: FI_Plugin;
 
 	constructor(app: App, plugin: FI_Plugin) {
 		super(app, plugin);
-		this.plugin = plugin;
+		this.plugin_ = plugin;
 	}
 
 	display(): void {
-		const { containerEl, plugin } = this;
-		const { settings } = plugin;
-		const context = {containerEl, plugin, settings} as SettingsContext<MyPluginSettings>;
+		const { containerEl, plugin_ } = this;
+		const { settings } = plugin_;
+		const context = {containerEl, plugin:plugin_, settings} as SettingsContext<MyPluginSettings>;
 		containerEl.empty();
 		containerEl.createEl('h2', { text: 'Folder Index settings' });
 		containerEl.createEl('a', { text: 'see documentation', href:"https://github.com/VeraMasc/folderNote-plugin" });
@@ -39,12 +39,12 @@ export class SettingsTab extends PluginSettingTab {
 			.setDesc("Name of the file in the root directory that will act as index")
 			.addText(text => text
 				.setPlaceholder('File Name')
-				.setValue(this.plugin.settings.rootIndex)
+				.setValue(this.plugin_.settings.rootIndex)
 				.onChange(async (value) => {
-					this.plugin.settings.rootIndex = value;
-					this.plugin.parseRootIndex(true);
-					await this.plugin.saveSettings();
-					await this.plugin.redrawFN();
+					this.plugin_.settings.rootIndex = value;
+					this.plugin_.parseRootIndex(true);
+					await this.plugin_.saveSettings();
+					await this.plugin_.redrawFN();
 				}));
 	}
 }

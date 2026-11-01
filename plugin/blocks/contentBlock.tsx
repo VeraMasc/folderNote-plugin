@@ -9,7 +9,7 @@ import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
 
 import * as JSX from "../../../.sharedModules/JSX obj"
-import { LongBookmark_icon } from "../html";
+import { LongBookmark_icon_ } from "../html";
 
 
 // TODO: Refactor this entire file
@@ -155,7 +155,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 				:null,
 		}
 		const link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
-			{heading == bmHeadingPattern? LongBookmark_icon():heading}
+			{heading == bmHeadingPattern? LongBookmark_icon_():heading}
 		</a>;
 		line.append(link)
 

@@ -41,20 +41,20 @@ export function navigateNext(note: IndexData|null) {
 export function getNavNext(note: IndexData|null) {
     if (!note?.parentFolder)
         return null;
-    let list = getNavOrderRoot(note);
+    let list = getNavOrderRoot_(note);
     let index = list.indexOf(note);
     index++;
     return list[index]
 }
 
 /**Gets the order of the navigable nodes in the environment of the note */
-function getNavOrderRoot(note: IndexData):IndexData[] {
+function getNavOrderRoot_(note: IndexData):IndexData[] {
     const index = note?.index;
     if(index == null)
         return [];
     //Is in flat subdirectory
     if(index?.config?.flatNav){
-        const val = getNavOrderRoot(index.parentFolder.parentFolder)
+        const val = getNavOrderRoot_(index.parentFolder.parentFolder)
         return val
     }
     
@@ -93,7 +93,7 @@ export function navigatePrev(note: IndexData) {
 export function getNavPrev(note: IndexData) {
     if (!note?.parentFolder)
         return null;
-    let list = getNavOrderRoot(note);
+    let list = getNavOrderRoot_(note);
     let index = list.indexOf(note);
     index--;
     return list[index]

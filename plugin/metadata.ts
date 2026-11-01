@@ -2,16 +2,13 @@ import {TAbstractFile,MetadataCache} from 'obsidian';
 import FI_Plugin from "./main"
 import {NoteConfig} from "./config"
 
-/** Marca el índice como uno de los archivos a los que conecta este archivo */
+/** Marks indexed files as being linked by their indexes. Helps to view vault stucture properly*/
 export function setLinkToIndex(file:TAbstractFile, plugin:FI_Plugin){
-    //console.log(file.path)
+    // TODO: Implement marking indexed files as being linked for graph reasons
     var resolved = app.metadataCache.resolvedLinks[file.path];
     if(!resolved)
         return;
 
-    
-
-    
     var name = file.parent.path.match(/[^\/]*(?=\/?$)/);
    
 
