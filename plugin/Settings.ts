@@ -1,6 +1,7 @@
 import { PluginSettingTab, App, Setting } from 'obsidian';
 import FI_Plugin from './main';
 import {addToggle, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
+import {setLinkToIndex} from './metadata'
 
 
 export class SettingsTab extends PluginSettingTab {
@@ -31,6 +32,9 @@ export class SettingsTab extends PluginSettingTab {
 		addToggle<MyPluginSettings>(context,'blockSuggestions',"Codeblock Suggestions","Shows suggestions for the plugin's codeblock parameters")
 		//Block suggestions
 		addToggle<MyPluginSettings>(context,'bookmarkStartup',"Go to bookmark after vault startup","Ensures vault will open the last active file at the bookmarked ('^-' block identifier) location")
+
+		//Metadata linking of indexes
+		addToggle<MyPluginSettings>(context,'metadataLinks',"Enable metadata linking of files to their indexes","This lets obsidian and other plugins understand that the files are connected despite lacking expicit links")
 		
 		
 
@@ -60,6 +64,8 @@ export interface MyPluginSettings {
 	bookmarkStartup:boolean;
 	/** Marks if the native trail in the tab header should be hidden */
 	hideNativeTrail:boolean;
+	/**Enable metadata links, see {@link setLinkToIndex} */
+	metadataLinks:boolean;
 }
 
 /**Describes the default settings of the plugin */
@@ -69,6 +75,7 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	rootIndex: 'Index',
 	blockSuggestions:false,
 	bookmarkStartup:true,
-	hideNativeTrail:false
+	hideNativeTrail:false,
+	metadataLinks: false,
 };
 

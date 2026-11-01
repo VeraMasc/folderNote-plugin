@@ -77,8 +77,10 @@ export class EventManager{
         this.nameChange = vault.on("rename",nameChange)
         plugin.registerEvent(this.nameChange);
 
-        plugin.metaResolve = metadataCache.on("resolve", (data)=>(setLinkToIndex(data,plugin)))
-        plugin.registerEvent(plugin.metaResolve);
+        if(plugin.settings.metadataLinks){
+            plugin.metaResolve = metadataCache.on("resolve", (data)=>(setLinkToIndex(data,plugin)))
+            plugin.registerEvent(plugin.metaResolve);
+        }
 
     }
     

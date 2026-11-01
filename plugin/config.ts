@@ -20,7 +20,7 @@ export class NoteConfig {
     expand: boolean;
     /** Enables sequential navigation between files */
     nav: boolean;
-    /** Requires {@link nav}Flattens the navigation (like the contents of the folder are in the parent) */
+    /** Requires {@link nav} Flattens the navigation (like the contents of the folder are in the parent) */
     flatNav: boolean;
     /** Hide folders with no index */
     hideEmpty: boolean;

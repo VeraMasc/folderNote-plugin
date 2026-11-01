@@ -2,7 +2,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
 import { sleep } from '../../.sharedModules/Async Utils'
 import { IndexTree } from "./indexing/indexTree"
-import { setLinkToIndex } from "./metadata"
 import * as Display from "./display/display"
 import * as Trail from './display/trail';
 import * as Blocks from "./blocks/Blocks"

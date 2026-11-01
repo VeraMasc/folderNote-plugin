@@ -16,11 +16,12 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 	try{
 		//Get Config
 		const config = {"FN-forceOpen": true, showTitle:true, ...getConfig(source)};
+		let {indexPath} = config;
 		let path: string = null;
-		if (config.indexPath) {
-			let meta = plugin.app.metadataCache.getFirstLinkpathDest(config.indexPath, ctx.sourcePath);
-			if (meta == null && config.indexPath.contains("/")) { //Corregir si pone solo la carpeta
-				var filePath = config.indexPath.replace(/(?<=\/|^)([^/\s]+)\/?$/gm, "$1/$1")
+		if (indexPath) {
+			let meta = plugin.app.metadataCache.getFirstLinkpathDest(indexPath, ctx.sourcePath);
+			if (meta == null && indexPath.contains("/")) { //Corregir si pone solo la carpeta
+				var filePath = indexPath.replace(/(?<=\/|^)([^/\s]+)\/?$/gm, "$1/$1")
 				meta = plugin.app.metadataCache.getFirstLinkpathDest(filePath, ctx.sourcePath);
 			}
 				
@@ -30,10 +31,6 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 		else {
 			path = ctx.sourcePath
 		}
-		
-		
-		
-		
 		const data = plugin.tree.getNodeAt(path)
 		if (data == null)
 			throw new Error(`No node in path "${path}"`)
@@ -49,7 +46,6 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:IndexData){
 	const fnDiv=el.createDiv({
         cls: `FN-div-block`,
-        
 	});
 
 	if (data && data.isIndex) {
