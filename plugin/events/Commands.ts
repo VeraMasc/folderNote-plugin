@@ -72,11 +72,11 @@ export function addCommands(this:FI_Plugin){
                             return false; //No block to bookmark
                         }
                         if(bookmark){
-                            const end = bookmark.position.end
-                            let str = editor.getLine(end.line);
-                            console.log(str)
+                            const {line} = bookmark.position.end
+                            let str = editor.getLine(line);
+                            // console.log(str)
                             if(str.endsWith("^-"))
-                                editor.setLine(end.line,str.slice(0,-2))
+                                editor.setLine(line,str.slice(0,-2))
                         }
                         
 

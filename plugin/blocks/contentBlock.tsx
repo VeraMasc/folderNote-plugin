@@ -9,7 +9,7 @@ import * as bm from "./bookmark"
 import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
 
 import * as JSX from "../../../.sharedModules/JSX obj"
-import { LongBookmark_icon_ } from "../html";
+import { LongBookmark_icon } from "../html";
 
 
 // TODO: Refactor this entire file
@@ -79,7 +79,7 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
 	el.parentElement?.addClass("compactBlock");
 	data ??= { }; //If no cached data
-	const headings = restrictContents( ctx, el,  data, config);
+	const headings = restrictContents( ctx, el, data, config);
 	renderListElements(el, config, headings);
 }
 
@@ -93,7 +93,7 @@ function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, d
 		//Use parent heading
 		const section = ctx.getSectionInfo(el);
 		const parentH = headings.filter(
-			(h) => h.position.start.line < section.lineStart
+			({position}) => position.start.line < section.lineStart
 		).last();
 		from = parentH?.heading;
 	}
@@ -155,7 +155,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 				:null,
 		}
 		const link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
-			{heading == bmHeadingPattern? LongBookmark_icon_():heading}
+			{heading == bmHeadingPattern? LongBookmark_icon():heading}
 		</a>;
 		line.append(link)
 

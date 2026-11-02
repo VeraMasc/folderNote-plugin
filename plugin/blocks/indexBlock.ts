@@ -32,7 +32,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 			path = ctx.sourcePath
 		}
 		const data = plugin.tree.getNodeAt(path)
-		if (data == null)
+		if (!data)
 			throw new Error(`No node in path "${path}"`)
 		//Fill according to config
 		fillBlock(el,config,ctx,data.clone());

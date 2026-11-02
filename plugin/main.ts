@@ -1,6 +1,5 @@
 
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
-import { sleep } from '../../.sharedModules/Async Utils'
 import { IndexTree } from "./indexing/indexTree"
 import * as Display from "./display/display"
 import * as Trail from './display/trail';
@@ -95,8 +94,7 @@ export default class FI_Plugin extends Plugin {
 		// TODO: make main readable
 
 		this.tree = new IndexTree(this);
-		this.trailResizeObs =
-			new ResizeObserver(Trail.trailOverflow);
+		this.trailResizeObs = new ResizeObserver(Trail.trailOverflow);
 
 
 		
@@ -111,13 +109,14 @@ export default class FI_Plugin extends Plugin {
 			//Register suggest
 			this.registerEditorSuggest(new BlockSuggest(this))
 			//Register events 
-			this.events.regLeafChangeEv_();
-			this.events.regLayoutChangeEv_();
-			this.events.regMetaDelEv_();
+			const {app:{workspace}, events} = this;
+			events.regLeafChangeEv_();
+			events.regLayoutChangeEv_();
+			events.regMetaDelEv_();
 
 			
 
-			app.workspace.iterateAllLeaves((leaf) => {
+			workspace.iterateAllLeaves((leaf) => {
 				if (leaf instanceof MarkdownView)
 					//@ts-ignore
 					leaf.view.previewMode.rerender(true);
@@ -172,10 +171,10 @@ export default class FI_Plugin extends Plugin {
 			}
 		}
 		// TODO: Move unregister events
-		const workspace = this.app.workspace;
-		workspace.offref(this.events.activeLeafChange)
-		workspace.offref(this.events.activeLeafSave)
-		workspace.offref(this.events.layoutChange)
+		const {app:{workspace}, events} = this;
+		workspace.offref(events.activeLeafChange)
+		workspace.offref(events.activeLeafSave)
+		workspace.offref(events.layoutChange)
 	}
 
 	async loadSettings() {

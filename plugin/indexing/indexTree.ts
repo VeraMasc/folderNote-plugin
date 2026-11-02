@@ -1,9 +1,6 @@
 import { OpenViewState, App, Editor, TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile, Vault, TextFileView } from 'obsidian';
 import FI_Plugin from "../main"
-import { NoteConfig } from "../config"
-import { lighten, getLuminance } from "color2k"
-import { linkMenu } from '../contextMenu';
-import {FolderData} from './folderData'
+
 import {IndexData} from './indexData'
 
 /** Holds the tree structure of files and their indexes*/

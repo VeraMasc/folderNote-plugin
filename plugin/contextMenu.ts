@@ -19,10 +19,10 @@ export function indexMenu(ev: MouseEvent) {
         (item)=>item.setIsLabel(true).setTitle("Index Menu")
     )
     //Options
-    setPropItem(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
-    setPropItem(menu, "Expanded by default", "fullscreen", "FN-expand")
-    setPropItem(menu, "Hide files", "eye-off" as obsidianIcons, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
-    setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")
+    setPropItem_(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
+    setPropItem_(menu, "Expanded by default", "fullscreen", "FN-expand")
+    setPropItem_(menu, "Hide files", "eye-off" as obsidianIcons, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
+    setPropItem_(menu, "Make it sticky", "pin", "FN-isSticky")
     noteOptions(menu, ev)
     menu.showAtMouseEvent(ev);
 }
@@ -33,8 +33,7 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
     var path = link?.dataset?.href;
     //If target is actual link
     if (path) {
-        var file = this.app.metadataCache.getFirstLinkpathDest(path, ".");
-        return file;
+        return this.app.metadataCache.getFirstLinkpathDest(path, ".");
     }
     else { //Return current file
         return this.app.workspace.getActiveFile();
@@ -46,7 +45,7 @@ function getOptionsTargetFile(ev: MouseEvent): TFile {
 */
 function globalOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null) {
     moreMenu??=menu;
-    actionItem(moreMenu, 'Rebuild Tree','folder-sync' as obsidianIcons,()=>{FI_Plugin.instance.tree.prune()})
+    actionItem_(moreMenu, 'Rebuild Tree','folder-sync' as obsidianIcons,()=>{FI_Plugin.instance.tree.prune()})
 }
 
 
@@ -58,12 +57,12 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
     let file = getOptionsTargetFile(ev)
     moreMenu??=menu;
     //Folder note
-    actionItem(moreMenu, "Make Folder Note", "folder-root", (e) => {
+    actionItem_(moreMenu, "Make Folder Note", "folder-root", (e) => {
         // TODO: Update folder note creation process
         new Notice("FN-Index: Update folder note creation process")
-        let data = FI_Plugin.instance.tree.getNode(file);
+        let {isIndex} = FI_Plugin.instance.tree.getNode(file);
         //Check if already folder note
-        if (data.isIndex) {
+        if (isIndex) {
             new Notice(`Note '${file.basename}' is already a folder note of '${file.parent.name}'`, 0)
             return;
         }
@@ -71,18 +70,18 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
         // TODO: move files
 
     });
-    setPropItem(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav")
+    setPropItem_(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav")
     //View file in explorer
-    actionItem(menu, "View in explorer", "eye", (e) => {
+    actionItem_(menu, "View in explorer", "eye", (e) => {
         let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function
         app.workspace.revealLeaf(explorerTab); //Reveal explorer leaf
 
         let view = explorerTab.view as View & { fileItems: { selfEl: HTMLElement }, tree: any };//Get view
 
         //Get element
-        let data = FI_Plugin.instance.tree.getNode(file);
+        let {isIndex, isRoot} = FI_Plugin.instance.tree.getNode(file)??{};
 
-        if (data?.isIndex && !data.isRoot) { //Get file or folder
+        if (isIndex && isRoot) { //Get file or folder
             var path: string = file.parent?.path;
         }
 
@@ -104,15 +103,15 @@ function currentNoteOptions(menu: Menu, ev: MouseEvent) {
     menu.addItem(
         (item)=>item.setIsLabel(true).setTitle(`'${file?.basename}' Note Menu`)
     )
-    setPropItem(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
-    setPropItemFunction(menu, "Use custom color", "highlight-glyph", "FN-color", (e,v)=>{ 
+    setPropItem_(menu, "Make it sticky", "pin", "FN-isSticky")//Sticky index
+    setPropItemFunction_(menu, "Use custom color", "highlight-glyph", "FN-color", (e,v)=>{ 
         var oldColor = app.metadataCache.getFileCache(v.file)?.frontmatter['FN-color'];
         return getAnotherColor(oldColor);
     })//Custom link color
     let moreMenu = new DeferredMenu();
-    insertBlockItem(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
-    setPropItemFunction(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
-    setPropItem(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
+    insertBlockItem_(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
+    setPropItemFunction_(menu, "List contents", "clipboard-list", "FN-listContent", () => true) //List contents
+    setPropItem_(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
     noteOptions(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu
     moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
@@ -147,8 +146,8 @@ export function linkMenu(ev: MouseEvent) {
     menu.addItem(
         (item)=>item.setIsLabel(true).setTitle(`'${link?.text}' Note Menu`)
     )
-    actionItem(menu, "Go to note", "note-glyph", () => link.click())
-    actionItem(menu, "Open in new tab", "open-elsewhere-glyph", (e) => {
+    actionItem_(menu, "Go to note", "note-glyph", () => link.click())
+    actionItem_(menu, "Open in new tab", "open-elsewhere-glyph", (e) => {
         if (!link?.dataset?.href)
             return;
         let mode = (app.vault as any).getConfig("defaultViewMode");
@@ -163,12 +162,12 @@ export function linkMenu(ev: MouseEvent) {
 }
 
 /**Sets contextual option to add a specific prop to the file */
-function setPropItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
-    return setPropItemFunction(menu, title, icon, prop, ()=>value)
+function setPropItem_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
+    return setPropItemFunction_(menu, title, icon, prop, ()=>value)
 }
 
-/**Same as {@link setPropItem} but sets the value through a function */
-function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent, v?: MarkdownView) => any){
+/**Same as {@link setPropItem_} but sets the value through a function */
+function setPropItemFunction_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent, v?: MarkdownView) => any){
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
@@ -183,7 +182,7 @@ function setPropItemFunction(menu: Menu|DeferredMenu, title: string, icon: obsid
 }
 
 /**Sets contextual option to insert a specific code block to the file  */
-function insertBlockItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, blockType: BlockName, content: string = "") {
+function insertBlockItem_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, blockType: BlockName, content: string = "") {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)
@@ -203,7 +202,7 @@ function insertBlockItem(menu: Menu|DeferredMenu, title: string, icon: obsidianI
  * @param icon Display icon of the item
  * @param onclick Action to trigger on clicking the item
 */
-function actionItem(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, onclick: (ev?: MouseEvent) => any) {
+function actionItem_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, onclick: (ev?: MouseEvent) => any) {
     menu.addItem((item) =>
         item.setTitle(title)
             .setIcon(icon)

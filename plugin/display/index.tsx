@@ -88,7 +88,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         open: config.forceOpen || IndexOpen || null
     }}>
         <summary cls='FN-icon icon-index' {...sumEv}>
-            <html.Index_icon_/>
+            <html.Index_icon/>
             {...Array.from(indexData?.config?.showTitle? addIndexTitle(indexData) : [])}
         </summary>
         {indexList=<ul cls='FN-indexList'/>}
@@ -107,7 +107,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         if (config.hideEmpty && child?.file == null)
             continue;
         // TODO: Use JSX factory for all the HTML
-        let Icon = child.isFolder ? html.Folder_icon_ : (child.ext =="md"? html.Note_icon_ : html.Unknown_file_icon_)
+        let Icon = child.isFolder ? html.Folder_icon : (child.ext =="md"? html.Note_icon : html.Unknown_file_icon)
         let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
             <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}>
                 <Icon/>
@@ -125,11 +125,11 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
             <span cls="FN-expand FN-icon" tabindex={0}
                 onclick={(ev: MouseEvent) => {
                     indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
-            }}><html.Expand_icon_/></span>
+            }}><html.Expand_icon/></span>
             
             {<span cls="FN-newNote FN-icon" tabindex={0} ondblclick={(ev: MouseEvent) => {
                 (app as any).commands.executeCommandById("file-explorer:new-file");
-            }}><html.NewNote_icon_/></span>}
+            }}><html.NewNote_icon/></span>}
 
         </div>
     </>
@@ -149,7 +149,7 @@ export function addIndexTitle(indexData: IndexData) {
             let mode = (app.vault as any).getConfig("defaultViewMode");
             app.workspace.activeLeaf?.openFile(file,
                 { active: true, mode } as OpenViewState);
-	    }}><html.GotoIndex_icon_/></a>
+	    }}><html.GotoIndex_icon/></a>
     </>
     return [...ret.childNodes];
 }

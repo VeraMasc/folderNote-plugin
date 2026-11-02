@@ -264,10 +264,12 @@ export class IndexData {
     /**Handles the order of nodes */
     sortNodes(nodes: IndexData[], config: NoteConfig = null) {
         // TODO: Add sorting config
-        //Locale Sort (Fixes number order and stuff)
-        nodes = nodes.sort((a, b) => a.fullName.localeCompare(b.fullName, undefined, { numeric: true }));
-        //Priority sort
-        return nodes.sort((a, b) => (b?.config?.priority ?? 0) - (a?.config?.priority ?? 0))
+        
+        return nodes
+            //Locale Sort (Fixes number order and stuff)
+            .sort((a, b) => a.fullName.localeCompare(b.fullName, undefined, { numeric: true }))
+            //Priority sort
+            .sort((a, b) => (b?.config?.priority ?? 0) - (a?.config?.priority ?? 0));
     }
 
     /** Refreshes the config data of the file*/

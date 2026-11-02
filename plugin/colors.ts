@@ -1,43 +1,43 @@
 /**Pool of default colors for notes*/
 
 export var defaultColorOptions = shuffle([
-    "darkred", //rgb(139, 0, 0)
-    "firebrick", //rgb(178, 34, 34)
-    "rgb(240,210,50)",
-    "rgb(238, 237, 163)", // Pale yellow
+    "darkred", //rgb(139,0,0)
+    "firebrick", //rgb(178,34,34)
+    "#f0d232",
+    "#eeeda3", // Pale yellow
     "dodgerblue", //rgb(30,144,255)
     "Chocolate", // rgb(210,105,30)
-    "rgb(166, 77, 121)",
+    "#a64d79",
     "Orangered", // rgb(255,69,0)
-    "rgb(255, 193, 69)", //Yellow Orange
-    "rgb(205, 193, 255)", //Blue silver
-    "rgb(194, 15, 90)", //Wine
-    " rgb(27, 80, 228)", //Deep blue
-    "Aqua", //rgb(0, 255, 255)
-    "GreenYellow", //rgb(173, 255, 47)
-    "Chartreuse", //rgb(127, 255, 0)
-    "DarkKhaki", //rgb(189, 183, 107)
-    "DarkOrchid", //rgb(153, 50, 204)
-    "ForestGreen", //rgb(34, 139, 34)
-    "HotPink", //rgb(255, 105, 180)
-    "rgb(214, 78, 62)",//Danger
-    "rgb(240, 202, 28)",//Corn
-    "rgb(133, 139, 194)",//Clear purple
-    "rgb(228, 186, 247)",// lavender
-    "rgb(210, 152, 221)",// Violet Pink
-    "rgb(172, 143, 69)", //Dark Gold
-    "rgb(99, 207, 99)",
-    "rgb(30, 255, 143)", // Jade
-    "rgb(4, 228, 172)", // Turquoise
-    "LimeGreen", //rgb(50, 205, 50)
-    "OliveDrab", //rgb(107, 142, 35)
-    "PaleTurquoise", //rgb(175, 238, 238)
-    "rgb(148, 209, 238)", // Sky blue
-    "Sienna", //rgb(160, 82, 45)
-    "Silver", //rgb(192, 192, 192)
-    "rgb(235, 235, 235)", //near white
-    "Tomato", //rgb(255, 99, 71)
-    "rgb(222, 175, 139)", //Skin color
+    "#ffc145", //Yellow Orange
+    "#cdc1ff", //Blue silver
+    "#c20f5a", //Wine
+    "#1b50e4", //Deep blue
+    "Aqua", //rgb(0,255,255)
+    "GreenYellow", //rgb(173,255,47)
+    "Chartreuse", //rgb(127,255,0)
+    "DarkKhaki", //rgb(189,183,107)
+    "DarkOrchid", //rgb(153,50,204)
+    "ForestGreen", //rgb(34,139,34)
+    "HotPink", //rgb(255,105,180)
+    "#d64e3e",//Danger
+    "#f0ca1c",//Corn
+    "#858bc2",//Clear purple
+    "#e4baf7",// lavender
+    "#d298dd",// Violet Pink
+    "#ac8f45", //Dark Gold
+    "#63cf63",
+    "#1eff8f", // Jade
+    "#04e4ac", // Turquoise
+    "LimeGreen", //rgb(50,205,50)
+    "OliveDrab", //rgb(107,142,35)
+    "PaleTurquoise", //rgb(175,238,238)
+    "#94d1ee", // Sky blue
+    "Sienna", //rgb(160,82,45)
+    "Silver", //rgb(192,192,192)
+    "#ebebeb", //near white
+    "Tomato", //rgb(255,99,71)
+    "#deaf8b", //Skin color
 ]);
 
 
