@@ -1,16 +1,13 @@
 import {TAbstractFile,MetadataCache, TFile, CachedMetadata, TFolder} from 'obsidian';
 import FI_Plugin from "./main"
 import {NoteConfig} from "./config"
-import Mutex from "../../.sharedModules/myMutex"
 
 var folderIndexes = new Map<TFolder, TFile>();
 
 /** Dictionary for delayed initialization */
-var delayed = new Map<TAbstractFile, TFile>()
+var delayed = new Map<TAbstractFile, TFile>() // TODO: Clean up after using
 
-var mutex = new Mutex()
 
-var startTime = Date.now();
 
 /** Marks indexed files as being linked by their indexes. Helps to view vault stucture properly*/
 export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
@@ -34,10 +31,8 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
             let subindex = folderIndexes.get(<TFolder>child);
             if(subindex){
                 folderIndexes.delete(<TFolder>child)
-                // console.warn(`${file.name} => ${(<TFile>subindex).name} (SubIndex)`)
                 connectWithIndex_(metadataCache, <TFile>subindex, file);
             }else{
-                //console.warn(`${file.basename} => ${child.name}`)
                 delayed.set(child, file)
             }
             continue;
@@ -49,8 +44,6 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
     //Link to parent index
     let {parent} = file;
     if(parent){
-        global.delayed = delayed;
-        global.folderIndexes = folderIndexes;
         // console.log(file.path)
         let superIndex = delayed.get(parent) // This should never fail because of resolution order
         if(!superIndex){
@@ -58,7 +51,6 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
             return;
         }
         delayed.delete(parent);
-        //console.warn(`${superIndex.name} => ${file.name} (Parent Index)`)
         await connectWithIndex_(metadataCache, file, superIndex)
     }
     
@@ -69,7 +61,6 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
 async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, index: TFile) {
     let resolved = metadataCache.resolvedLinks[child.path];
     if(!resolved){
-        // console.warn(`${index.basename} => ${child.basename}`)
         delayed.set(child,index);
         return;
     }
@@ -85,7 +76,8 @@ async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, ind
     }
 
     if(child.stat.size < 50 && !(cache.frontmatter?.['id'] || cache.frontmatter?.['aliases'])){ // TODO: Decide a better criteria for this
-        console.warn(`Can't generate unique hash for ${child.path}`)
+        // console.warn(`Can't generate unique hash for ${child.path}`)
+        // TODO: Better way to display that a hash can't be generated
         return;
     }
 
@@ -99,7 +91,7 @@ async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, ind
 
     // }
 
-    let entry = <any>{ key: 'index', time:Date.now()-startTime, link: index.path, original: "[[" + index.path +'|'+index.basename+ "]]", displayText: index.basename };
+    let entry = { key: 'index', link: index.path, original: "[[" + index.path +'|'+index.basename+ "]]", displayText: index.basename };
     cache.frontmatterLinks.push(entry);
 
     
@@ -108,12 +100,13 @@ async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, ind
 /** Finds if it is the index*/
 function isIndex(file: TFile, plugin: FI_Plugin): boolean {
     let parent = file.parent;
-    if(parent){
+    if(parent?.isRoot() == false){
         if(file.basename == parent.name){
             return true;
         }
     }else{
-        if (plugin.RootIndexList?.contains(file.path))
+        let path = file.path.replace(/\.md$/,'')
+        if (plugin.RootIndexList?.contains(path))
             return true;
     }
     // Check for metadata

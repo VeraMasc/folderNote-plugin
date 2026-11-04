@@ -246,13 +246,14 @@ export class IndexData {
             }
         }
         this.mappedChildren = mapped;
-        let {hideRegExp:hideRegExpRaw} = config??{};
+        let {hideRegExp:hideRegExpRaw, hideExt} = config??{};
         let hideRegExp  = [(hideRegExpRaw??[])].flat()
             .map(exp => new RegExp(exp))
 
         for (let cData of mapped) {
             //Hide files from index
             let ignore = cData?.config?.ignore;
+            ignore ||= !cData.ext && hideExt?.contains(cData.ext)
             ignore ||= hideRegExp?.find(reg => reg.test(cData.fullName)) != null;
             if (!ignore)
                 yield cData;
