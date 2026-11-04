@@ -8,6 +8,12 @@ var folderIndexes = new Map<TFolder, TFile>();
 var delayed = new Map<TAbstractFile, TFile>() // TODO: Clean up after using
 
 
+export function cleanup(){
+    // console.log(delayed)
+    // console.log(folderIndexes)
+    folderIndexes.clear()
+    delayed.clear()
+}
 
 /** Marks indexed files as being linked by their indexes. Helps to view vault stucture properly*/
 export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
@@ -90,7 +96,7 @@ async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, ind
 
     // }
 
-    let entry = { key: 'index', link: index.path, original: "[[" + index.path +'|'+index.basename+ "]]", displayText: index.basename };
+    let entry = { key: 'index', link: index.path, original: `[[${index.path}|${index.basename}]]`, displayText: index.basename };
     cache.frontmatterLinks.push(entry);
 
     

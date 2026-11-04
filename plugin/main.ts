@@ -55,6 +55,7 @@ export default class FI_Plugin extends Plugin {
 	
 	events: EventManager = new EventManager(this);
 	metaResolve = undefined;
+	metaResolvedAll = undefined;
 	metaInit = undefined;
 	metaDel = undefined;
 	RootIndexList: Array<string> = [];

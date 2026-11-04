@@ -1,6 +1,6 @@
 import { EventRef, FileView, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
 import FI_Plugin from '../main';
-import { setLinkToIndex } from '../metadata';
+import { cleanup, setLinkToIndex } from '../metadata';
 import * as Display from "../display/display"
 import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
 import {getHeaderUI} from '../display/headerUI'
@@ -80,6 +80,8 @@ export class EventManager{
         if(plugin.settings.metadataLinks){
             plugin.metaResolve = metadataCache.on("resolve", (data)=>{setLinkToIndex(data,plugin)})
             plugin.registerEvent(plugin.metaResolve);
+            plugin.metaResolvedAll = metadataCache.on("resolved", cleanup)
+            plugin.registerEvent(plugin.metaResolvedAll);
         }
 
     }
