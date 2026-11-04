@@ -12,7 +12,6 @@ var delayed = new Map<TAbstractFile, TFile>() // TODO: Clean up after using
 /** Marks indexed files as being linked by their indexes. Helps to view vault stucture properly*/
 export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
     const {metadataCache} = app;
-    
     if(!isIndex(file, plugin)){
         let index = delayed.get(file)
         if(index){ // Delayed linking

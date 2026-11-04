@@ -93,6 +93,13 @@ function noteOptions(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=null
         applyHighlight(fileElement?.selfEl);
 
     })
+    setPropItemFunction_(menu, "Add simple Alias", "import-glyph", 'aliases', (e, v) => {
+        let node = FI_Plugin.instance.tree.getNode(v.file);
+        if(!node) return []; //Do nothing
+        let parent = node.isIndex? node.parent : node.index;
+        let alias =`${parent?.name??'Root'} => ${v.file.basename}`;
+        return [alias]
+    })
     //Add global options to menu
     globalOptions(menu,ev,moreMenu)
 }
