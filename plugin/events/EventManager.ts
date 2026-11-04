@@ -78,7 +78,7 @@ export class EventManager{
         plugin.registerEvent(this.nameChange);
 
         if(plugin.settings.metadataLinks){
-            plugin.metaResolve = metadataCache.on("resolve", (data)=>(setLinkToIndex(data,plugin)))
+            plugin.metaResolve = metadataCache.on("resolve", (data)=>{setLinkToIndex(data,plugin)})
             plugin.registerEvent(plugin.metaResolve);
         }
 

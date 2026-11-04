@@ -47,7 +47,7 @@ esbuild.build({
 	// watch: false,
 	target: 'esNext',
 	logLevel: "debug",
-	sourcemap: true,
+	sourcemap: 'external',
 	drop: prod? ['debugger']:[],
 	minifySyntax:true,
 	minifyWhitespace:true,
