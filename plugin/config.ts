@@ -1,4 +1,4 @@
-import { CachedMetadata } from "obsidian";
+import { CachedMetadata } from './imports/obsidian';
 import { type Config } from "./blocks/contentBlock";
 /** Configuration parameters a note can have */
 export class NoteConfig {

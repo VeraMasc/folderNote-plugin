@@ -1,4 +1,4 @@
-import {Editor, EditorPosition, EditorSuggest,EditorSuggestTriggerInfo,FuzzyMatch, Plugin, TFile,EditorSuggestContext, SearchResult} from "obsidian";
+import {Editor, EditorPosition, EditorSuggest,EditorSuggestTriggerInfo,FuzzyMatch, Plugin, TFile,EditorSuggestContext, SearchResult} from './imports/obsidian';
 import { NoteConfig } from "./config";
 
 // TODO: Properly implement suggestions

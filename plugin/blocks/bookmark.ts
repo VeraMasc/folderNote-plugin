@@ -1,4 +1,4 @@
-import { HeadingCache, BlockCache, Plugin } from "obsidian"
+import { HeadingCache, BlockCache, Plugin } from '../imports/obsidian'
 
 /** Defines the bookmark pattern */
 export const bmPattern = "-"

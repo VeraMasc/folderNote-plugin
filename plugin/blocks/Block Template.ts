@@ -1,6 +1,6 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 
-import { MarkdownPostProcessorContext, Plugin } from "obsidian";
+import { MarkdownPostProcessorContext, Plugin } from '../imports/obsidian';
 
 /**Block identifier */
 export const Id = "blockName";

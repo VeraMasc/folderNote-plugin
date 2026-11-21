@@ -1,5 +1,5 @@
 import { dotCommaObj as getConfig } from "../../../.sharedModules/Data Parsing"
-import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from "obsidian";
+import { MarkdownPostProcessorContext, TFile, CachedMetadata, MarkdownView, Component, Plugin, OpenViewState, HeadingCache } from '../imports/obsidian';
 
 export const Id = "contentList";
 

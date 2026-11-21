@@ -1,6 +1,6 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 
-import { MarkdownPostProcessorContext, Plugin, MetadataCache } from "obsidian";
+import { MarkdownPostProcessorContext, Plugin, MetadataCache } from '../imports/obsidian';
 import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
 import { IndexData } from '../indexing/indexData';

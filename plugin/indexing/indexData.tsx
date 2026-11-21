@@ -1,5 +1,5 @@
 import { getLuminance, lighten } from "color2k";
-import { OpenViewState, PaneType, TAbstractFile, TextFileView, TFile, TFolder } from "obsidian";
+import { OpenViewState, PaneType, TAbstractFile, TextFileView, TFile, TFolder } from '../imports/obsidian';
 import { NoteConfig } from "../config";
 import { linkMenu } from "../contextMenu";
 import { IndexTree } from "./indexTree";

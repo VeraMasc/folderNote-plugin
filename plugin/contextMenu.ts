@@ -1,4 +1,4 @@
-import { addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache, Events, Notice, TFolder, View } from "obsidian";
+import { addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache, Events, Notice, TFolder, View } from './imports/obsidian';
 
 import { fromView as fmFromView, valueRegex } from "../../.sharedModules/FrontMatter";
 import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../../.sharedModules/obsidian/obsidianUtils';
