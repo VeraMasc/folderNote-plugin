@@ -309,12 +309,12 @@ body.is-mobile .FN-link {
 .FN-note-title-UI {
   background-color: rgba(37, 1, 37, 0.329);
   border-radius: 5px;
-  margin: 0px 0.3em;
+  margin: 0px 0.2em;
 }
 .FN-note-title-UI > button {
   padding: initial;
   display: inline-block;
-  height: 2em;
+  height: 1.8em;
   aspect-ratio: 1;
 }
 .FN-note-title-UI > button::after {
@@ -324,6 +324,7 @@ body.is-mobile .FN-link {
 .FN-div, .FN-div-block {
   max-width: 100%;
   margin-bottom: 10px;
+  border-radius: 1em;
 }
 .cm-contentContainer > .FN-div, .FN-div-block {
   margin-top: -5px;
@@ -333,6 +334,7 @@ body.is-mobile .FN-link {
   position: sticky;
   top: 0;
   z-index: 10;
+  background-color: var(--background-primary);
 }
 
 .block-language-contentList {

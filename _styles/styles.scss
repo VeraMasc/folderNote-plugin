@@ -15,6 +15,7 @@
 .FN-div,.FN-div-block{
     max-width: 100%;
     margin-bottom: 10px;
+    border-radius: 1em;
     @at-root .cm-contentContainer>#{&}{
         margin-top: -5px;
     }
@@ -25,6 +26,7 @@
 	position: sticky;
 	top:0;
 	z-index: 10;
+    background-color: var(--background-primary);
 }
 
 
