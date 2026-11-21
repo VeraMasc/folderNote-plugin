@@ -1,4 +1,4 @@
-import { EditorPosition, Editor } from 'obsidian';
+import { EditorPosition, Editor } from '../../imports/obsidian';
 
 /**Finds the parent codeblock of a specific editor position 
  * @param attempts number of attempts before the function gives up 

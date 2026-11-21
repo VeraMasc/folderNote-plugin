@@ -1,6 +1,6 @@
-import { PluginSettingTab, App, Setting } from 'obsidian';
+import { PluginSettingTab, App, Setting } from './imports/obsidian';
 import FI_Plugin from './main';
-import {addToggle, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
+import {addToggle_, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
 import {setLinkToIndex} from './metadata'
 
 
@@ -21,20 +21,20 @@ export class SettingsTab extends PluginSettingTab {
 		containerEl.createEl('a', { text: 'see documentation', href:"https://github.com/VeraMasc/folderNote-plugin" });
 
 		//Refresh on save
-		addToggle<MyPluginSettings>(context,'hideNativeTrail',"Hide native trail","Hides the native trail in the header of the note");
+		addToggle_<MyPluginSettings>(context,'hideNativeTrail',"Hide native trail","Hides the native trail in the header of the note");
 
 		//Refresh on save
-		addToggle<MyPluginSettings>(context,'refreshOnNoteSave',"Refresh on Save","Refresh Folder note index when a note is saved");
+		addToggle_<MyPluginSettings>(context,'refreshOnNoteSave',"Refresh on Save","Refresh Folder note index when a note is saved");
 
 		//Refresh on change
-		addToggle<MyPluginSettings>(context,'refreshOnNoteChange',"Refresh on Change","Refresh Folder note index when changing notes");
+		addToggle_<MyPluginSettings>(context,'refreshOnNoteChange',"Refresh on Change","Refresh Folder note index when changing notes");
 		
-		addToggle<MyPluginSettings>(context,'blockSuggestions',"Codeblock Suggestions","Shows suggestions for the plugin's codeblock parameters")
+		addToggle_<MyPluginSettings>(context,'blockSuggestions',"Codeblock Suggestions","Shows suggestions for the plugin's codeblock parameters")
 		//Block suggestions
-		addToggle<MyPluginSettings>(context,'bookmarkStartup',"Go to bookmark after vault startup","Ensures vault will open the last active file at the bookmarked ('^-' block identifier) location")
+		addToggle_<MyPluginSettings>(context,'bookmarkStartup',"Go to bookmark after vault startup","Ensures vault will open the last active file at the bookmarked ('^-' block identifier) location")
 
 		//Metadata linking of indexes
-		addToggle<MyPluginSettings>(context,'metadataLinks',"Enable metadata linking of files to their indexes","This lets obsidian and other plugins understand that the files are connected despite lacking expicit links")
+		addToggle_<MyPluginSettings>(context,'metadataLinks',"Enable metadata linking of files to their indexes","This lets obsidian and other plugins understand that the files are connected despite lacking expicit links")
 		
 		
 

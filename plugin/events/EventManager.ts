@@ -1,4 +1,4 @@
-import { EventRef, FileView, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
+import { EventRef, FileView, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from '../imports/obsidian';
 import FI_Plugin from '../main';
 import { cleanup, setLinkToIndex } from '../metadata';
 import * as Display from "../display/display"

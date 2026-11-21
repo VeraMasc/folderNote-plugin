@@ -1,4 +1,4 @@
-import {TAbstractFile,MetadataCache, TFile, CachedMetadata, TFolder} from 'obsidian';
+import {TAbstractFile,MetadataCache, TFile, CachedMetadata, TFolder} from './imports/obsidian';
 import FI_Plugin from "./main"
 import {NoteConfig} from "./config"
 

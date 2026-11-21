@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, Menu, TextFileView, MarkdownViewModeType, MarkdownPostProcessorContext, FileManager, Vault, MetadataCache } from '../imports/obsidian';
 
 
 /** Gets the currently active Markdown View */

@@ -3,7 +3,7 @@ import { bmPattern } from "../blocks/bookmark";
 import { navigateNext, navigatePrev } from "../display/nav";
 import { IndexData } from "../indexing/indexData";
 import FI_Plugin from "../main"
-import {App, Editor, EditorPosition, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
+import {App, Editor, EditorPosition, MarkdownView, Modal, Notice, Plugin} from '../imports/obsidian';
 
 export function addCommands(this:FI_Plugin){
         // This adds a simple command that can be triggered anywhere

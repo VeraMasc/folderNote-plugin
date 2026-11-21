@@ -1,4 +1,4 @@
-import { Editor, EditorPosition, EditorSuggest, EditorSuggestContext, EditorSuggestTriggerInfo, TFile, Plugin, SuggestModal, Notice } from 'obsidian';
+import { Editor, EditorPosition, EditorSuggest, EditorSuggestContext, EditorSuggestTriggerInfo, TFile, Plugin, SuggestModal, Notice } from '../../imports/obsidian';
 import FI_Plugin from '../../main';
 import { contentBlock, BlockName } from '../Blocks';
 import {findParentCodeblock} from "./suggestUtils"

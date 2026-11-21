@@ -1,4 +1,4 @@
-import { EventRef, TAbstractFile, TFile, TFolder, WorkspaceLeaf, View} from 'obsidian';
+import { EventRef, TAbstractFile, TFile, TFolder, WorkspaceLeaf, View} from '../imports/obsidian';
 
 
 /** Finds the header of the specified view */

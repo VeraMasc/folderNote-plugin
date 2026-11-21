@@ -1,4 +1,4 @@
-import { TFile, MarkdownPostProcessorContext} from 'obsidian';
+import { TFile, MarkdownPostProcessorContext} from '../imports/obsidian';
 import { NoteConfig } from '../config';
 
 

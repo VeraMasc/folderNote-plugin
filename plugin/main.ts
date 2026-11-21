@@ -1,5 +1,5 @@
 
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Command, MetadataCache, OpenViewState, TextFileView, View, MarkdownRenderer, MarkdownPreviewRenderer, EventRef } from './imports/obsidian';
 import { IndexTree } from "./indexing/indexTree"
 import * as Display from "./display/display"
 import * as Trail from './display/trail';

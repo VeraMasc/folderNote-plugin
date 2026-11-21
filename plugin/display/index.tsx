@@ -1,4 +1,4 @@
-import { MarkdownView, MarkdownViewModeType, Notice, OpenViewState, TFile } from 'obsidian';
+import { MarkdownView, MarkdownViewModeType, Notice, OpenViewState, TFile } from '../imports/obsidian';
 import { IndexData } from '../indexing/indexData';
 import { indexMenu } from '../contextMenu';
 import { IndexOpen, setIndexOpen } from './display';

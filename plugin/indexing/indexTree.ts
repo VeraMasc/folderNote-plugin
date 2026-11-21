@@ -1,4 +1,4 @@
-import { OpenViewState, App, Editor, TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile, Vault, TextFileView } from 'obsidian';
+import { OpenViewState, App, Editor, TAbstractFile, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Command, TFolder, TFile, Vault, TextFileView } from '../imports/obsidian';
 import FI_Plugin from "../main"
 
 import {IndexData} from './indexData'

@@ -1,10 +1,4 @@
-import * as DOMu from '.sharedModules/DOM Utils';
-import { MarkdownView, MarkdownViewModeType } from 'obsidian';
-import { createFNDiv, createContentDiv as getContentDiv, addIndex } from '.';
-import { getContextOf } from '../blocks/BlockUtils';
-import { contentBlock } from '../blocks/Blocks';
-import { currentNoteMenu } from '../contextMenu';
-import FI_Plugin from '../main';
+
 
 import { IndexData } from '../indexing/indexData'
 import {FolderData} from '../indexing/folderData'

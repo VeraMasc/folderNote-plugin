@@ -1,5 +1,5 @@
 import * as DOMu from '.sharedModules/DOM Utils';
-import { MarkdownView, MarkdownViewModeType } from 'obsidian';
+import { MarkdownView, MarkdownViewModeType } from '../imports/obsidian';
 import { createFNDiv, createContentDiv as getContentDiv, addIndex } from '.';
 import { getContextOf } from '../blocks/BlockUtils';
 import { contentBlock } from '../blocks/Blocks';
