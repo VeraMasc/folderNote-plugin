@@ -5,7 +5,7 @@ import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../.
 import { BlockName } from './blocks/Blocks';
 import FI_Plugin from "./main"
 import { xApp } from "./main"
-import { getRandomColor, getAnotherColor } from "./colors";
+import { getRandomColor_, getAnotherColor_ } from "./colors";
 
 import { MenuItemAPI } from "../../.sharedModules/obsidian/obsidianUtils";
 
@@ -31,12 +31,13 @@ export function indexMenu(ev: MouseEvent) {
 function getOptionsTargetFile_(ev: MouseEvent): TFile {
     let link = ev.target as HTMLAnchorElement;
     var path = link?.dataset?.href;
+    let {app} = this;
     //If target is actual link
     if (path) {
-        return this.app.metadataCache.getFirstLinkpathDest(path, ".");
+        return app.metadataCache.getFirstLinkpathDest(path, ".");
     }
     else { //Return current file
-        return this.app.workspace.getActiveFile();
+        return app.workspace.getActiveFile();
     }
 
 }
@@ -70,7 +71,7 @@ function noteOptions_(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=nul
         // TODO: move files
 
     });
-    changePropItemFunction_(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav", ({p})=>!!p)
+    changePropItemFunction_(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav", ({p})=>!p)
     //View file in explorer
     actionItem_(menu, "View in explorer", "eye", (_e) => {
         let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function
@@ -110,12 +111,12 @@ function currentNoteOptions_(menu: Menu, ev: MouseEvent) {
     menu.addItem(
         (item)=>item.setIsLabel(true).setTitle(`'${file?.basename}' Note Menu`)
     )
-    changePropItemFunction_(menu, "Make it sticky", "pin", "FN-isSticky", ({p})=>!!p)//Sticky index
+    changePropItemFunction_(menu, "Make it sticky", "pin", "FN-isSticky", ({p})=>!p)//Sticky index
     changePropItemFunction_(menu, "Use custom color", "highlight-glyph", "FN-color", 
-        ({p})=> getAnotherColor(p))//Custom link color
+        ({p})=> getAnotherColor_(p))//Custom link color
     let moreMenu = new DeferredMenu();
     insertBlockItem_(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
-    changePropItemFunction_(menu, "List contents", "clipboard-list", "FN-listContent", ({p}) => (!!p)) //List contents
+    changePropItemFunction_(menu, "List contents", "clipboard-list", "FN-listContent", ({p}) => (!p)) //List contents
     setPropItem_(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
     noteOptions_(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu

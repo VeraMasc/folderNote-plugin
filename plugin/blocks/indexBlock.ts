@@ -1,6 +1,6 @@
 import {dotCommaObj as getConfig} from "../../../.sharedModules/Data Parsing"
 
-import { MarkdownPostProcessorContext, Plugin, MetadataCache } from '../imports/obsidian';
+import { MarkdownPostProcessorContext } from '../imports/obsidian';
 import * as createFNDiv from '../display';
 import FI_Plugin from "../main";
 import { IndexData } from '../indexing/indexData';
@@ -34,7 +34,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 		if (!data)
 			throw new Error(`No node in path "${path}"`)
 		//Fill according to config
-		fillBlock(el,config,ctx,data.clone());
+		fillBlock_(el,config,ctx,data.clone());
 	}catch(err){
 		console.error(err);
 		el.innerText=err+"";
@@ -42,7 +42,7 @@ export async function generateBlock(source:string, el, ctx:PPContext, plugin:FI_
 }
 
 /**Fills block according to the configuration */
-function fillBlock(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:IndexData){
+function fillBlock_(el:HTMLElement,config:any={},ctx:MarkdownPostProcessorContext,data:IndexData){
 	const fnDiv=el.createDiv({
         cls: `FN-div-block`,
 	});

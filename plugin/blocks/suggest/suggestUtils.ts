@@ -3,7 +3,7 @@ import { EditorPosition, Editor } from '../../imports/obsidian';
 /**Finds the parent codeblock of a specific editor position 
  * @param attempts number of attempts before the function gives up 
 */
-export function findParentCodeblock(pos:EditorPosition, editor:Editor, attempts:number=50):string|null{
+export function findParentCodeblock_(pos:EditorPosition, editor:Editor, attempts:number=50):string|null{
     //Iterate lines
     for(var i=pos.line-1; i>=0; i--){
         let line = editor.getLine(i);

@@ -1,6 +1,6 @@
 import { EventRef, FileView, TAbstractFile, TFile, TFolder, WorkspaceLeaf } from '../imports/obsidian';
 import FI_Plugin from '../main';
-import { cleanup, setLinkToIndex } from '../metadata';
+import { cleanup_, setLinkToIndex_ } from '../metadata';
 import * as Display from "../display/display"
 import { debounce, debounceReps } from '../../../.sharedModules/EventUtils';
 import {getHeaderUI} from '../display/headerUI'
@@ -26,7 +26,7 @@ export class EventManager{
         let {plugin} = this;
         var func = async (leaf:WorkspaceLeaf) => {
             if (plugin.settings.refreshOnNoteChange) {
-                await plugin.redrawFN();
+                await plugin.redrawFN_();
                 if((leaf?.view as FileView)?.file){ // It's a leaf that views a file
                     getHeaderUI(leaf.view);
                 }
@@ -43,7 +43,7 @@ export class EventManager{
     /**Registers the obsidian layout changes*/
     regLayoutChangeEv_() {
         this.layoutChange = this.plugin.app.workspace.on("layout-change", async () => {
-            await this.plugin.redrawFN();
+            await this.plugin.redrawFN_();
             //console.warn("Layout event")
         });
         this.plugin.registerEvent(this.layoutChange);
@@ -58,7 +58,7 @@ export class EventManager{
             var view = Display.getActiveMDView();
             if(view.activeMDView?.file == file){
                 //console.warn("Active File modified")
-                await plugin.redrawFN();
+                await plugin.redrawFN_();
             }
         };
 
@@ -78,9 +78,9 @@ export class EventManager{
         plugin.registerEvent(this.nameChange);
 
         if(plugin.settings.metadataLinks){
-            plugin.metaResolve = metadataCache.on("resolve", (data)=>{setLinkToIndex(data,plugin)})
+            plugin.metaResolve = metadataCache.on("resolve", (data)=>{setLinkToIndex_(data,plugin)})
             plugin.registerEvent(plugin.metaResolve);
-            plugin.metaResolvedAll = metadataCache.on("resolved", cleanup)
+            plugin.metaResolvedAll = metadataCache.on("resolved", cleanup_)
             plugin.registerEvent(plugin.metaResolvedAll);
         }
 

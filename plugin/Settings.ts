@@ -1,7 +1,7 @@
 import { PluginSettingTab, App, Setting } from './imports/obsidian';
 import FI_Plugin from './main';
 import {addToggle_, SettingsContext} from '.sharedModules/obsidian/SettingsUtils'
-import {setLinkToIndex} from './metadata'
+import {setLinkToIndex_} from './metadata'
 
 
 export class SettingsTab extends PluginSettingTab {
@@ -43,12 +43,12 @@ export class SettingsTab extends PluginSettingTab {
 			.setDesc("Name of the file in the root directory that will act as index")
 			.addText(text => text
 				.setPlaceholder('File Name')
-				.setValue(this.plugin_.settings.rootIndex)
+				.setValue(plugin_.settings.rootIndex)
 				.onChange(async (value) => {
-					this.plugin_.settings.rootIndex = value;
-					this.plugin_.parseRootIndex(true);
-					await this.plugin_.saveSettings();
-					await this.plugin_.redrawFN();
+					plugin_.settings.rootIndex = value;
+					plugin_.parseRootIndex_(true);
+					await plugin_.saveSettings();
+					await plugin_.redrawFN_();
 				}));
 	}
 }
@@ -64,7 +64,7 @@ export interface MyPluginSettings {
 	bookmarkStartup:boolean;
 	/** Marks if the native trail in the tab header should be hidden */
 	hideNativeTrail:boolean;
-	/**Enable metadata links, see {@link setLinkToIndex} */
+	/**Enable metadata links, see {@link setLinkToIndex_} */
 	metadataLinks:boolean;
 }
 

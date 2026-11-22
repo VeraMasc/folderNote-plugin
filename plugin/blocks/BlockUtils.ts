@@ -13,8 +13,8 @@ export function getContextOf(file:TFile,frontmatter=<NoteConfig>{}):MarkdownPost
         sourcePath: file.path,
         frontmatter,
         //Empty functions to prevent errors
-        addChild: (child)=>null, 
-        getSectionInfo: (el)=> null,
+        addChild: (_)=>null, 
+        getSectionInfo: (_)=> null,
     }
 
     return ret;

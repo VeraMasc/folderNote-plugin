@@ -2,26 +2,26 @@ import {TAbstractFile,MetadataCache, TFile, CachedMetadata, TFolder} from './imp
 import FI_Plugin from "./main"
 import {NoteConfig} from "./config"
 
-var folderIndexes = new Map<TFolder, TFile>();
+var folderIndexes_ = new Map<TFolder, TFile>();
 
 /** Dictionary for delayed initialization */
-var delayed = new Map<TAbstractFile, TFile>() // TODO: Clean up after using
+var delayed_ = new Map<TAbstractFile, TFile>() // TODO: Clean up after using
 
 
-export function cleanup(){
+export function cleanup_(){
     // console.log(delayed)
     // console.log(folderIndexes)
-    folderIndexes.clear()
-    delayed.clear()
+    folderIndexes_.clear()
+    delayed_.clear()
 }
 
 /** Marks indexed files as being linked by their indexes. Helps to view vault stucture properly*/
-export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
+export async function setLinkToIndex_(file:TFile, plugin:FI_Plugin){
     const {metadataCache} = app;
     if(!isIndex(file, plugin)){
-        let index = delayed.get(file)
+        let index = delayed_.get(file)
         if(index){ // Delayed linking
-            delayed.delete(file);
+            delayed_.delete(file);
             connectWithIndex_(metadataCache, file, index)
         }
         return; // Handle only indexes for efficiency
@@ -33,12 +33,12 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
         if(child === file) // Skip index and subfolders
             continue;
         if(!(<TFile>child).basename){ //Register folder for delayed linking
-            let subindex = folderIndexes.get(<TFolder>child);
+            let subindex = folderIndexes_.get(<TFolder>child);
             if(subindex){
-                folderIndexes.delete(<TFolder>child)
+                folderIndexes_.delete(<TFolder>child)
                 connectWithIndex_(metadataCache, <TFile>subindex, file);
             }else{
-                delayed.set(child, file)
+                delayed_.set(child, file)
             }
             continue;
         }
@@ -50,12 +50,12 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
     let {parent} = file;
     if(parent){
         // console.log(file.path)
-        let superIndex = delayed.get(parent) // This should never fail because of resolution order
+        let superIndex = delayed_.get(parent) // This should never fail because of resolution order
         if(!superIndex){
-            folderIndexes.set(parent, file)
+            folderIndexes_.set(parent, file)
             return;
         }
-        delayed.delete(parent);
+        delayed_.delete(parent);
         await connectWithIndex_(metadataCache, file, superIndex)
     }
     
@@ -66,14 +66,13 @@ export async function setLinkToIndex(file:TFile, plugin:FI_Plugin){
 async function connectWithIndex_(metadataCache: MetadataCache, child: TFile, index: TFile) {
     let resolved = metadataCache.resolvedLinks[child.path];
     if(!resolved){
-        delayed.set(child,index);
+        delayed_.set(child,index);
         return;
     }
 
     resolved[index.path] ??= 1;
     metadataCache.resolvedLinks[child.path] = resolved
     
-    let meta = child.stat;
     let cache = metadataCache.getFileCache(child); // HACK: Repeated calling of GetFileCache
     if(!cache){
         console.error(`File ${child.path} has no cache`);

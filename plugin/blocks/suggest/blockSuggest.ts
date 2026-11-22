@@ -1,7 +1,7 @@
 import { Editor, EditorPosition, EditorSuggest, EditorSuggestContext, EditorSuggestTriggerInfo, TFile, Plugin, SuggestModal, Notice } from '../../imports/obsidian';
 import FI_Plugin from '../../main';
 import { contentBlock, BlockName } from '../Blocks';
-import {findParentCodeblock} from "./suggestUtils"
+import {findParentCodeblock_} from "./suggestUtils"
 import { KeyOfType } from '../../../../.sharedModules/Type Utilities';
 import { Config } from '../contentBlock';
 
@@ -39,7 +39,7 @@ export class BlockSuggest extends EditorSuggest<string>{
             return null;
         }
 
-        let block = findParentCodeblock(cursor,editor);
+        let block = findParentCodeblock_(cursor,editor);
 
         if(!block)
             return null;

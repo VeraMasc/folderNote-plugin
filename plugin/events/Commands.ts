@@ -1,5 +1,5 @@
 import { locToPos } from ".sharedModules/obsidian/obsidianUtils";
-import { bmPattern } from "../blocks/bookmark";
+import { bmPattern_ } from "../blocks/bookmark";
 import { navigateNext, navigatePrev } from "../display/nav";
 import { IndexData } from "../indexing/indexData";
 import FI_Plugin from "../main"
@@ -10,7 +10,7 @@ export function addCommands(this:FI_Plugin){
         this.addCommand({
             id: 'nav-next',
             name: 'Go to next navigable note',
-            checkCallback: noteCallback(this,(note, checking)=>{
+            checkCallback: noteCallback_(this,(note, checking)=>{
                 if(note?.config.nav){
                     if(!checking){
                         navigateNext(note)
@@ -24,7 +24,7 @@ export function addCommands(this:FI_Plugin){
         this.addCommand({
             id: 'nav-prev',
             name: 'Go to previous navigable note',
-            checkCallback: noteCallback(this,(note, checking)=>{
+            checkCallback: noteCallback_(this,(note, checking)=>{
                 if(note?.config.nav){
                     if(!checking){
                         navigatePrev(note)
@@ -37,9 +37,9 @@ export function addCommands(this:FI_Plugin){
         this.addCommand({
             id: 'goto-bookmark',
             name: 'Go to bookmarked block',
-            checkCallback: noteCallback(this,(note, checking, view:MarkdownView)=>{
+            checkCallback: noteCallback_(this,(note, checking, view:MarkdownView)=>{
                 const cache = note?.getMetaData()
-                const bookmark = cache?.blocks?.[bmPattern]
+                const bookmark = cache?.blocks?.[bmPattern_]
                 if(bookmark){
                     if(!checking){
                         view.editor.hasFocus()
@@ -59,9 +59,9 @@ export function addCommands(this:FI_Plugin){
         this.addCommand({
             id: 'create-bookmark',
             name: 'Bookmark current block',
-            checkCallback: noteCallback(this,(note, checking, view)=>{
+            checkCallback: noteCallback_(this,(note, checking, view)=>{
                 const cache = note?.getMetaData(), editor = view.editor;
-                const bookmark = cache?.blocks?.[bmPattern]
+                const bookmark = cache?.blocks?.[bmPattern_]
                 if((view as MarkdownView)?.getMode?.() == 'source'){ //Check if in edit mode
                     const location = editor.getCursor("head");
                     let blockLine = editor.getLine(location.line)
@@ -92,7 +92,7 @@ export function addCommands(this:FI_Plugin){
 }
 
 /**Acts as a base for note based commands */
-export function noteCallback(plugin:FI_Plugin ,fn:(note:IndexData,checking:boolean, view?:MarkdownView)=>boolean):(checking:boolean)=>boolean{
+export function noteCallback_(plugin:FI_Plugin ,fn:(note:IndexData,checking:boolean, view?:MarkdownView)=>boolean):(checking:boolean)=>boolean{
     return (checking:boolean)=>{
         const view = plugin.app.workspace.getActiveViewOfType(MarkdownView);
         if(view?.file){

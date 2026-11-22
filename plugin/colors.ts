@@ -1,6 +1,6 @@
 /**Pool of default colors for notes*/
 
-export var defaultColorOptions = shuffle([
+export var defaultColorOptions_ = shuffle_([
     "darkred", //rgb(139,0,0)
     "firebrick", //rgb(178,34,34)
     "#f0d232",
@@ -42,21 +42,21 @@ export var defaultColorOptions = shuffle([
 
 
 /**Gets a new random color string */
-export function getRandomColor() {
-    return defaultColorOptions[defaultColorOptions.length * Math.random() | 0];
+export function getRandomColor_() {
+    return defaultColorOptions_[defaultColorOptions_.length * Math.random() | 0];
 }
 
 /**Get sthe next color in the list of random colors */
-export function getAnotherColor(color:string) {
+export function getAnotherColor_(color:string) {
     var index;
-    if(color === null ||(index=defaultColorOptions.indexOf(color)) == -1)
-        return getRandomColor();
-    index = (index+1)%defaultColorOptions.length
-    return defaultColorOptions[index];
+    if(color === null ||(index=defaultColorOptions_.indexOf(color)) == -1)
+        return getRandomColor_();
+    index = (index+1)%defaultColorOptions_.length
+    return defaultColorOptions_[index];
 }
 
 /**Fisher-Yates Shuffle */
-function shuffle(array) {
+function shuffle_(array) {
   let currentIndex = array.length;
 
   // While there remain elements to shuffle...

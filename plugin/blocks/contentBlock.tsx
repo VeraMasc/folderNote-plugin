@@ -6,7 +6,7 @@ export const Id = "contentList";
 import { PPContext as Context } from "../../../.sharedModules/obsidian/obsidianUtils"
 import { getActiveMDView } from "../display/display";
 import * as bm from "./bookmark"
-import { insertBlockAsHeading, blockAsHeading, bmPattern, bmHeadingPattern } from "./bookmark";
+import { insertBlockAsHeading, blockAsHeading, bmPattern_, bmHeadingPattern_ } from "./bookmark";
 
 import * as JSX from "../../../.sharedModules/JSX obj"
 import { LongBookmark_icon } from "../html";
@@ -18,8 +18,8 @@ import { LongBookmark_icon } from "../html";
 export function generateBlock(source, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	try {
 		const config = getConfig(source) as Config;
-		const data = getMetaData(ctx);
-		renderContents(el, data, config, ctx, plugin);
+		const data = getMetaData_(ctx);
+		renderContents_(el, data, config, ctx, plugin);
 
 	} catch (err) {
 		console.error(err);
@@ -34,20 +34,20 @@ let cache:HeadingCache[];
 export function regenerateBlock(config:Config, el: HTMLElement, ctx: Context, plugin: Plugin) {
 	const temp = createDiv({ cls: "block-language-contentList" });
 	try {
-		const data = getMetaData(ctx);
-		let contents = restrictContents( ctx, el,  data, config);
+		const data = getMetaData_(ctx);
+		let contents = restrictContents_( ctx, el,  data, config);
 		if(config?.listBlocks && data.blocks)
 			contents = insertBlockAsHeading(contents, Object.values(data.blocks))
 		// TODO: Improve bookmark display
-		if(data.blocks?.[bmPattern])
-			contents.unshift(blockAsHeading(data.blocks?.[bmPattern],2))
+		if(data.blocks?.[bmPattern_])
+			contents.unshift(blockAsHeading(data.blocks?.[bmPattern_],2))
 		const hasChanged = !checkSameHeadings(contents,cache);
 		
 		if(hasChanged){
 			// if(hasChanged && !!cache){ // HACK: For testing 
 			// 	console.warn(`Headings changed ${[...cache].length}=>${[...(data.headings??[])].length}`,{old:[...cache], "new":[...contents]})
 			// }
-			renderContents(temp, {...data, headings:contents}, config, ctx, plugin);
+			renderContents_(temp, {...data, headings:contents}, config, ctx, plugin);
 			//Replace previous
 			el.replaceChildren(temp);
 		}
@@ -76,17 +76,17 @@ function checkSameHeadings(a:HeadingCache[],b:HeadingCache[]){
 }
 
 /**Renders the content of the block */
-function renderContents(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
+function renderContents_(el: HTMLElement, data: CachedMetadata, config: Config, ctx: Context, plugin: Plugin) {
 	el.parentElement?.addClass("compactBlock");
 	data ??= { }; //If no cached data
-	const headings = restrictContents( ctx, el, data, config);
-	renderListElements(el, config, headings);
+	const headings = restrictContents_( ctx, el, data, config);
+	renderListElements_(el, config, headings);
 }
 
 /** Limits the rendering to a specific set of headings if needed
  * @returns list of the contents to display
 */
-function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, data: CachedMetadata, config: Config) {
+function restrictContents_( ctx: MarkdownPostProcessorContext, el: HTMLElement, data: CachedMetadata, config: Config) {
 	let  headings  = [...(data?.headings ?? [])]; //Avoid operating on metadata
 	let { from, relative, excludeRoot=true } = config;
 	if (relative) {
@@ -99,7 +99,7 @@ function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, d
 	}
 
 	if (from) {
-		headings = getSubheadings(ctx, el, data, from || null);
+		headings = getSubheadings_(ctx, el, data, from || null);
 		//Remove excess root
 		if (excludeRoot && headings?.length) {
 			headings.shift();
@@ -109,8 +109,8 @@ function restrictContents( ctx: MarkdownPostProcessorContext, el: HTMLElement, d
 }
 
 /** Renders the list elements of the table of contents */
-function renderListElements(el: HTMLElement, config: Config, headings: HeadingCache[]) {
-	const list = renderHeadingList(config, headings, el);
+function renderListElements_(el: HTMLElement, config: Config, headings: HeadingCache[]) {
+	const list = renderHeadingList_(config, headings, el);
 
 	//Remove unnecessary indentation
 	let element: Element = list[0].firstElementChild;
@@ -132,7 +132,7 @@ function renderListElements(el: HTMLElement, config: Config, headings: HeadingCa
  * @param headings List of headings to render
  * @param el Parent element where the headings should be rendered
 */
-function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElement) {
+function renderHeadingList_(config:Config, headings:HeadingCache[], el:HTMLElement) {
 	const maxDepth = (config.maxDepth && Number.parseInt(config.maxDepth)); 
 
 	const list = [el.createEl("ol", { cls: "noteContents" })]
@@ -145,7 +145,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 		if (maxDepth && maxDepth < level)//Limit depth
 			continue;
 
-		line = getLine(level, list, line)
+		line = getLine_(level, list, line)
 		const href= "#" + heading;
 		const props= {
 			href, 
@@ -155,7 +155,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
 				:null,
 		}
 		const link = <a {...props} cls="internal-link" target="_blank" rel="noopener">
-			{heading == bmHeadingPattern? LongBookmark_icon():heading}
+			{heading == bmHeadingPattern_? LongBookmark_icon():heading}
 		</a>;
 		line.append(link)
 
@@ -169,7 +169,7 @@ function renderHeadingList(config:Config, headings:HeadingCache[], el:HTMLElemen
  * @param list Lists the parent <ol> of the new line
  * @param line Previous <li> generated (not nested)
 */
-function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIElement | null) {
+function getLine_(level: number, list: Array<HTMLOListElement>, line: HTMLLIElement | null) {
 	while (level > list.length) { //Loop to generate nested lines
 		const noMarker = level > list.length ? "noMarker" : "";
 		line ??= list.last().createEl("li", { cls: `header-level:${list.length} ${noMarker}` })
@@ -188,7 +188,7 @@ function getLine(level: number, list: Array<HTMLOListElement>, line: HTMLLIEleme
  * @param from Header to use as root for the index
  * @returns new list with subheadings
 */
-function getSubheadings(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
+function getSubheadings_(ctx: Context, el: HTMLElement, data: CachedMetadata, from: string) {
 	let ret = data.headings;
 	if(!ret)
 		return [];
@@ -222,7 +222,7 @@ export type Config = {
 }
 
 /**Gets the metadata of the current file */
-function getMetaData(ctx: Context) {
+function getMetaData_(ctx: Context) {
 	const file = app.vault.getAbstractFileByPath(ctx.sourcePath) as TFile;
 	const cache = app.metadataCache.getFileCache(file);
 	// console.log({cache,ctx})

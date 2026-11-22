@@ -105,7 +105,7 @@ export default class FI_Plugin extends Plugin {
 		this.events.regMetaChangeEvent_();
 
 		app.workspace.onLayoutReady(async () => {
-			await this.redrawFN()
+			await this.redrawFN_()
 
 			//Register suggest
 			this.registerEditorSuggest(new BlockSuggest(this))
@@ -138,7 +138,7 @@ export default class FI_Plugin extends Plugin {
 				await save();
 				if (this.settings.refreshOnNoteSave) {
 
-					await this.redrawFN()
+					await this.redrawFN_()
 				}
 			};
 		}
@@ -180,14 +180,14 @@ export default class FI_Plugin extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-		this.parseRootIndex();
+		this.parseRootIndex_();
 
 	}
 
 	/**Parses the root index names
 	 * @param [resetTree=false] indicates if the {@link IndexTree} should be reset after parsing
 	*/
-	parseRootIndex(resetTree = false) {
+	parseRootIndex_(resetTree = false) {
 		this.RootIndexList = this.settings.rootIndex?.match(/(?:[^,\\]|\\.)+/g)
 			?.map(s => s?.trim())
 		if (resetTree)
@@ -201,7 +201,7 @@ export default class FI_Plugin extends Plugin {
 
 
 	/**Redraws the Folder Note elements */
-	async redrawFN() {
+	async redrawFN_() {
 
 		try {
 			const { RootIndexList = [], settings, app } = this;

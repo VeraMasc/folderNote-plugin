@@ -11,11 +11,12 @@ export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewMo
 	// const specialView = app.viewRegistry.viewByType?.["database-plugin"];
 	// const activeSpecialView = specialView &&app.workspace.getActiveViewOfType(specialView);
 	// console.log({activeSpecialView})
-	const mode = activeMDView === null || activeMDView === void 0 ? void 0 : activeMDView.getMode();
+	let mdViewCheck:boolean =  activeMDView === null || activeMDView === void 0;
+	const mode = mdViewCheck? void 0 : activeMDView.getMode();
 	
 	if (!activeMDView ||
 		(mode !== "preview" && !true)) {
-		(container = activeMDView === null || activeMDView === void 0 ? void 0 : 
+		(container = mdViewCheck? void 0 : 
 			activeMDView.containerEl.querySelector(".FN-div")) === null || container === void 0 ? void 0 : container.remove();
 
 		

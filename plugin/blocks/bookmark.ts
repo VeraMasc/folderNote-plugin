@@ -1,10 +1,10 @@
 import { HeadingCache, BlockCache, Plugin } from '../imports/obsidian'
 
 /** Defines the bookmark pattern */
-export const bmPattern = "-"
+export const bmPattern_ = "-"
 
 /** Defines what the bookmark pattern looks like as a heading */
-export const bmHeadingPattern = "^" + bmPattern
+export const bmHeadingPattern_ = "^" + bmPattern_
 
 /**Converts the blocks and makes them be treated as headings */
 export function insertBlockAsHeading(headings: HeadingCache[], blocks: BlockCache[]) {
