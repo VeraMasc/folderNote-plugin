@@ -43,10 +43,9 @@ export function addCommands(this:FI_Plugin){
                 if(bookmark){
                     if(!checking){
                         view.editor.hasFocus()
-                        // FIXME: Fix a weird scroll bug on mobile
                         const path = note.filePath;
-                        let action = ()=>this.app.workspace.openLinkText(path+"#^-", "",false,);
-                        this.app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
+                        let action = ()=>app.workspace.openLinkText(path+"#^-", "",false,);
+                        app.workspace.getActiveViewOfType(MarkdownView).leaf.loadIfDeferred()
                             .then(action)
                             .then(action) // HACK: Repeated to force proper loading and scroll
                         
@@ -94,7 +93,7 @@ export function addCommands(this:FI_Plugin){
 /**Acts as a base for note based commands */
 export function noteCallback_(plugin:FI_Plugin ,fn:(note:IndexData,checking:boolean, view?:MarkdownView)=>boolean):(checking:boolean)=>boolean{
     return (checking:boolean)=>{
-        const view = plugin.app.workspace.getActiveViewOfType(MarkdownView);
+        const view = app.workspace.getActiveViewOfType(MarkdownView);
         if(view?.file){
             const note = plugin.tree.getNode(view?.file)
             return fn(note,checking, view);

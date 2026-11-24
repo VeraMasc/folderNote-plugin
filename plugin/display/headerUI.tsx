@@ -52,15 +52,17 @@ export class HeaderUI{
         this.clear();
         if(this.container == null)
             return; // No proper header found
-        // TODO: Extract as method
-        // Generate go to top button
-        this.toTopButton = this.container.createEl('button',);
-        this.toTopButton.onfocus = this.toTopButton.onclick=(ev: PointerEvent)=>{
-
+        
+        this.createTopButton_();
+    }
+    /** Generates go to top button */
+    private createTopButton_() {
+        let button = this.container.createEl('button');
+        button.onfocus = button.onclick = (_: PointerEvent) => {
             let state = this.leaf.view.getEphemeralState();
             state.scroll = 0;
             this.leaf.view.setEphemeralState(state);
-            
         };
+        this.toTopButton = button;
     }
 }

@@ -73,7 +73,7 @@ export default class FI_Plugin extends Plugin {
 
 	async onload() {
 		//Detect startup of vault
-		let isStartup = !this.app.workspace.layoutReady;
+		let isStartup = !app.workspace.layoutReady;
 		FI_Plugin.instance = (window as any).FNindex = this;
 		await this.loadSettings();
 		globalThis.app = this.app;
@@ -131,8 +131,8 @@ export default class FI_Plugin extends Plugin {
 
 		// Custom Save command
 		// https://github.com/hipstersmoothie/obsidian-plugin-prettier/blob/main/src/main.ts
-		const saveCmdDef = this.app.commands.commands["editor:save-file"];
-		const save = saveCmdDef === null || saveCmdDef === void 0 ? void 0 : saveCmdDef.callback;
+		const saveCmdDef = app.commands.commands["editor:save-file"];
+		const save = saveCmdDef? void 0 : saveCmdDef.callback;
 		if (typeof save === "function") {
 			saveCmdDef.callback = async () => {
 				await save();

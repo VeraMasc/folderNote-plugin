@@ -27,7 +27,6 @@ export function indexMenu(ev: MouseEvent) {
 function getOptionsTargetFile_(ev: MouseEvent): TFile {
     let link = ev.target as HTMLAnchorElement;
     var path = link?.dataset?.href;
-    let {app} = this;
     //If target is actual link
     if (path) {
         return app.metadataCache.getFirstLinkpathDest(path, ".");
