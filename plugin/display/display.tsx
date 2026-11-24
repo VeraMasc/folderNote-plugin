@@ -17,8 +17,8 @@ export function getActiveMDView():{activeMDView:MarkdownView,mode:MarkdownViewMo
 	if (!activeMDView ||
 		(mode !== "preview" && !true)) {
 		//Finds the container and removes it
-		(container = mdViewCheck &&	activeMDView.containerEl.querySelector(".FN-div")) 
-			&& container.remove();
+		(container = mdViewCheck &&	activeMDView.containerEl?.querySelector(".FN-div")) 
+			?.remove();
 		
 	}
 	return { activeMDView,mode};

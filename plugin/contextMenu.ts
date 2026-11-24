@@ -173,9 +173,10 @@ function changePropItemFunction_(menu: Menu|DeferredMenu, title: string, icon: o
         item.setTitle(title)
             .setIcon(icon)
             .onClick((e: MouseEvent) => {
+                debugger;
                 let view = app.workspace.getActiveViewOfType(MarkdownView)
                 let previous = app.metadataCache.getFileCache(view.file)?.frontmatter?.[prop];
-                let propDict = {prop:valueFunc({e,v:view, p:previous})};
+                let propDict = {[prop]:valueFunc({e,v:view, p:previous})};
                 view?.["metadataEditor"].insertProperties(propDict)
             })
     );

@@ -20,6 +20,7 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 		return;
 	const { file } = activeMDView;
 
+	// TODO: Show Icons in trail
 
 	let note = plugin.tree.getNode(file);
 

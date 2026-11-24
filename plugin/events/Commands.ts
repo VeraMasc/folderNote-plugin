@@ -1,6 +1,6 @@
 import { locToPos } from ".sharedModules/obsidian/obsidianUtils";
 import { bmPattern_ } from "../blocks/bookmark";
-import { navigateNext, navigatePrev } from "../display/nav";
+import { navigateNext_, navigatePrev_ } from "../display/nav";
 import { IndexData } from "../indexing/indexData";
 import FI_Plugin from "../main"
 import {App, Editor, EditorPosition, MarkdownView, Modal, Notice, Plugin} from '../imports/obsidian';
@@ -13,7 +13,7 @@ export function addCommands(this:FI_Plugin){
             checkCallback: noteCallback_(this,(note, checking)=>{
                 if(note?.config.nav){
                     if(!checking){
-                        navigateNext(note)
+                        navigateNext_(note)
                     }
                     return true
                 }
@@ -27,7 +27,7 @@ export function addCommands(this:FI_Plugin){
             checkCallback: noteCallback_(this,(note, checking)=>{
                 if(note?.config.nav){
                     if(!checking){
-                        navigatePrev(note)
+                        navigatePrev_(note)
                     }
                     return true
                 }
