@@ -7,8 +7,8 @@ import {setLinkToIndex_} from './metadata'
 export class SettingsTab extends PluginSettingTab {
 	plugin_: FI_Plugin;
 
-	constructor(app: App, plugin: FI_Plugin) {
-		super(app, plugin);
+	constructor(plugin: FI_Plugin) {
+		super(plugin.app, plugin);
 		this.plugin_ = plugin;
 	}
 

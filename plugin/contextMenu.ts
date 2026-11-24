@@ -1,13 +1,9 @@
 import { addIcon, MarkdownView, Menu, OpenViewState, Plugin, TFile, MetadataCache, Events, Notice, TFolder, View } from './imports/obsidian';
-
-import { fromView as fmFromView, valueRegex } from "../../.sharedModules/FrontMatter";
 import { applyHighlight, DeferredMenu, insertSubmenu, obsidianIcons } from '../../.sharedModules/obsidian/obsidianUtils';
 import { BlockName } from './blocks/Blocks';
 import FI_Plugin from "./main"
 import { xApp } from "./main"
 import { getRandomColor_, getAnotherColor_ } from "./colors";
-
-import { MenuItemAPI } from "../../.sharedModules/obsidian/obsidianUtils";
 
 
 /**Context menu of the index element of the index file*/
@@ -19,10 +15,10 @@ export function indexMenu(ev: MouseEvent) {
         (item)=>item.setIsLabel(true).setTitle("Index Menu")
     )
     //Options
-    setPropItem_(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
-    setPropItem_(menu, "Expanded by default", "fullscreen", "FN-expand")
-    setPropItem_(menu, "Hide files", "eye-off" as obsidianIcons, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
-    setPropItem_(menu, "Make it sticky", "pin", "FN-isSticky")
+    setPropItemValue_(menu, "Keep Open", "expand-vertically", "FN-forceOpen")
+    setPropItemValue_(menu, "Expanded by default", "fullscreen", "FN-expand")
+    setPropItemValue_(menu, "Hide files", "eye-off" as obsidianIcons, "FN-hideRegExp", '"\\\\..+$(?<!\\\\.md$)"')
+    setPropItemValue_(menu, "Make it sticky", "pin", "FN-isSticky")
     noteOptions_(menu, ev)
     menu.showAtMouseEvent(ev);
 }
@@ -58,7 +54,7 @@ function noteOptions_(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=nul
     let file = getOptionsTargetFile_(ev)
     moreMenu??=menu;
     //Folder note
-    actionItem_(moreMenu, "Make Folder Note", "folder-root", (_e) => {
+    actionItem_(moreMenu, "Make Folder Note", "folder-root", () => {
         // TODO: Update folder note creation process
         new Notice("FN-Index: Update folder note creation process")
         let {isIndex} = FI_Plugin.instance.tree.getNode(file);
@@ -73,7 +69,7 @@ function noteOptions_(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=nul
     });
     changePropItemFunction_(moreMenu, "Make Navigable", "arrow-right-left" as obsidianIcons, "FN-nav", ({p})=>!p)
     //View file in explorer
-    actionItem_(menu, "View in explorer", "eye", (_e) => {
+    actionItem_(menu, "View in explorer", "eye", () => {
         let explorerTab = app.workspace.getLeavesOfType("file-explorer")?.first(); //Get reveal function
         app.workspace.revealLeaf(explorerTab); //Reveal explorer leaf
 
@@ -94,7 +90,7 @@ function noteOptions_(menu: Menu, ev: MouseEvent, moreMenu:Menu|DeferredMenu=nul
         applyHighlight(fileElement?.selfEl);
 
     })
-    setPropItemFunction_(menu, "Add simple Alias", "import-glyph", 'aliases', (_e, v) => {
+    changePropItemFunction_(menu, "Add simple Alias", "import-glyph", 'aliases', ({v}) => {
         let node = FI_Plugin.instance.tree.getNode(v.file);
         if(!node) return []; //Do nothing
         let parent = node.isIndex? node.parent : node.index;
@@ -117,7 +113,7 @@ function currentNoteOptions_(menu: Menu, ev: MouseEvent) {
     let moreMenu = new DeferredMenu();
     insertBlockItem_(moreMenu, "Add content block", "clipboard-list", "contentList", "") //Insert header index
     changePropItemFunction_(menu, "List contents", "clipboard-list", "FN-listContent", ({p}) => (!p)) //List contents
-    setPropItem_(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
+    setPropItemValue_(moreMenu, "Use custom Icon", "scan-face", "FN-icon",' ')//Use icon
     noteOptions_(menu, ev,moreMenu) //Generate regular options
     //Resolve moremenu
     moreMenu.resolveWith(insertSubmenu(menu, "More","ellipsis"));
@@ -153,7 +149,7 @@ export function linkMenu(ev: MouseEvent) {
         (item)=>item.setIsLabel(true).setTitle(`'${link?.text}' Note Menu`)
     )
     actionItem_(menu, "Go to note", "note-glyph", () => link.click())
-    actionItem_(menu, "Open in new tab", "open-elsewhere-glyph", (_e) => {
+    actionItem_(menu, "Open in new tab", "open-elsewhere-glyph", () => {
         if (!link?.dataset?.href)
             return;
         let mode = (app.vault as any).getConfig("defaultViewMode");
@@ -168,23 +164,8 @@ export function linkMenu(ev: MouseEvent) {
 }
 
 /**Sets contextual option to add a specific prop to the file */
-function setPropItem_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
-    return setPropItemFunction_(menu, title, icon, prop, ()=>value)
-}
-
-/**Same as {@link setPropItem_} but sets the value through a function */
-function setPropItemFunction_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, valueFunc: (e?: MouseEvent, v?: MarkdownView) => any){
-    menu.addItem((item) =>
-        item.setTitle(title)
-            .setIcon(icon)
-            .onClick((e: MouseEvent) => {
-                let view = app.workspace.getActiveViewOfType(MarkdownView)
-                let propDict = {};
-                propDict[prop] = valueFunc(e,view);
-                view?.["metadataEditor"].insertProperties(propDict)
-            }
-            )
-    );
+function setPropItemValue_(menu: Menu|DeferredMenu, title: string, icon: obsidianIcons, prop: string, value: any = true) {
+    return changePropItemFunction_(menu, title, icon, prop, ()=>value)
 }
 
 /**Changes the value of contextual option to add a specific prop to the file (lets you access previous value)*/
@@ -194,9 +175,8 @@ function changePropItemFunction_(menu: Menu|DeferredMenu, title: string, icon: o
             .setIcon(icon)
             .onClick((e: MouseEvent) => {
                 let view = app.workspace.getActiveViewOfType(MarkdownView)
-                let propDict = {};
                 let previous = app.metadataCache.getFileCache(view.file)?.frontmatter?.[prop];
-                propDict[prop] = valueFunc({e,v:view, p:previous});
+                let propDict = {prop:valueFunc({e,v:view, p:previous})};
                 view?.["metadataEditor"].insertProperties(propDict)
             })
     );

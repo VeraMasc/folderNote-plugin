@@ -5,7 +5,7 @@ import { linkMenu } from "../contextMenu";
 import { IndexTree } from "./indexTree";
 import * as JSX from ".sharedModules/JSX obj";
 
-
+const cutoffSize_ = 15;
 
 /**Indexing data of a specific folder or file*/
 export class IndexData {
@@ -149,7 +149,6 @@ export class IndexData {
             index = this.sortNodes(mapped)?.first()
         }
         
-
         return index?.file as TFile;
     }
     /**Gets the indexData of the current folder */
@@ -177,14 +176,14 @@ export class IndexData {
 
     /** Generates an obsidian link to the file or folder index */
     fileLink() {
-        let {name, config} = this;
-        let stepNote = this?.file, link = this.filePath;
+        let {name, config } = this;
+        let {file:stepNote, filePath:link} = this??{};
         let text = name, content:any[]=[];
         let extraText = null;
         //Truncate
         if (text.length > 17) {
-            extraText = text?.slice(15);
-            text = text?.slice(0, 15);
+            extraText = text.slice(cutoffSize_);
+            text = text.slice(0, cutoffSize_);
             content = [<span cls="ellipsed" data-text={extraText}></span>]
         }
         content.unshift(text);
@@ -194,33 +193,36 @@ export class IndexData {
         if (stepNote) { //Si la step note existe
             // Calculate color
             let {color} = config;
-            let baseCol = color || null;
-            let hoverCol = baseCol && lighten(color, 0.15 * (1 - getLuminance(color)));
-            let style = color?{"--link-color": color, "--link-color-hover":hoverCol}:null
+            if(color){
+                let hoverCol = lighten(color, 0.15 * (1 - getLuminance(color)));
+                var style = {"--link-color": color, "--link-color-hover":hoverCol}
+            }
+            Object.assign(props,{style, title:name, href:link, 'data-href':link});
+            // Mark as root
             if(this.isRoot)
                 props.cls+=" FN-root";
-            Object.assign(props,{style, title:name, href:link, 'data-href':link});
         }
 
         linkEl = <a {...props}>
                 {...content}
             </a>;
-        
+        let {vault, workspace} = app;
         if(stepNote){
             linkEl.onclick = (e) => {
                 e.preventDefault()
                 let newLeaf:boolean | PaneType = e.ctrlKey? "tab":false;
-                let mode = (app.vault as any).getConfig("defaultViewMode");
-                app.workspace.getLeaf(newLeaf).openFile(stepNote,
-                   { active: true, mode, } as OpenViewState)
+                let mode = (vault as any).getConfig("defaultViewMode");
+                workspace.getLeaf(newLeaf).openFile(stepNote,
+                   { active: true, mode } as OpenViewState)
             };
             linkEl.oncontextmenu = linkMenu;
         }
         else{
              linkEl.oncontextmenu = (e) => {
                 e.preventDefault()
-                let state = { mode:(app.vault as any).getConfig("defaultViewMode") } as OpenViewState;
-                app.workspace.openLinkText(this.folder.path + "/" + this.folder.name, ".", false, state)
+                let {folder:{path, name}}=this;
+                let state = { mode:(vault as any).getConfig("defaultViewMode") } as OpenViewState;
+                workspace.openLinkText(path+ "/" + name, ".", false, state)
             };
         }
         return linkEl;
@@ -235,14 +237,15 @@ export class IndexData {
 
     /**Returns the index data of all child notes (except hidden)*/
     *childNotes(config: NoteConfig = null): Generator<IndexData, void, unknown> {
+        let {folder:{children}, mappedChildren, tree_} = this;
         //Map and sort notes
-        let mapped = this.sortNodes(this.folder.children
+        let mapped = this.sortNodes(children
             .map(child => this.explore(child)));
 
-        if(this.mappedChildren.length > mapped.length){
-            for(var child of [...this.mappedChildren]){
+        if(mappedChildren.length > mapped.length){
+            for(var child of [...mappedChildren]){
                 if(child.checkIsOutdated())
-                    this.tree_.deleteNodeAt(child.filePath)
+                    tree_.deleteNodeAt(child.filePath)
             }
         }
         this.mappedChildren = mapped;

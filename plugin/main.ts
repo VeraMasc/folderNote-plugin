@@ -146,15 +146,15 @@ export default class FI_Plugin extends Plugin {
 		for (let block of Object.values(Blocks)) {
 			if (!block?.Id) continue;
 			try {
-				this.registerMarkdownCodeBlockProcessor(block?.Id + '', (source, el, ctx) => block.generateBlock(source, el, ctx, this))
-				this.injectors[block?.Id + ''] = block;
+				this.registerMarkdownCodeBlockProcessor(block.Id + '', (source, el, ctx) => block.generateBlock(source, el, ctx, this))
+				this.injectors[block.Id + ''] = block;
 			} catch (err) {
 				console.log({ err })
 				console.warn("Blocks Plugin Error: ", err)
 			}
 		}
 
-		this.addSettingTab(new SettingsTab(this.app, this));
+		this.addSettingTab(new SettingsTab(this));
 	}
 
 
@@ -208,10 +208,8 @@ export default class FI_Plugin extends Plugin {
 			const { activeMDView, mode } = Display.getActiveMDView()
 			if (activeMDView)
 				Trail.Trail(activeMDView, mode, this)
-		}
-		catch (err) {
+		}catch (err) {
 			console.error(err);
-
 		}
 	}
 }

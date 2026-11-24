@@ -66,11 +66,12 @@ export class IndexTree {
         // Deleted node existed
         if(old){
             // Delete folder data if index
-            if (!old.isFolder && old.isIndex) {
-                this.deleteNode(old.folder)
+            let {isFolder, isIndex, parent, folder}=old
+            if (!isFolder && isIndex) {
+                this.deleteNode(folder)
             }
-            if(old.parent){
-                old.parent.mappedChildren.remove(old);
+            if(parent){
+                parent.mappedChildren.remove(old)
             }
         }
         
