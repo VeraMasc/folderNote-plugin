@@ -114,57 +114,6 @@
   max-width: none;
 }
 
-.FN-icon {
-  list-style: none;
-  top: 0;
-  vertical-align: middle;
-  padding-left: 10px;
-  z-index: 2;
-  color: var(--text-accent);
-}
-.FN-icon:hover {
-  filter: drop-shadow(0px 0px 2px var(--text-accent));
-}
-.FN-icon > svg {
-  color: inherit;
-  fill: currentColor;
-}
-
-.icon-index.FN-icon {
-  background-color: inherit;
-}
-.isMobile .icon-index.FN-icon.icon-index {
-  font-size: 1.5rem;
-  line-height: 1.5;
-}
-
-.FN-index[open] .icon-index.FN-icon {
-  color: var(--text-faint);
-}
-
-.FN-expand.FN-icon {
-  vertical-align: middle;
-}
-.FN-index.isExpanded {
-  max-width: none;
-}
-.FN-index.isExpanded .FN-expand > svg {
-  color: var(--text-accent);
-  transform: scaleY(-1);
-}
-
-.FN-newNote.FN-icon {
-  z-index: 4;
-  padding: 0px 15px;
-  margin-left: 55px;
-  margin-right: auto;
-  color: var(--text-faint);
-  cursor: pointer;
-}
-.FN-newNote.FN-icon:focus, .FN-newNote.FN-icon :active {
-  color: var(--text-accent-hover);
-}
-
 ul.FN-indexList {
   margin: 0;
   max-height: 30vh;
@@ -278,6 +227,59 @@ body.is-mobile .FN-link {
   background-image: none !important;
   mask: var(--alx-folder-icon-url);
   -webkit-mask: var(--alx-folder-icon-url);
+}
+
+.FN-icon {
+  list-style: none;
+  top: 0;
+  vertical-align: middle;
+  z-index: 2;
+}
+.FN-icon.FN-UI {
+  padding-left: 10px;
+  color: var(--text-accent);
+}
+.FN-icon.FN-UI:hover {
+  filter: drop-shadow(0px 0px 2px var(--text-accent));
+}
+.FN-icon > svg {
+  color: inherit;
+  fill: currentColor;
+}
+
+.icon-index.FN-icon {
+  background-color: inherit;
+}
+.isMobile .icon-index.FN-icon.icon-index {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.FN-index[open] .icon-index.FN-icon {
+  color: var(--text-faint);
+}
+
+.FN-expand.FN-icon {
+  vertical-align: middle;
+}
+.FN-index.isExpanded {
+  max-width: none;
+}
+.FN-index.isExpanded .FN-expand > svg {
+  color: var(--text-accent);
+  transform: scaleY(-1);
+}
+
+.FN-newNote.FN-icon {
+  z-index: 4;
+  padding: 0px 15px;
+  margin-left: 55px;
+  margin-right: auto;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+.FN-newNote.FN-icon:focus, .FN-newNote.FN-icon :active {
+  color: var(--text-accent-hover);
 }
 
 .FN-nav {

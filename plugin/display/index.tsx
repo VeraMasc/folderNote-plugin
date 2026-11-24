@@ -87,7 +87,7 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
         cls: `FN-index` + (config.expand ? " isExpanded" : ""),
         open: config.forceOpen || IndexOpen || null
     }}>
-        <summary cls='FN-icon icon-index' {...sumEv}>
+        <summary cls='FN-icon FN-UI icon-index' {...sumEv}>
             <html.Index_icon/>
             {...Array.from(indexData?.config?.showTitle? addIndexTitle(indexData) : [])}
         </summary>
@@ -108,27 +108,26 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
             continue;
 
         let Icon = child.isFolder ? html.Folder_icon : (child.ext =="md"? html.Note_icon : html.Unknown_file_icon)
-        // TODO: Move icons generation to indexdata
-        let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
-            <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}>
+        let li = <li cls={child.isFolder?"FN-isFolder":null}>
+            <span cls='FN-icon FN-UI'>
                 <Icon/>
             </span>
             {(!child.isFolder && child.ext != "md") && <span cls='FN-ext'>{`.${child.ext}`}</span>}
         </li>;
         indexList.append(li);
         
-        li.append(child.fileLink());
+        li.append(child.fileLink({withIcons:true}));
     }
     // TODO: Fix new-note depending on obsidian new file creation settings
     var frag = <>
         <div cls='FN-cover'/>
         <div cls='FN-bottom'>
-            <span cls="FN-expand FN-icon" tabindex={0}
+            <span cls="FN-expand FN-icon FN-UI" tabindex={0}
                 onclick={(ev: MouseEvent) => {
                     indexEl.toggleClass("isExpanded", !indexEl.hasClass("isExpanded"));
             }}><html.Expand_icon/></span>
             
-            {<span cls="FN-newNote FN-icon" tabindex={0} ondblclick={(ev: MouseEvent) => {
+            {<span cls="FN-newNote FN-icon FN-UI" tabindex={0} ondblclick={(ev: MouseEvent) => {
                 (app as any).commands.executeCommandById("file-explorer:new-file");
             }}><html.NewNote_icon/></span>}
 

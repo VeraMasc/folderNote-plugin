@@ -5,5 +5,70 @@
     -webkit-mask: var(--alx-folder-icon-url);
 }
 
+.FN-icon{
+	list-style: none;
+	// position: sticky;
+	top: 0;
+	vertical-align: middle;
+    z-index:2;
 
+    // Marks that an icon is part of the UI
+    &.FN-UI{
+        padding-left: 10px;
+        color:var(--text-accent);
+        &:hover{
+            filter: drop-shadow(0px 0px 2px var(--text-accent));
+        };
+    }
+	
+
+	>svg{
+		color: inherit;
+		fill: currentColor;
+	}
+	
+}
+
+
+.icon-index.FN-icon{
+	background-color:inherit;
+	
+
+	@at-root .isMobile &.icon-index{
+		font-size: 1.5rem;
+		line-height: 1.5;
+	};
+
+	@at-root .FN-index[open] &{
+		color: var(--text-faint);
+	}
+}
+
+.FN-expand.FN-icon{
+	vertical-align: middle;
+
+	@at-root .FN-index.isExpanded{
+		max-width:none;
+		
+		.FN-expand>svg{
+			color:var(--text-accent);
+			transform: scaleY(-1);
+		}
+	}
+}
+
+.FN-newNote.FN-icon{
+
+	z-index: 4;
+	padding: 0px 15px;
+	margin: {
+		left: 55px;
+		right: auto
+	};
+	color: var(--text-faint);
+	cursor: pointer;
+	&:focus,:active{
+	  color: var(--text-accent-hover);
+	}
+}
 //.alx-folder-icons .nav-folder.alx-folder-with-note[data-icon][data-icon-type=svg] > .nav-folder-title > .nav-folder-title-content::before

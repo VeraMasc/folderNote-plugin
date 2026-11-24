@@ -199,6 +199,7 @@ export class IndexData {
             }
             if(withIcons && icon){
                 console.warn("Trail icons not implemented yet")
+                content.unshift(<span cls="FN-icon">{icon}</span>);
             }
             Object.assign(props,{style, title:name, href:link, 'data-href':link});
             // Mark as root
