@@ -106,8 +106,9 @@ export function addIndex(fnDiv: HTMLElement, indexData: IndexData) {
 
         if (config.hideEmpty && child?.file == null)
             continue;
-        // TODO: Use JSX factory for all the HTML
+
         let Icon = child.isFolder ? html.Folder_icon : (child.ext =="md"? html.Note_icon : html.Unknown_file_icon)
+        // TODO: Move icons generation to indexdata
         let li = <li cls={child.isFolder?"FN-isFolder":null} data-icon={child.config?.icon??''}>
             <span cls='FN-icon' style={`--fn-color:${child.config?.color??''};`}>
                 <Icon/>

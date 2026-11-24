@@ -54,11 +54,11 @@ export function Trail(activeMDView: MarkdownView, mode: MarkdownViewModeType, pl
 	let trailDiv: HTMLElement, el: HTMLElement; 
 	fnDiv.append(<div tabindex="0" cls='FN-trail-scroller'>
 		{trailDiv = <span cls='FN-trail'>
-			{el=root?.fileLink()}
+			{el=root?.fileLink({withIcons:true})}
 		</span>}
 	</div>);
 
-	let elements = [el].concat(pathList.flatMap(step=>[<span cls="FN-trail-arrow"> → </span>,step?.fileLink()]))
+	let elements = [el].concat(pathList.flatMap(step=>[<span cls="FN-trail-arrow"> → </span>,step?.fileLink({withIcons:true})]))
 	
 	elements.last().addClass("FN-current");
 	trailDiv.append(...elements)

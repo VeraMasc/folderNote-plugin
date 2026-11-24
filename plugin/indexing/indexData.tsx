@@ -175,7 +175,7 @@ export class IndexData {
     }
 
     /** Generates an obsidian link to the file or folder index */
-    fileLink() {
+    fileLink({withIcons}:{withIcons?:boolean}={}) {
         let {name, config } = this;
         let {file:stepNote, filePath:link} = this??{};
         let text = name, content:any[]=[];
@@ -192,10 +192,13 @@ export class IndexData {
         let props = {cls:"internal-link FN-link",target:"_blank", rel:"noopener"};
         if (stepNote) { //Si la step note existe
             // Calculate color
-            let {color} = config;
+            let {color, icon} = config;
             if(color){
                 let hoverCol = lighten(color, 0.15 * (1 - getLuminance(color)));
                 var style = {"--link-color": color, "--link-color-hover":hoverCol}
+            }
+            if(withIcons && icon){
+                console.warn("Trail icons not implemented yet")
             }
             Object.assign(props,{style, title:name, href:link, 'data-href':link});
             // Mark as root
